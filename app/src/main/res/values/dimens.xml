@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="list_item_margin">5dp</dimen>
+    <dimen name="list_empty_text_size">16sp</dimen>
+    <dimen name="min_title_text_size">10sp</dimen>
+    <dimen name="max_title_text_size">18sp</dimen>
+    <dimen name="min_detail_title_text_size">14sp</dimen>
+    <dimen name="max_detail_title_text_size">38sp</dimen>
+
+    <dimen name="min_description_text_size">16sp</dimen>
+    <dimen name="max_description_text_size">24sp</dimen>
+
+</resources>
