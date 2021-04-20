@@ -1,0 +1,11 @@
+<resources>
+    <string name="internet_connection_offline">The Internet connection appears to be offline.</string>
+    <string name="oops_went_wrong_try">Опа, нещо се обърка. Понякога тези неща се случват, опитайте отново.</string>
+    <string name="list_is_empty">List is empty</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="send_protocol">Изпрати Протокол</string>
+    <string name="send_signal">Изпрати Сигнал</string>
+    <string name="rights_and_obligations">Права и Задължения</string>
+    <string name="ti_broish">Ти Броиш</string>
+</resources>
