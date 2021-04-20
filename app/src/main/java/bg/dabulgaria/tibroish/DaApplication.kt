@@ -1,9 +1,9 @@
 package bg.dabulgaria.tibroish
 
 import android.app.Application
-import bg.dabulgaria.tibroish.di.components.DaggerApplicationComponent
+import bg.dabulgaria.tibroish.infrastructure.di.components.DaggerApplicationComponent
 
-import bg.dabulgaria.tibroish.di.modules.DeviceModule
+import bg.dabulgaria.tibroish.infrastructure.di.modules.DeviceModule
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector

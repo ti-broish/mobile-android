@@ -7,12 +7,12 @@
 //import bg.dabulgaria.tibroish.domain.providers.ILogger
 //import bg.dabulgaria.tibroish.domain.repositories.remote.IMarvelsRemoteRepository
 //import bg.dabulgaria.tibroish.domain.repositories.local.IComicsLocalRepository
-//import bg.dabulgaria.tibroish.presentation.comic.list.presenter.ComicListPresenter
-//import bg.dabulgaria.tibroish.presentation.comic.list.view.IComicListView
-//import bg.dabulgaria.tibroish.presentation.comic.list.model.ComicListViewModel
+//import bg.dabulgaria.tibroish.presentation.comic.list.ComicListPresenter
+//import bg.dabulgaria.tibroish.presentation.comic.list.IComicListView
+//import bg.dabulgaria.tibroish.presentation.comic.list.ComicListViewModel
 //import bg.dabulgaria.tibroish.presentation.providers.INetworkInfoProvider
 //import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
-//import bg.dabulgaria.tibroish.utils.ISchedulersProvider
+//import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 //
 //import org.junit.*
 //import org.mockito.invocation.InvocationOnMock

@@ -8,4 +8,6 @@
     <string name="send_signal">Изпрати Сигнал</string>
     <string name="rights_and_obligations">Права и Задължения</string>
     <string name="ti_broish">Ти Броиш</string>
+    <string name="menu">Меню</string>
+    <string name="profile">Профил</string>
 </resources>

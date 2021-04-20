@@ -2,11 +2,14 @@ package bg.dabulgaria.tibroish.presentation.main
 
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BaseActivity
-import bg.dabulgaria.tibroish.presentation.comic.details.model.ComicDetailsViewData
-import bg.dabulgaria.tibroish.presentation.comic.details.view.ComicDetailsFragment
-import bg.dabulgaria.tibroish.presentation.comic.list.view.ComicListFragment
+import bg.dabulgaria.tibroish.presentation.ui.protocol.add.ComicDetailsViewData
+import bg.dabulgaria.tibroish.presentation.ui.protocol.add.ComicDetailsFragment
+import bg.dabulgaria.tibroish.presentation.ui.protocol.list.ComicListFragment
 import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
 import dagger.android.AndroidInjector
@@ -14,13 +17,30 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-class MainActivity : BaseActivity(), IMainNavigator, HasAndroidInjector {
+interface IMainScreenView{
+
+    fun showScreen(content : Fragment,
+                   contentTag : String,
+                   addToBackStack : Boolean,
+                   transitionContent : Boolean)
+
+    fun setRequestedOrientation( orientation:Int)
+
+    val supportFragmentMngr: FragmentManager?
+
+    val appCompatActivity: AppCompatActivity
+}
+
+class MainActivity : BaseActivity(), IMainScreenView, HasAndroidInjector {
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
     @Inject
     lateinit var resourceProvider: IResourceProvider
+
+    @Inject
+    lateinit var mainNavigator: IMainNavigator
 
     //region AppCompatActivity overrides
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +52,7 @@ class MainActivity : BaseActivity(), IMainNavigator, HasAndroidInjector {
     override fun onResume() {
 
         super.onResume()
-        showHomeScreen()
+        mainNavigator.showHomeScreen()
     }
     //region AppCompatActivity overrides
 
@@ -40,46 +60,10 @@ class MainActivity : BaseActivity(), IMainNavigator, HasAndroidInjector {
 
         return dispatchingAndroidInjector
     }
-    //region HasSupportFragmentInjector implementation
-//    override fun supportFragmentInjector(): AndroidInjector<Fragment>? {
-//
-//        return dispatchingAndroidInjector
-//    }
-    //endregion HasSupportFragmentInjector implementation
 
-    //region IMainNavigator implementation
-    override fun showHomeScreen() {
+    override val appCompatActivity: AppCompatActivity
+        get() = this
 
-        var homeFragment = supportFragmentManager.findFragmentByTag(HomeFragment.TAG )
-        if (homeFragment == null) {
-
-            homeFragment = HomeFragment.newInstance()
-        }
-
-        showScreen(homeFragment, HomeFragment.TAG, false, false)
-    }
-
-    override fun showComicList() {
-
-        var comicListFragment = supportFragmentManager.findFragmentByTag(ComicListFragment.TAG )
-        if (comicListFragment == null) {
-
-            comicListFragment = ComicListFragment.newInstance()
-        }
-
-        showScreen(comicListFragment, ComicListFragment.TAG, false, false)
-    }
-
-    override fun showComicDetails(comicDetailsViewData: ComicDetailsViewData ) {
-
-        var comicDetailsFragment = supportFragmentManager.findFragmentByTag(ComicDetailsFragment.TAG )
-        if (comicDetailsFragment == null) {
-
-            comicDetailsFragment = ComicDetailsFragment.newInstance(comicDetailsViewData )
-        }
-
-        showScreen(comicDetailsFragment, ComicListFragment.TAG, true, true)
-    }
-    //endregion IMainNavigator implementation
-
+    override val supportFragmentMngr: FragmentManager?
+      = this.supportFragmentManager
 }
