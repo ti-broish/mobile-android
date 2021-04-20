@@ -3,6 +3,34 @@ package bg.dabulgaria.tibroish.domain.Locations
 import java.io.Serializable
 
 
+//
+//MunicipalityDto{
+//    code*	string
+//    name*	string
+//}
+//
+//ElectionRegionDto{
+//    code*	string
+//    name*	string
+//    isAbroad*	boolean
+//    municipalities*	[...]
+//}
+//
+//class CityRegionDto{
+//    code*	string
+//    name*	string
+//}
+//
+//Country{
+//    cityRegions*	{...}
+//    id*	number
+//    code*	string
+//    name*	string
+//    isAbroad*	boolean
+//    towns*	[...]
+//    sectionsCount*	number
+//}
+
 open class CountryS constructor():Serializable{
 
     var uuid :String?=null

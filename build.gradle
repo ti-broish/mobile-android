@@ -2,7 +2,7 @@
 
 buildscript {
     ext{
-        kotlinVersion = '1.4.10'
+        kotlinVersion = '1.4.20'
         daggerVersion = '2.27'
         rxjavaVersion = '3.0.5'
         appCompatVersion = '1.2.0'
