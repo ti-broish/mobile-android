@@ -1,7 +1,5 @@
 package bg.dabulgaria.tibroish.presentation.main
 
-import android.hardware.input.InputManager
-import bg.dabulgaria.tibroish.presentation.ui.protocol.add.ComicDetailsViewData
 
 interface IMainNavigator {
 
@@ -11,5 +9,5 @@ interface IMainNavigator {
 
         fun showComicList()
 
-        fun showComicDetails(comicDetailsViewData: ComicDetailsViewData)
+        //fun showComicDetails(comicDetailsViewData: ComicDetailsViewData)
 }

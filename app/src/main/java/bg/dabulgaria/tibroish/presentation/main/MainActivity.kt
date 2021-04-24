@@ -7,11 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BaseActivity
-import bg.dabulgaria.tibroish.presentation.ui.protocol.add.ComicDetailsViewData
-import bg.dabulgaria.tibroish.presentation.ui.protocol.add.ComicDetailsFragment
-import bg.dabulgaria.tibroish.presentation.ui.protocol.list.ComicListFragment
 import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
-import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
