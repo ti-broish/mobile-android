@@ -27,7 +27,7 @@ open class BaseActivity : AppCompatActivity() {
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         }
 
-        ft.replace( R.id.placeholder_content, content, contentTag )
+        ft.replace( R.id.container, content, contentTag )
 
         if (addToBackStack) {
             ft.addToBackStack(contentTag + System.identityHashCode(content))

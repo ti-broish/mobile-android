@@ -1,7 +1,10 @@
 package bg.dabulgaria.tibroish.presentation.main
 
 import android.content.Context
+import android.util.Log
+import androidx.fragment.app.FragmentManager
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
+import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
 import javax.inject.Inject
 
@@ -15,6 +18,23 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
         this.view = view
     }
 
+    override fun onItemClicked(action: NavItemAction) {
+
+        when(action){
+
+            NavItemAction.Home -> {
+                clearBackStack()
+                showHomeScreen()
+            }
+            NavItemAction.Profile ->{}
+            NavItemAction.SendProtocol -> {}
+            NavItemAction.MyProtocols -> {}
+            NavItemAction.MySignals -> {}
+            NavItemAction.RightsAndObligations -> {}
+            NavItemAction.YouCountLive -> {}
+            NavItemAction.Exit -> {}
+        }
+    }
     //region IMainNavigator implementation
     override fun showHomeScreen() {
 
@@ -29,7 +49,7 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
         view?.showScreen(homeFragment, HomeFragment.TAG, false, false)
     }
 
-    override fun showComicList() {
+//    override fun showComicList() {
 //
 //        var comicListFragment = view?.supportFragmentMngr?.findFragmentByTag(ComicListFragment.TAG )
 //        if (comicListFragment == null) {
@@ -38,7 +58,7 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
 //        }
 //
 //        view?.showScreen(comicListFragment, ComicListFragment.TAG, false, false)
-    }
+//    }
 
 //    override fun showComicDetails(comicDetailsViewData: ComicDetailsViewData) {
 //
@@ -50,5 +70,20 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
 ////
 ////        view?.showScreen(comicDetailsFragment, ComicListFragment.TAG, true, true)
 //    }
+
+    private fun clearBackStack() {
+
+        try {
+            val fragmentManager = view?.supportFragmentMngr ?: return
+            //this will clear the back stack and displays no animation on the screen
+            fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        } catch (ex: Exception) {
+            Log.e(TAG, "Error occurred while trying to navigate to product chooser screen.", ex)
+        }
+    }
     //endregion IMainNavigator implementation
+
+    companion object {
+        val TAG = MainNavigator::class.java.simpleName
+    }
 }

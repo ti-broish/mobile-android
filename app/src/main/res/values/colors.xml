@@ -8,4 +8,5 @@
     <color name="textLightGreen">#4CAF52</color>
     <color name="textRed">#C8181B</color>
     <color name="white">#FFFFFF</color>
+    <color name="dirtyWhite">#F0F0F0</color>
 </resources>
