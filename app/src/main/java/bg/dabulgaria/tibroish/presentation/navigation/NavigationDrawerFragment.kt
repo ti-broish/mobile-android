@@ -2,7 +2,6 @@ package bg.dabulgaria.tibroish.presentation.navigation
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.view.*
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -54,6 +53,7 @@ class NavigationDrawerFragment : Fragment() {
         val navItems = listOf(NavItem( NavItemAction.Home, R.string.start, null ),
                 NavItem( NavItemAction.Profile, R.string.profile, null ),
                 NavItem( NavItemAction.SendProtocol, R.string.send_protocol, null ),
+                NavItem( NavItemAction.SendSignal, R.string.send_signal, null ),
                 NavItem( NavItemAction.MyProtocols, R.string.my_protocols, null ),
                 NavItem( NavItemAction.MySignals, R.string.my_signals, null ),
                 NavItem( NavItemAction.RightsAndObligations, R.string.rights_and_obligations, null ),
@@ -64,11 +64,11 @@ class NavigationDrawerFragment : Fragment() {
         view.navItemsRecyclerView?.layoutManager = LinearLayoutManager( this.context, RecyclerView.VERTICAL, false )
         view.navItemsRecyclerView?.adapter = NavItemsAdapter( navItems, object:OnMenuClickListener{
 
-            override fun onItemClicked(action: NavItemAction) {
+            override fun onNavigateToItem(action: NavItemAction) {
 
                 view.navItemsRecyclerView?.postDelayed( {
                     drawerLayout?.closeDrawers()
-                    listener?.onItemClicked(action)
+                    listener?.onNavigateToItem(action)
                 }, 200)
             }
         })

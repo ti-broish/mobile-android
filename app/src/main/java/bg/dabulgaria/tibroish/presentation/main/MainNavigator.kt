@@ -18,16 +18,18 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
         this.view = view
     }
 
-    override fun onItemClicked(action: NavItemAction) {
+    override fun onNavigateToItem(action: NavItemAction) {
+
+        Log.i( TAG, action.name )
 
         when(action){
-
             NavItemAction.Home -> {
                 clearBackStack()
                 showHomeScreen()
             }
             NavItemAction.Profile ->{}
             NavItemAction.SendProtocol -> {}
+            NavItemAction.SendSignal -> {}
             NavItemAction.MyProtocols -> {}
             NavItemAction.MySignals -> {}
             NavItemAction.RightsAndObligations -> {}

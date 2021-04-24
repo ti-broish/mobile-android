@@ -120,15 +120,14 @@ class MainActivity : BaseActivity(),
     override fun onStart() {
 
         super.onStart()
-        mainNavigator.showHomeScreen()
     }
     //region AppCompatActivity overrides
 
     //region OnMenuClickListener implementation
-    override fun onItemClicked(action: NavItemAction) {
+    override fun onNavigateToItem(action: NavItemAction) {
 
         drawerLayout?.closeDrawers()
-        mainNavigator.onItemClicked(action)
+        mainNavigator.onNavigateToItem(action)
     }
     //endregion OnMenuClickListener implementation
 
@@ -153,7 +152,7 @@ class MainActivity : BaseActivity(),
                  if(drawerLayout?.isOpen() == true)
                      closeDrawer()
                  else
-                    openDrawer()
+                     openDrawer()
                  return true
              }
         }

@@ -53,6 +53,6 @@ class NavItemsAdapter constructor(private val items: List<NavItem>,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             holder.itemView.navItemText.text = spannableString
         }
-        holder.itemView.setOnClickListener { clickListener?.onItemClicked(navItem.action) }
+        holder.itemView.setOnClickListener { clickListener?.onNavigateToItem(navItem.action) }
     }
 }
