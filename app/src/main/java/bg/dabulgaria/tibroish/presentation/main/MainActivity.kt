@@ -45,12 +45,11 @@ class MainActivity : BaseActivity(),
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
-
     @Inject
     lateinit var resourceProvider: IResourceProvider
-
     @Inject
     lateinit var mainNavigator: IMainNavigator
+
 
     private var drawerLayout :DrawerLayout? = null
     private var navigationDrawerFragment :NavigationDrawerFragment ? = null

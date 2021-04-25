@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.dokka'
+apply plugin: "com.yelp.codegen.plugin"
 
 android {
     compileSdkVersion 29
@@ -106,4 +107,13 @@ dependencies {
 
 repositories {
     mavenCentral()
+}
+
+generateSwagger {
+    platform = "kotlin"
+    packageName = "bg.dabulgaria.tibroish"
+    inputFile = file("./apidocs.json")
+    specName = "integration"
+    specVersion = "1.0.0"
+    outputDir = file("./src/main/java/")
 }

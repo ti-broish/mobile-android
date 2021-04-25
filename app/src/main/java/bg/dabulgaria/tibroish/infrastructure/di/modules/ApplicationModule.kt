@@ -8,14 +8,8 @@ import bg.dabulgaria.tibroish.DaApplication
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.domain.calculators.HashCalculator
 import bg.dabulgaria.tibroish.domain.calculators.IHashCalculator
-import bg.dabulgaria.tibroish.domain.interactors.ComicInteractor
-import bg.dabulgaria.tibroish.domain.interactors.IComicInteractor
 import bg.dabulgaria.tibroish.domain.providers.ITimestampProvider
 import bg.dabulgaria.tibroish.domain.providers.TimestampProvider
-import bg.dabulgaria.tibroish.persistence.remote.MarvelsRemoteRepository
-import bg.dabulgaria.tibroish.domain.repositories.remote.IMarvelsRemoteRepository
-import bg.dabulgaria.tibroish.domain.repositories.local.IComicsLocalRepository
-import bg.dabulgaria.tibroish.persistence.local.ComicsLocalRepository
 import bg.dabulgaria.tibroish.persistence.local.MarvelsDatabase
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.infrastructure.schedulers.SchedulersProvider
@@ -62,11 +56,7 @@ class ApplicationModule {
                 .build()
     }
 
-    @Provides
-    internal fun providesLocalStorageRepository(database :MarvelsDatabase): IComicsLocalRepository {
 
-        return ComicsLocalRepository( database)
-    }
 
     @Provides
     internal fun providesSchedulersProvider(schedulersProvider: SchedulersProvider): ISchedulersProvider {
@@ -74,11 +64,6 @@ class ApplicationModule {
         return schedulersProvider
     }
 
-    @Provides
-    internal fun providesMarvelsApiRepository( comicApiRepository: MarvelsRemoteRepository): IMarvelsRemoteRepository {
-
-        return comicApiRepository
-    }
 
     @Provides
     @Singleton
@@ -94,11 +79,6 @@ class ApplicationModule {
         return TimestampProvider()
     }
 
-    @Provides
-    fun providesComicInteractor(comicInteractor: ComicInteractor): IComicInteractor {
-
-        return comicInteractor
-    }
 
     @Provides
     @Singleton

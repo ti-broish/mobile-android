@@ -1,11 +1,16 @@
 package bg.dabulgaria.tibroish.presentation.main
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import android.util.Log
 import androidx.fragment.app.FragmentManager
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
+import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolFragment
+import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolViewData
 import javax.inject.Inject
 
 class MainNavigator @Inject constructor(@AppContext private val appContext: Context )
@@ -42,6 +47,8 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
 
         view ?: return
 
+        clearBackStack()
+
         var homeFragment = view?.supportFragmentMngr?.findFragmentByTag(HomeFragment.TAG )
         if (homeFragment == null) {
 
@@ -51,27 +58,29 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
         view?.showScreen(homeFragment, HomeFragment.TAG, false, false)
     }
 
-//    override fun showComicList() {
-//
-//        var comicListFragment = view?.supportFragmentMngr?.findFragmentByTag(ComicListFragment.TAG )
-//        if (comicListFragment == null) {
-//
-//            comicListFragment = ComicListFragment.newInstance()
-//        }
-//
-//        view?.showScreen(comicListFragment, ComicListFragment.TAG, false, false)
-//    }
+    override fun openAppSettings() {
 
-//    override fun showComicDetails(comicDetailsViewData: ComicDetailsViewData) {
-//
-////        var comicDetailsFragment = view?.supportFragmentMngr?.findFragmentByTag(ComicDetailsFragment.TAG )
-////        if (comicDetailsFragment == null) {
-////
-////            comicDetailsFragment = ComicDetailsFragment.newInstance(comicDetailsViewData )
-////        }
-////
-////        view?.showScreen(comicDetailsFragment, ComicListFragment.TAG, true, true)
-//    }
+        val intent = Intent()
+        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        intent.addCategory(Intent.CATEGORY_DEFAULT)
+        intent.data = Uri.parse("package:" + appContext.packageName)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+        appContext.startActivity(intent)
+    }
+
+    override fun showAddProtocol() {
+
+        var comicDetailsFragment = view?.supportFragmentMngr?.findFragmentByTag(AddProtocolFragment.TAG )
+        if (comicDetailsFragment == null) {
+
+            clearBackStack()
+            comicDetailsFragment = AddProtocolFragment.newInstance(AddProtocolViewData())
+        }
+
+        view?.showScreen(comicDetailsFragment, AddProtocolFragment.TAG, addToBackStack = true, transitionContent = true)
+    }
 
     private fun clearBackStack() {
 

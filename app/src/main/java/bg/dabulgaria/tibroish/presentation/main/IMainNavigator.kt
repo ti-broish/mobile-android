@@ -8,7 +8,7 @@ interface IMainNavigator: OnMenuClickListener {
 
         fun showHomeScreen()
 
-        //fun showComicList()
+        fun showAddProtocol()
 
-        //fun showComicDetails(comicDetailsViewData: ComicDetailsViewData)
+        fun openAppSettings()
 }

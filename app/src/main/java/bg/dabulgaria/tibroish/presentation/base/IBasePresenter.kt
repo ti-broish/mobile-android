@@ -1,6 +1,10 @@
 package bg.dabulgaria.tibroish.presentation.base
 
+import android.os.Bundle
+
 interface IBasePresenter<IView: IBaseView>  {
+
+    fun onRestoreData(bundle: Bundle?)
 
     fun onViewCreated( view:IView )
 
@@ -9,8 +13,9 @@ interface IBasePresenter<IView: IBaseView>  {
     fun onViewShow()
 
     fun onViewHide()
-}
 
+    fun onSaveData(outState: Bundle)
+}
 
 abstract class BasePresenter<IView:IBaseView> ( disposableHandler: IDisposableHandler)
     :IBasePresenter<IView>, IDisposableHandler by disposableHandler{
