@@ -25,8 +25,10 @@ import javax.inject.Singleton
 import dagger.Module
 import dagger.Provides
 import androidx.room.Room
+import bg.dabulgaria.tibroish.domain.config.IAppConfigRepository
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.providers.Logger
+import bg.dabulgaria.tibroish.persistence.local.AppConfigRepository
 import bg.dabulgaria.tibroish.persistence.remote.ILocationsRemoteRepo
 import bg.dabulgaria.tibroish.persistence.remote.LocationsRemoteRepo
 
@@ -109,4 +111,8 @@ class ApplicationModule {
     @Singleton
     fun providesILocationsRemoteRepo( impementer: LocationsRemoteRepo): ILocationsRemoteRepo = impementer
 
+    @Provides
+    @Singleton
+    internal fun providesIAppConfigRepository(implementer: AppConfigRepository) : IAppConfigRepository
+            =implementer
 }
