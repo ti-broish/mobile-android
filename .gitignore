@@ -11,3 +11,4 @@
 /.idea
 /.git
 /.gradle
+app/src/main/assets/appconfig.properties
