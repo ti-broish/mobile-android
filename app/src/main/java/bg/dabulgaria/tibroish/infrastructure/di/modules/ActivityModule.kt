@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.ActivityScope
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.PerActivity
 import bg.dabulgaria.tibroish.infrastructure.permission.IPermissionRequester
+import bg.dabulgaria.tibroish.infrastructure.permission.IPermissionResponseHandler
 import bg.dabulgaria.tibroish.infrastructure.permission.PermissionRequester
+import bg.dabulgaria.tibroish.infrastructure.permission.PermissionResponseHandler
 import bg.dabulgaria.tibroish.presentation.base.DisposableHandler
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.main.IMainNavigator
@@ -18,17 +20,22 @@ interface ActivityModule {
 
     @Binds
     @ActivityScope
-    fun bindsMainNavigator(mainActivity: MainNavigator): IMainNavigator
+    fun bindsMainNavigator(implementation: MainNavigator): IMainNavigator
 
     @Binds
     @ActivityScope
-    fun bindsIDisposableHandler(disposableHandler: DisposableHandler):IDisposableHandler
+    fun bindsIDisposableHandler(implementation: DisposableHandler):IDisposableHandler
 
     @Binds
-    @PerActivity
+    @ActivityScope
     fun appCompatActivity(mainActivity: MainActivity): AppCompatActivity
 
     @Binds
-    @PerActivity
-    fun appCompatActivity(permissionRequester: PermissionRequester): IPermissionRequester
+    @ActivityScope
+    fun bindsIPermissionRequester(implementation: PermissionRequester): IPermissionRequester
+
+    @Binds
+    @ActivityScope
+    fun bindsIPermissionRequester(implementation: PermissionResponseHandler): IPermissionResponseHandler
+
 }

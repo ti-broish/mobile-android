@@ -1,10 +1,7 @@
 package bg.dabulgaria.tibroish.presentation.ui.di
 
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
-import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolFragment
-import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolPresenter
-import bg.dabulgaria.tibroish.presentation.ui.protocol.add.IAddProtocolView
-import bg.dabulgaria.tibroish.presentation.ui.protocol.add.IAddProtocolViewPresenter
+import bg.dabulgaria.tibroish.presentation.ui.protocol.add.*
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -22,5 +19,5 @@ interface FragmentModule {
     fun bindsDetailsView( detailsFragment: AddProtocolFragment): IAddProtocolView
 
     @Binds
-    fun bindDetailsPresenter( detailsPresenter: AddProtocolPresenter): IAddProtocolViewPresenter
+    fun bindsIAddProtocolPresenter( detailsPresenter: AddProtocolPresenter): IAddProtocolPresenter
 }

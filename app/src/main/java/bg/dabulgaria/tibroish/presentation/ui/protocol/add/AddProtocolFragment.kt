@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.CallSuper
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
+import kotlinx.android.synthetic.main.fragment_add_protocol.*
 import kotlinx.android.synthetic.main.fragment_comic_list.*
 import javax.inject.Inject
 
@@ -24,28 +26,15 @@ class AddProtocolFragment @Inject constructor()
 
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?,
                               savedInstanceState : Bundle?) : View? {
-
-        val view = inflater.inflate(R.layout.fragment_add_protocol, container, false)
-
-//        listSwipeRefreshLayout  = view.findViewById( R.id.swipeToRefreshLayout )
-//        titleTextView           = view.findViewById( R.id.titleTextView )
-//        thumbnailImageView      = view.findViewById( R.id.thumbnailImageView )
-//        descriptionTextView     = view.findViewById( R.id.descriptionTextView )
-//
-//        listSwipeRefreshLayout?.setColorSchemeResources(android.R.color.holo_orange_dark)
-//        listSwipeRefreshLayout?.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
-//
-//            detailsPresenter.loadComicDetails(true, mAddProtocolViewData?.id ?: 0L )
-//        })
-
-        return view
+        return inflater.inflate(R.layout.fragment_add_protocol, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        addProtocolGalleryBtn.setOnClickListener { presenter.onAddFromGalleryClick() }
+        addProtocolCameraBtn.setOnClickListener { presenter.onAddFromCameraClick() }
     }
-
 
     override fun onLoadingStateChange(isLoading: Boolean) {
 

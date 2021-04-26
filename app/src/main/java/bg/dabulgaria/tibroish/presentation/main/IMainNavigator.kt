@@ -4,11 +4,15 @@ import bg.dabulgaria.tibroish.presentation.navigation.OnMenuClickListener
 
 interface IMainNavigator: OnMenuClickListener {
 
-        fun setView(view: IMainScreenView?)
+    fun setView(view: IMainScreenView?)
 
-        fun showHomeScreen()
+    fun showHomeScreen()
 
-        fun showAddProtocol()
+    fun showAddProtocol()
 
-        fun openAppSettings()
+    fun openAppSettings()
+
+    fun showPhotoPicker(protocolId:Long)
+
+    fun showCameraPicker(protocolId:Long)
 }

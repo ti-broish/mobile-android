@@ -9,6 +9,8 @@ import androidx.fragment.app.FragmentManager
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
+import bg.dabulgaria.tibroish.presentation.ui.photopicker.Camera.CameraPickerFragment
+import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolViewData
 import javax.inject.Inject
@@ -72,14 +74,38 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
 
     override fun showAddProtocol() {
 
-        var comicDetailsFragment = view?.supportFragmentMngr?.findFragmentByTag(AddProtocolFragment.TAG )
-        if (comicDetailsFragment == null) {
+        var content = view?.supportFragmentMngr?.findFragmentByTag(AddProtocolFragment.TAG )
+        if (content == null) {
 
             clearBackStack()
-            comicDetailsFragment = AddProtocolFragment.newInstance(AddProtocolViewData())
+            content = AddProtocolFragment.newInstance(AddProtocolViewData())
         }
 
-        view?.showScreen(comicDetailsFragment, AddProtocolFragment.TAG, addToBackStack = true, transitionContent = true)
+        view?.showScreen(content, AddProtocolFragment.TAG, addToBackStack = true, transitionContent = true)
+    }
+
+    override fun showPhotoPicker(protocolId:Long) {
+
+        var content = view?.supportFragmentMngr?.findFragmentByTag(PhotoPickerFragment.TAG )
+        if (content == null) {
+
+            clearBackStack()
+            content = PhotoPickerFragment.newInstance(protocolId)
+        }
+
+        view?.showScreen(content, PhotoPickerFragment.TAG, addToBackStack = true, transitionContent = true)
+    }
+
+    override fun showCameraPicker(protocolId:Long) {
+
+        var content = view?.supportFragmentMngr?.findFragmentByTag(CameraPickerFragment.TAG )
+        if (content == null) {
+
+            clearBackStack()
+            content = CameraPickerFragment.newInstance(protocolId)
+        }
+
+        view?.showScreen(content, CameraPickerFragment.TAG, addToBackStack = true, transitionContent = true)
     }
 
     private fun clearBackStack() {

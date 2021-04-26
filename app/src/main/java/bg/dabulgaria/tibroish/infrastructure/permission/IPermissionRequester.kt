@@ -6,11 +6,12 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import bg.dabulgaria.tibroish.infrastructure.di.annotations.PerActivity
 import javax.inject.Inject
 
 interface IPermissionRequester {
 
-    fun requestPermission(appPermission: AppPermission )
+    fun requestPermission(appPermission: AppPermission)
 
     fun hasPermission(appPermission: AppPermission): Boolean
 
@@ -35,8 +36,7 @@ class PermissionRequester @Inject constructor(private val activity: AppCompatAct
     }
 
     override fun shouldShowRequestPermissionRationale(appPermission: AppPermission): Boolean {
-        return ActivityCompat.shouldShowRequestPermissionRationale(activity,
-                appPermission.name)
+        return ActivityCompat.shouldShowRequestPermissionRationale(activity, appPermission.name)
     }
 
     companion object{

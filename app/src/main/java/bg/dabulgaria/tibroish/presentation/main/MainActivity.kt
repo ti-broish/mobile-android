@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.ui.AppBarConfiguration
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.infrastructure.permission.IPermissionResponseHandler
 import bg.dabulgaria.tibroish.presentation.base.BaseActivity
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
 import bg.dabulgaria.tibroish.presentation.navigation.NavigationDrawerFragment
@@ -49,6 +50,8 @@ class MainActivity : BaseActivity(),
     lateinit var resourceProvider: IResourceProvider
     @Inject
     lateinit var mainNavigator: IMainNavigator
+    @Inject
+    lateinit var permissionsResponseHandler: IPermissionResponseHandler
 
 
     private var drawerLayout :DrawerLayout? = null
@@ -109,6 +112,10 @@ class MainActivity : BaseActivity(),
             return true
         }
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        permissionsResponseHandler.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onSupportNavigateUp(): Boolean {

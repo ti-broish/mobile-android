@@ -10,7 +10,7 @@ import bg.dabulgaria.tibroish.domain.calculators.HashCalculator
 import bg.dabulgaria.tibroish.domain.calculators.IHashCalculator
 import bg.dabulgaria.tibroish.domain.providers.ITimestampProvider
 import bg.dabulgaria.tibroish.domain.providers.TimestampProvider
-import bg.dabulgaria.tibroish.persistence.local.MarvelsDatabase
+import bg.dabulgaria.tibroish.persistence.local.TiBroishDatabase
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.infrastructure.schedulers.SchedulersProvider
 
@@ -48,10 +48,10 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    internal fun providesMarvelsDatabase( @AppContext context: Context ) :MarvelsDatabase{
+    internal fun providesMarvelsDatabase( @AppContext context: Context ) :TiBroishDatabase{
 
         return Room.databaseBuilder( context,
-                                     MarvelsDatabase::class.java,
+                                     TiBroishDatabase::class.java,
                                      "marvels_db" )
                 .build()
     }

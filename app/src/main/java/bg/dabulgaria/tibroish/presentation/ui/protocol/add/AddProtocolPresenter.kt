@@ -3,27 +3,34 @@ package bg.dabulgaria.tibroish.presentation.ui.protocol.add
 import android.os.Bundle
 import android.util.Log
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.infrastructure.permission.AppPermission
+import bg.dabulgaria.tibroish.infrastructure.permission.IPermissionRequester
+import bg.dabulgaria.tibroish.infrastructure.permission.PermissionCodes
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.providers.INetworkInfoProvider
 import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
+import bg.dabulgaria.tibroish.presentation.main.IMainNavigator
 
 
 import javax.inject.Inject
 
 interface IAddProtocolPresenter: IBasePresenter<IAddProtocolView> {
 
+    fun onAddFromGalleryClick()
+
+    fun onAddFromCameraClick()
 }
 
-class AddProtocolPresenter @Inject
-constructor(private val schedulersProvider : ISchedulersProvider,
-            private val resourceProvider : IResourceProvider,
-            private val networkInfoProvider : INetworkInfoProvider,
-            dispHandler: IDisposableHandler) : BasePresenter<IAddProtocolView>(dispHandler),
-        IAddProtocolPresenter,
-        IDisposableHandler by dispHandler{
+class AddProtocolPresenter @Inject constructor(private val schedulersProvider : ISchedulersProvider,
+                                               private val resourceProvider : IResourceProvider,
+                                               private val networkInfoProvider : INetworkInfoProvider,
+                                               private val permissionRequester : IPermissionRequester,
+                                               private val mainNavigator : IMainNavigator,
+                                               dispHandler: IDisposableHandler)
+    : BasePresenter<IAddProtocolView>(dispHandler), IAddProtocolPresenter{
 
     var data :AddProtocolViewData? = null
 
@@ -38,6 +45,29 @@ constructor(private val schedulersProvider : ISchedulersProvider,
     }
 
     override fun loadData() {
+
+    }
+
+    override fun onAddFromCameraClick() {
+
+        val protocolId = data?.protocolId ?:return
+
+        val permission = PermissionCodes.READ_STORAGE
+        if(permissionRequester.hasPermission(permission)){
+            mainNavigator.showPhotoPicker(protocolId)
+        }
+        else if(data?.photosPermissionRequested == true
+                && !permissionRequester.shouldShowRequestPermissionRationale(permission) ){
+            mainNavigator.openAppSettings()
+        }
+        else{
+            data?.photosPermissionRequested = true
+            permissionRequester.requestPermission(permission)
+        }
+    }
+
+    override fun onAddFromGalleryClick() {
+        TODO("Not yet implemented")
     }
 
 //    fun loadComicDetails(refresh: Boolean, id:Long ) {
