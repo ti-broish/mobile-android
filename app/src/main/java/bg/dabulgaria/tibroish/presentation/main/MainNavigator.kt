@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentManager
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
-import bg.dabulgaria.tibroish.presentation.ui.photopicker.Camera.CameraPickerFragment
+import bg.dabulgaria.tibroish.presentation.ui.photopicker.camera.CameraPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolViewData

@@ -1,4 +1,4 @@
-package bg.dabulgaria.tibroish.presentation.ui.photopicker.Camera//package bg.dabulgaria.tibroish.presentation.ui.protocol.list
+package bg.dabulgaria.tibroish.presentation.ui.photopicker.camera//package bg.dabulgaria.tibroish.presentation.ui.protocol.list
 
 
 import android.content.Context

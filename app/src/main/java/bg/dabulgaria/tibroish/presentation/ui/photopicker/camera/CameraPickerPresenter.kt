@@ -1,7 +1,8 @@
-package bg.dabulgaria.tibroish.presentation.ui.photopicker.Camera//package bg.dabulgaria.tibroish.presentation.ui.protocol.list
+package bg.dabulgaria.tibroish.presentation.ui.photopicker.camera//package bg.dabulgaria.tibroish.presentation.ui.protocol.list
 
 import android.os.Bundle
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.domain.image.PickedImage
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.persistence.remote.ILocationsRemoteRepo
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
@@ -20,9 +21,9 @@ import javax.inject.Inject
 
 interface ICameraPickerPresenter : IBasePresenter<ICameraPickerView> {
 
-    fun onImageClick(photo: PhotoItem)
+    fun onImageClick(photo: PickedImage)
 
-    fun loadComics(refresh: Boolean )
+    fun loadComics(refresh: Boolean)
 }
 
 class CameraPickerPresenter @Inject constructor(private val interactor : ICameraPickerInteractor,
@@ -47,13 +48,14 @@ class CameraPickerPresenter @Inject constructor(private val interactor : ICamera
         outState.putSerializable(CameraPickerConstants.VIEW_DATA_KEY, data)
     }
 
-    override fun onImageClick(photo: PhotoItem) {
+    override fun loadData() {
 
-        TODO("Not Implemented")
+        add( Single.fromCallable(interactor))
     }
 
-    override fun loadData() {
-        TODO("Not yet implemented")
+    override fun onImageClick(photo: PickedImage) {
+
+        TODO("Not Implemented")
     }
 
     override fun loadComics(refresh: Boolean ) {

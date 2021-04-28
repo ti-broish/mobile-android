@@ -36,6 +36,6 @@ interface ActivityModule {
 
     @Binds
     @ActivityScope
-    fun bindsIPermissionRequester(implementation: PermissionResponseHandler): IPermissionResponseHandler
+    fun bindsIPermissionResponseHandler(implementation: PermissionResponseHandler): IPermissionResponseHandler
 
 }

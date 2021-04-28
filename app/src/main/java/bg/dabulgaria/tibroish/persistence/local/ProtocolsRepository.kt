@@ -23,13 +23,13 @@ constructor(private val database:TiBroishDatabase ) : IProtocolsRepository {
         return database.daoProtocol().getById( id )
     }
 
-    override fun insert(protocol: Protocol):Protocol {
+    override fun insert(protocol: Protocol) {
 
-        return database.daoProtocol().insert( protocol )
+        database.daoProtocol().insert( protocol )
     }
 
-    override fun update(protocol: Protocol):Protocol {
-        return database.daoProtocol().update(protocol)
+    override fun update(protocol: Protocol) {
+        database.daoProtocol().update(protocol)
     }
 
     override fun delete(protocol: Protocol) {
