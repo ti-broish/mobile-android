@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".presentation.ui.registration.RegisterActivity"
+            android:exported="true" />
+        <activity
             android:name=".presentation.ui.login.LoginActivity"
             android:exported="true" />
         <activity

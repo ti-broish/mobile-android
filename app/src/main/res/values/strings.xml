@@ -21,4 +21,22 @@
     <!-- Common -->
     <string name="invalid_email">Невалиден имейл адрес</string>
     <string name="invalid_password">Невалидна парола</string>
+    <string name="register_repeat_password">Повтори парола*</string>
+    <string name="register_password">Парола*</string>
+    <string name="register_data_consent">Съгласен съм да съхранявате данните ми и за целите на застъпнически кампании за следващите избори (след 04.04.2021).</string>
+    <string name="register_data_disclaimer">Данните ви се съхраняват по подразбиране до 30 дни след изборния ден на база на легитимния интерес на администратора и изискванията на Изборния кодекс.</string>
+    <string name="register_confirm_over_18">Имам навършени 18 години.*</string>
+    <string name="register_organization">Организация*</string>
+    <string name="register_last_4_digits_of_egn">Последни 4 цифри на ЕГН*</string>
+    <string name="register_telephone_number">Телефон*</string>
+    <string name="register_email">Имейл*</string>
+    <string name="register_first_name">Име*</string>
+    <string name="register_last_name">Фамилия*</string>
+    <string name="register_create_profile">Създай профил</string>
+    <string name="register_registration">Регистрация</string>
+    <string name="required_field">Това поле е задължително</string>
+    <string name="egn_four_digits_required">Невалидни цифри от ЕГН (последните 4)</string>
+    <string name="passwords_do_not_match">Невалидна парола. Проверете дали паролите съвпадат.</string>
+    <string name="invalid_password_too_short">Невалидна парола. Паролата трябва да съдържа 6 или повече символа.</string>
+    <string name="confirm_over_18">Моля потвърдете, че имате навършени 18 години</string>
 </resources>
