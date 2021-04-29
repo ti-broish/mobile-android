@@ -54,5 +54,4 @@
     <string name="confirm_over_18">Моля потвърдете, че имате навършени 18 години</string>
     <string name="invalid_phone_number">Невалиден формат на телефонен номер.</string>
     <string name="invalid_organization">Изберете организация от списъка</string>
-
 </resources>

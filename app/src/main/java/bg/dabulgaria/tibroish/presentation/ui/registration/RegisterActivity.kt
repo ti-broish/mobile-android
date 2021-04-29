@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.*
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
-
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -21,7 +20,6 @@ class RegisterActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this).get(RegisterActivityViewModel::class.java)
 
-
         setupCountryCodes()
         setupOrganizations()
         setupRegisterButton()
@@ -36,7 +34,6 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun setupOrganizations() {
-
         viewModel.getOrganizations().observe(this, Observer {
             val adapter = OrganizationsAdapter(this, it)
             val dropdown = findViewById<AutoCompleteTextView>(R.id.input_organization_dropdown)
@@ -57,7 +54,6 @@ class RegisterActivity : AppCompatActivity() {
             dropdown.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 dropdown.setText(adapter.getItem(position)?.code, /* filter= */ false)
                 adapter.filter.filter(null)
-
             }
         })
     }

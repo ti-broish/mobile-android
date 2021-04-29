@@ -16,7 +16,6 @@ class RegisterActivityViewModel(application: Application) : AndroidViewModel(app
     private var organizationsData: MutableLiveData<List<Organization>> = MutableLiveData()
     private var formValidator: FormValidator = FormValidator()
 
-
     fun getCountryCodes(): MutableLiveData<List<CountryCode>> {
         if (countryCodesData.value == null) {
             loadCountryCodesAsync()
@@ -37,13 +36,11 @@ class RegisterActivityViewModel(application: Application) : AndroidViewModel(app
                 Organization("Organization 1", "123"),
                 Organization("Hello 2", "124"),
                 Organization("Test 3", "125")))
-
         organizationsData.value = organizations
     }
 
     private fun loadCountryCodesAsync() {
         val json: String? = AssetReader().loadJsonFromAsset(
-
                 "phone-codes.json",
                 getApplication<Application>().assets)
         val fromJson = Gson().fromJson(json, Countries::class.java)
