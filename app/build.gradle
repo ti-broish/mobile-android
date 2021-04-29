@@ -91,6 +91,9 @@ dependencies {
     // Volley
     api 'com.android.volley:volley:1.2.0'
 
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.6'
+
     // Test
     testImplementation 'junit:junit:4.13'
     //testImplementation 'org.mockito:mockito-core:2.+'
