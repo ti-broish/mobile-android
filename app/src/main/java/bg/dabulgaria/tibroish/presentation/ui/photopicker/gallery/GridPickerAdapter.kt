@@ -8,51 +8,25 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.Locations.LocationsS
 import bg.dabulgaria.tibroish.domain.Locations.RegionS
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import kotlinx.android.synthetic.main.gallery_picker_photo_item.view.*
 import javax.inject.Inject
 
 
-class GridPickerAdapter @Inject constructor(val presenter: IPhotoPickerPresenter)
-    : RecyclerView.Adapter<GridPickerAdapter.ComicViewHolder>() {
+class GridPickerAdapter @Inject constructor(private val presenter: IPhotoPickerPresenter)
+    : RecyclerView.Adapter<GridPickerAdapter.PickerImageViewHolder>() {
 
-    val list = mutableListOf<RegionS>()
+    val list = mutableListOf<PhotoItem>()
 
-    class ComicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class PickerImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-        internal val titleTextView: AppCompatTextView = itemView.findViewById(R.id.titleTextView)
-        internal val comicImageView: AppCompatImageView = itemView.findViewById(R.id.comicImageView)
-
-        internal fun bind(regionS: RegionS?) {
-
-            if (regionS == null)
-                return
-
-            titleTextView.text = regionS.name
-//            Glide.with(this.itemView)
-//                    .load(regionS.thumbUlr)
-//                    .transition(DrawableTransitionOptions.withCrossFade())
-//                    .into(comicImageView)
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComicViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PickerImageViewHolder {
 
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.adapter_list_item, parent, false)
-        val viewHodler = ComicViewHolder(view)
-
-        viewHodler.itemView.setOnClickListener {
-
-            val position = viewHodler.getAdapterPosition()
-            if (position != RecyclerView.NO_POSITION) {
-
-                val comic = list.get(position)
-                //presenter.onComicClick(ComicDetailsViewData(comic))
-            }
-        }
-
-        return viewHodler
+        val view = inflater.inflate(R.layout.gallery_picker_photo_item, parent, false)
+        return PickerImageViewHolder(view)
     }
 
     override fun getItemCount(): Int {
@@ -60,23 +34,32 @@ class GridPickerAdapter @Inject constructor(val presenter: IPhotoPickerPresenter
         return list.size
     }
 
-    override fun onBindViewHolder(holder: ComicViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PickerImageViewHolder, position: Int) {
 
-        if (list.size <= position)
-            holder.bind(null)
-        else {
+        val item = list[position]
 
-            holder.bind(list[position])
-        }
+        Glide.with(holder.itemView)
+                .load(item.imageFilePath)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(holder.itemView.photoImageView)
+
+        holder.itemView.photoImageView.setOnClickListener { presenter.onImageClick(item, position) }
+        holder.itemView.photoCheckBox.setOnClickListener { presenter.onImageClick(item, position) }
+        holder.itemView.photoCheckBox.isChecked = item.isSelected
     }
 
-    fun updateList( locationsS: LocationsS) {
+    fun updateList(newItemsList:List<PhotoItem>) {
 
         list.clear()
-        if ( !locationsS.regions.isNullOrEmpty() )
-            list.addAll(locationsS.regions)
+        list.addAll(newItemsList)
 
         notifyDataSetChanged()
+    }
+
+    fun updateItem(photoItem:PhotoItem, index:Int) {
+
+        list[index]=photoItem
+        notifyItemChanged(index)
     }
 
     companion object {

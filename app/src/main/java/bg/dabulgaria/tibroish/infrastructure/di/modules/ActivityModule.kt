@@ -20,10 +20,6 @@ interface ActivityModule {
 
     @Binds
     @ActivityScope
-    fun bindsMainNavigator(implementation: MainNavigator): IMainNavigator
-
-    @Binds
-    @ActivityScope
     fun bindsIDisposableHandler(implementation: DisposableHandler):IDisposableHandler
 
     @Binds

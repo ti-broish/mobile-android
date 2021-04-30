@@ -1,6 +1,7 @@
 package bg.dabulgaria.tibroish.infrastructure.di.modules
 
 import android.content.Context
+import androidx.core.view.ViewCompat
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -22,9 +23,13 @@ import androidx.room.Room
 import bg.dabulgaria.tibroish.domain.config.IAppConfigRepository
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.providers.Logger
+import bg.dabulgaria.tibroish.infrastructure.di.annotations.ActivityScope
 import bg.dabulgaria.tibroish.persistence.local.AppConfigRepository
 import bg.dabulgaria.tibroish.persistence.remote.ILocationsRemoteRepo
 import bg.dabulgaria.tibroish.persistence.remote.LocationsRemoteRepo
+import bg.dabulgaria.tibroish.presentation.main.IMainNavigator
+import bg.dabulgaria.tibroish.presentation.main.MainNavigator
+import dagger.Binds
 
 
 @Module
@@ -45,6 +50,10 @@ class ApplicationModule {
                 .setDateFormat("dd/mm/yyyy HH:mm")
                 .create()
     }
+
+    @Provides
+    @Singleton
+    fun bindsMainNavigator(implementation: MainNavigator): IMainNavigator = implementation
 
     @Provides
     @Singleton

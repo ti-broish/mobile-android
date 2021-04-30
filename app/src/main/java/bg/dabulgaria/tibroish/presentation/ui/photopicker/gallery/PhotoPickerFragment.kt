@@ -7,24 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.recyclerview.widget.GridLayoutManager
 
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.Locations.LocationsS
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_comic_list.*
+import kotlinx.android.synthetic.main.fragment_photo_picker.*
 
 interface IPhotoPickerView : IBaseView {
 
-    fun onLoadingStateChange(isLoading : Boolean );
+    fun onLoadingStateChange(viewState: ViewState)
 
-    fun onComicsLoaded(locations : LocationsS )
+    fun onDataLoaded(viewData: PhotoPickerViewData)
 
-    fun onError( errorMessage: String)
+    fun onItemUpdated(photoItem:PhotoItem, index:Int)
 }
 
 class PhotoPickerFragment : BasePresentableFragment<IPhotoPickerView, IPhotoPickerPresenter>(), IPhotoPickerView {
@@ -44,38 +41,56 @@ class PhotoPickerFragment : BasePresentableFragment<IPhotoPickerView, IPhotoPick
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        listRecyclerView?.setLayoutManager(LinearLayoutManager(activity, RecyclerView.VERTICAL, false))
-        adapter = GridPickerAdapter(presenter)
-        listRecyclerView?.setAdapter( adapter )
+        listRecyclerView?.layoutManager = GridLayoutManager(activity, 3)
+        adapter = GridPickerAdapter(presenter = presenter)
+        listRecyclerView?.adapter = adapter
 
-        emptyListText?.setVisibility(View.GONE)
+        infoText?.setVisibility(View.GONE)
 
-        listSwipeRefreshLayout?.setColorSchemeResources(android.R.color.holo_orange_dark)
-        listSwipeRefreshLayout?.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
-
-            presenter.loadComics(true)
-        })
+        listSwipeRefreshLayout?.setColorSchemeResources(R.color.colorPrimary)
+        listSwipeRefreshLayout?.setOnRefreshListener { presenter.loadData() }
     }
 
     //region IComicListView implementation
-    override fun onLoadingStateChange(isLoading: Boolean) {
+    override fun onLoadingStateChange(viewState: ViewState) {
 
-        listSwipeRefreshLayout?.setRefreshing(isLoading)
+        listSwipeRefreshLayout?.isRefreshing = (viewState == ViewState.Loading)
+        actionButton?.setOnClickListener { presenter.onDoneClick() }
+        infoText?.visibility =  View.GONE
+        actionButton?.setText( R.string.add )
+
+        when(viewState){
+
+            ViewState.Loaded -> {
+                infoText?.setText(R.string.list_is_empty)
+            }
+
+            ViewState.NoPermission -> {
+
+                infoText?.setText(R.string.app_has_no_image_permissions)
+                infoText?.visibility =  View.VISIBLE
+                actionButton?.setText( R.string.give_permission )
+                actionButton?.setOnClickListener { presenter.onRequestPermissionClick() }
+            }
+        }
     }
 
-    override fun onComicsLoaded(locationsS: LocationsS) {
+    override fun onDataLoaded(data: PhotoPickerViewData) {
 
-        adapter?.updateList(locationsS )
+        adapter?.updateList( data.photoItems )
+        infoText?.visibility = if (data.photoItems.isEmpty()) View.VISIBLE else View.GONE
+    }
 
-        val listIsEmpty = locationsS.regions.isNullOrEmpty()
-        emptyListText?.setVisibility(if (listIsEmpty) View.VISIBLE else View.GONE)
+    override fun onItemUpdated(photoItem:PhotoItem, index:Int){
+
+        adapter?.updateItem(photoItem, index)
     }
 
     override fun onError(errorMessage: String) {
 
         adapter?.notifyDataSetChanged()
 
-        emptyListText?.setVisibility( if( adapter?.itemCount == 0 ) View.VISIBLE else View.INVISIBLE )
+        infoText?.setVisibility( if( adapter?.itemCount == 0 ) View.VISIBLE else View.INVISIBLE )
 
         Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show()
     }

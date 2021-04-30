@@ -15,4 +15,10 @@ interface IMainNavigator: OnMenuClickListener {
     fun showPhotoPicker(protocolId:Long)
 
     fun showCameraPicker(protocolId:Long)
+
+    fun navigateBack()
+
+    fun onPermissionResult(permissionCode:Int, granted:Boolean)
+
+    var permissionResponseListener: IPermissionResponseListener?
 }

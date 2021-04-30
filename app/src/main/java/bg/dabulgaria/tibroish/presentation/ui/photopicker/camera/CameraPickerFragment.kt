@@ -20,11 +20,9 @@ import kotlinx.android.synthetic.main.fragment_comic_list.*
 
 interface ICameraPickerView : IBaseView {
 
-    fun onLoadingStateChange(isLoading : Boolean );
+    fun onLoadingStateChange(isLoading : Boolean )
 
     fun onComicsLoaded(locations : LocationsS )
-
-    fun onError( errorMessage: String)
 }
 
 class CameraPickerFragment : BasePresentableFragment<ICameraPickerView,ICameraPickerPresenter>(), ICameraPickerView {
@@ -48,12 +46,12 @@ class CameraPickerFragment : BasePresentableFragment<ICameraPickerView,ICameraPi
         mAdapter = CameraPickerAdapter(presenter)
         listRecyclerView?.setAdapter( mAdapter )
 
-        emptyListText?.setVisibility(View.GONE)
+        infoText?.setVisibility(View.GONE)
 
         listSwipeRefreshLayout?.setColorSchemeResources(android.R.color.holo_orange_dark)
         listSwipeRefreshLayout?.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
 
-            presenter.loadComics(true)
+            presenter.reload()
         })
     }
 
@@ -68,14 +66,14 @@ class CameraPickerFragment : BasePresentableFragment<ICameraPickerView,ICameraPi
         mAdapter?.updateList(locationsS )
 
         val listIsEmpty = locationsS.regions.isNullOrEmpty()
-        emptyListText?.setVisibility(if (listIsEmpty) View.VISIBLE else View.GONE)
+        infoText?.setVisibility(if (listIsEmpty) View.VISIBLE else View.GONE)
     }
 
     override fun onError(errorMessage: String) {
 
         mAdapter?.notifyDataSetChanged()
 
-        emptyListText?.setVisibility( if( mAdapter?.itemCount == 0 ) View.VISIBLE else View.INVISIBLE )
+        infoText?.setVisibility( if( mAdapter?.itemCount == 0 ) View.VISIBLE else View.INVISIBLE )
 
         Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show()
     }

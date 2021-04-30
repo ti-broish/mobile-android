@@ -19,6 +19,7 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
     :IMainNavigator{
 
     private var view: IMainScreenView? = null
+    override var permissionResponseListener: IPermissionResponseListener? = null
 
     override fun setView(view: IMainScreenView?) {
 
@@ -35,7 +36,9 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
                 showHomeScreen()
             }
             NavItemAction.Profile ->{}
-            NavItemAction.SendProtocol -> {}
+            NavItemAction.SendProtocol -> {
+                showAddProtocol()
+            }
             NavItemAction.SendSignal -> {}
             NavItemAction.MyProtocols -> {}
             NavItemAction.MySignals -> {}
@@ -89,7 +92,6 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
         var content = view?.supportFragmentMngr?.findFragmentByTag(PhotoPickerFragment.TAG )
         if (content == null) {
 
-            clearBackStack()
             content = PhotoPickerFragment.newInstance(protocolId)
         }
 
@@ -106,6 +108,15 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
         }
 
         view?.showScreen(content, CameraPickerFragment.TAG, addToBackStack = true, transitionContent = true)
+    }
+
+    override fun navigateBack() {
+        view?.navigateBack()
+    }
+
+    override fun onPermissionResult(permissionCode:Int, granted:Boolean){
+
+        permissionResponseListener?.onPermissionResult(permissionCode, granted)
     }
 
     private fun clearBackStack() {

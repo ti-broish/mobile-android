@@ -1,6 +1,11 @@
 package bg.dabulgaria.tibroish.presentation.base
 
 import android.os.Bundle
+import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.presentation.providers.INetworkInfoProvider
+import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
+import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerPresenter
+import javax.inject.Inject
 
 interface IBasePresenter<IView: IBaseView>  {
 
@@ -15,6 +20,10 @@ interface IBasePresenter<IView: IBaseView>  {
     fun onViewHide()
 
     fun onSaveData(outState: Bundle)
+
+    fun loadData()
+
+    fun onError( throwable : Throwable )
 }
 
 abstract class BasePresenter<IView:IBaseView> ( disposableHandler: IDisposableHandler)
@@ -22,7 +31,11 @@ abstract class BasePresenter<IView:IBaseView> ( disposableHandler: IDisposableHa
 
     var view:IView? = null
 
-    abstract fun loadData()
+    @Inject
+    lateinit var networkInfoProvider :INetworkInfoProvider
+
+    @Inject
+    lateinit var resourceProvider :IResourceProvider
 
     override fun onViewCreated(view: IView) {
         this.view = view
@@ -37,6 +50,16 @@ abstract class BasePresenter<IView:IBaseView> ( disposableHandler: IDisposableHa
     }
 
     override fun onViewHide() {
+    }
+
+    override fun onError( throwable : Throwable ){
+
+        val resId = if( !networkInfoProvider.isNetworkConnected )
+                    R.string.internet_connection_offline
+                else
+                    R.string.oops_went_wrong_try
+
+        view?.onError(resourceProvider.getString(resId ) )
     }
 
 }

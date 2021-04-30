@@ -17,8 +17,6 @@ import javax.inject.Inject
 interface IAddProtocolView : IBaseView {
 
     fun onLoadingStateChange( isLoading : Boolean )
-
-    fun onError( errorMessage: String)
 }
 
 class AddProtocolFragment @Inject constructor()

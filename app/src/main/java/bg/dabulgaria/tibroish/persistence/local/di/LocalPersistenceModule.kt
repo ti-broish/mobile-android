@@ -14,5 +14,5 @@ interface LocalPersistenceModule {
     fun bindsIProtocolsRepository(implementation: ProtocolsRepository): IProtocolsRepository
 
     @Binds
-    fun bindsIProtocolsRepository(implementation: GalleryImagesRepository): IGalleryImagesRepository
+    fun bindsIGalleryImagesRepository(implementation: GalleryImagesRepository): IGalleryImagesRepository
 }

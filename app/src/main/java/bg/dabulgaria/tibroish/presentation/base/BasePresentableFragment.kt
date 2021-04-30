@@ -2,6 +2,8 @@ package bg.dabulgaria.tibroish.presentation.base
 
 import android.os.Bundle
 import android.view.View
+import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerPresenter
 import javax.inject.Inject
 
 open class BasePresentableFragment<IView:IBaseView, IPresenter:IBasePresenter<IView>>: BaseFragment() {
@@ -44,5 +46,4 @@ open class BasePresentableFragment<IView:IBaseView, IPresenter:IBasePresenter<IV
         presenter.onSaveData(outState = outState)
         super.onSaveInstanceState(outState)
     }
-
 }

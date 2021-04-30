@@ -25,19 +25,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-interface IMainScreenView{
 
-    fun showScreen(content : Fragment,
-                   contentTag : String,
-                   addToBackStack : Boolean,
-                   transitionContent : Boolean)
-
-    fun setRequestedOrientation( orientation:Int)
-
-    val supportFragmentMngr: FragmentManager?
-
-    val appCompatActivity: AppCompatActivity
-}
 
 class MainActivity : BaseActivity(),
         IMainScreenView,
@@ -53,13 +41,10 @@ class MainActivity : BaseActivity(),
     @Inject
     lateinit var permissionsResponseHandler: IPermissionResponseHandler
 
-
     private var drawerLayout :DrawerLayout? = null
     private var navigationDrawerFragment :NavigationDrawerFragment ? = null
 
     private lateinit var navController: NavController
-    private lateinit var appBarConfiguration :AppBarConfiguration
-    private var mContentFragment: Fragment? = null
 
     //region AppCompatActivity overrides
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,35 +59,16 @@ class MainActivity : BaseActivity(),
         navigationDrawerFragment?.setUp(R.id.navigation_drawer, drawerLayout, this)
 
         drawerLayout?.closeDrawers()
+
+        mainNavigator.setView(this)
+
+        if( savedInstanceState == null)
+            mainNavigator.showHomeScreen()
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        // Always call the superclass so it can restore the view hierarchy
-        super.onRestoreInstanceState(savedInstanceState)
-        // Restore state members from saved instance
-        mContentFragment = supportFragmentManager.getFragment(savedInstanceState!!, MainActivity.KEY_LAST_FRAGMENT)
-    }
-
-    override fun onSaveInstanceState(savedInstanceState: Bundle) {
-
-        if (mContentFragment != null && mContentFragment?.isAdded() == true) {
-            supportFragmentManager.putFragment(savedInstanceState,
-                    KEY_LAST_FRAGMENT, mContentFragment!!)
-        }
-        // Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        // make sure we always have some default
-        if (mContentFragment == null)
-            mContentFragment = HomeFragment.newInstance()
-
-        // no backstack here
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.container, mContentFragment!!)
-                .commit()
+    override fun onDestroy() {
+        mainNavigator.setView(null)
+        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -114,6 +80,7 @@ class MainActivity : BaseActivity(),
         return super.onCreateOptionsMenu(menu)
     }
 
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         permissionsResponseHandler.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
@@ -121,11 +88,6 @@ class MainActivity : BaseActivity(),
     override fun onSupportNavigateUp(): Boolean {
 
         return navController.navigateUp() || super.onSupportNavigateUp()
-    }
-
-    override fun onStart() {
-
-        super.onStart()
     }
     //region AppCompatActivity overrides
 
@@ -170,11 +132,6 @@ class MainActivity : BaseActivity(),
         return dispatchingAndroidInjector
     }
 
-    override val appCompatActivity: AppCompatActivity
-        get() = this
-
-    override val supportFragmentMngr: FragmentManager?
-      = this.supportFragmentManager
 
     companion object{
 

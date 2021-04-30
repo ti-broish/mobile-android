@@ -76,7 +76,8 @@ class GalleryImagesRepository @Inject constructor(@AppContext private val contex
                 list.add( PickedImage(id.toString(),
                         PickedImageSource.Gallery,
                         imageFilePath,
-                        Size(width, height),
+                        width,
+                        height,
                         calendar.time))
             }
 

@@ -23,13 +23,11 @@ interface ICameraPickerPresenter : IBasePresenter<ICameraPickerView> {
 
     fun onImageClick(photo: PickedImage)
 
-    fun loadComics(refresh: Boolean)
+    fun reload()
 }
 
 class CameraPickerPresenter @Inject constructor(private val interactor : ICameraPickerInteractor,
                                                private val schedulersProvider : ISchedulersProvider,
-                                               private val resourceProvider : IResourceProvider,
-                                               private val networkInfoProvider : INetworkInfoProvider,
                                                private val logger: ILogger,
                                                private val mainRouter: IMainNavigator,
                                                private val locationsRemoteRepo: ILocationsRemoteRepo,
@@ -50,16 +48,16 @@ class CameraPickerPresenter @Inject constructor(private val interactor : ICamera
 
     override fun loadData() {
 
-        add( Single.fromCallable(interactor))
+    }
+
+    override fun reload() {
+
+        loadData()
     }
 
     override fun onImageClick(photo: PickedImage) {
 
         TODO("Not Implemented")
-    }
-
-    override fun loadComics(refresh: Boolean ) {
-        add( getLocations( refresh ) )
     }
 
     private fun getLocations(refresh: Boolean) : Disposable {
@@ -79,19 +77,11 @@ class CameraPickerPresenter @Inject constructor(private val interactor : ICamera
 
     }
 
-    private fun onError( throwable : Throwable ){
+    override fun onError( throwable : Throwable ){
 
         logger.e(TAG, throwable.message, throwable)
 
         view?.onLoadingStateChange(false )
-
-        val resId =
-                if( !networkInfoProvider.isNetworkConnected )
-                    R.string.internet_connection_offline
-                else
-                    R.string.oops_went_wrong_try
-
-        view?.onError(resourceProvider.getString(resId ) )
     }
 
 

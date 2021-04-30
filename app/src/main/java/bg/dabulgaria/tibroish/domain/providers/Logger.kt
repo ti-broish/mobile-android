@@ -8,6 +8,10 @@ class Logger : ILogger {
         Log.e(tag, message, throwable)
     }
 
+    override fun e( tag:String?, throwable: Throwable? ){
+        Log.e(tag, throwable?.message, throwable)
+    }
+
     override fun i(tag: String?, message: String?) {
         Log.i(tag, message)
     }
