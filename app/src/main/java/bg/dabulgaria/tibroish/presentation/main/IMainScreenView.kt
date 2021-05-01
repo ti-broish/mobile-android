@@ -18,4 +18,6 @@ interface IMainScreenView{
     val supportFragmentMngr: FragmentManager?
 
     val appCompatActivity: AppCompatActivity
+
+    fun onAuthEvent(coldStart:Boolean)
 }

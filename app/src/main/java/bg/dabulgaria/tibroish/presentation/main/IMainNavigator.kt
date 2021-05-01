@@ -23,4 +23,6 @@ interface IMainNavigator: OnMenuClickListener {
     fun showCameraPicker(protocolId:Long)
 
     fun showLoginScreen()
+
+    fun onAuthEvent()
 }

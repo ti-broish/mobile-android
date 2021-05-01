@@ -40,8 +40,8 @@ class MainActivity : BaseActivity(),
     lateinit var mainNavigator: IMainNavigator
     @Inject
     lateinit var permissionsResponseHandler: IPermissionResponseHandler
-//    @Inject
-//    lateinit var firebaseAuth: FirebaseAuth
+
+    private lateinit var auth: FirebaseAuth
 
     private var drawerLayout :DrawerLayout? = null
     private var navigationDrawerFragment :NavigationDrawerFragment ? = null
@@ -54,6 +54,8 @@ class MainActivity : BaseActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        auth = FirebaseAuth.getInstance()
+
         navigationDrawerFragment = supportFragmentManager.findFragmentById(R.id.navigation_drawer) as NavigationDrawerFragment?
 
         drawerLayout = findViewById(R.id.drawerLayout)
@@ -64,19 +66,7 @@ class MainActivity : BaseActivity(),
 
         mainNavigator.setView(this)
 
-        val user = 1// TODO get from firebaseAuth.currentUser
-        if( user != null ){
-
-            mainNavigator.showLoginScreen()
-            drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-            navigationDrawerFragment?.setEnabled( false )
-        }
-        else if( savedInstanceState == null ) {
-
-            mainNavigator.showHomeScreen()
-            drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-            navigationDrawerFragment?.setEnabled( true )
-        }
+        onAuthEvent(coldStart = savedInstanceState == null )
     }
 
     override fun onDestroy() {
@@ -111,6 +101,25 @@ class MainActivity : BaseActivity(),
         mainNavigator.onNavigateToItem(action)
     }
     //endregion OnMenuClickListener implementation
+
+    //region IMainView implementation
+    override fun onAuthEvent(coldStart:Boolean) {
+
+        val user = auth.currentUser
+        if( user == null ){
+
+            mainNavigator.showLoginScreen()
+            drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            navigationDrawerFragment?.setEnabled( false )
+        }
+        else if(coldStart) {
+
+            mainNavigator.showHomeScreen()
+            drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            navigationDrawerFragment?.setEnabled( true )
+        }
+    }
+    //endregion IMainView implementation
 
     private fun restoreActionBar() {
         val actionBar = supportActionBar

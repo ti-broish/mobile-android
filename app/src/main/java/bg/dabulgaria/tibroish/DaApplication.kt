@@ -19,8 +19,7 @@ class DaApplication : Application(), HasAndroidInjector {
     override fun onCreate() {
 
         super.onCreate()
-
-        //FirebaseApp.initializeApp(this)
+        FirebaseApp.initializeApp(this);
 
         DaggerApplicationComponent.builder()
                 .application( this )

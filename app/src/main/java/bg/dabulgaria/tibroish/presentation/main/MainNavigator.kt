@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentManager
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
-import bg.dabulgaria.tibroish.presentation.ui.login.LoginFragment
+import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginFragment
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.camera.CameraPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolFragment
@@ -25,6 +25,11 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
     override fun setView(view: IMainScreenView?) {
 
         this.view = view
+    }
+
+    override fun onAuthEvent() {
+
+        view?.onAuthEvent(true)
     }
 
     override fun onNavigateToItem(action: NavItemAction) {

@@ -11,7 +11,7 @@ import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.main.IMainScreenView
 import dagger.android.AndroidInjection
 
-open class BaseActivity : AppCompatActivity(), IMainScreenView {
+abstract class BaseActivity : AppCompatActivity(), IMainScreenView {
 
     //region show screen
     override fun showScreen(content: Fragment,

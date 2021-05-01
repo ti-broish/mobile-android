@@ -4,6 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'org.openapi.generator'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
@@ -43,7 +44,7 @@ android {
         }
         staging{
 
-            applicationId = "bg.dabulgaria.tibroishstage"
+            applicationId = "bg.dabulgaria.tibroish.apn"
             def APP_NAME = "Ти Броиш Stage"
             resValue "string", "app_name", APP_NAME
         }
