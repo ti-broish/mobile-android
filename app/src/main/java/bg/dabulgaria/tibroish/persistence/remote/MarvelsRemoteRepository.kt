@@ -23,21 +23,7 @@ constructor(private var apiController : MarvelsApiController,
 
     override fun getComicsList(limit: Long ) : Single<List<Comic>> {
 
-        val timeStamp = timestampProvider.getTimeStamp()
-        return apiController.getComics( timeStamp, publicKey, calculateHash(timeStamp), limit )
-                .map{
-
-                    comicDataResponse ->
-                    val list = mutableListOf<Comic>()
-
-                    if( comicDataResponse .data?.results?.size == 0)
-                        return@map list
-
-                    for( comic in comicDataResponse.data?.results?.sortedByDescending { it-> it.id }.orEmpty() )
-                        list.add( createFrom( comic ))
-
-                    return@map list
-                }
+        return Single.just( emptyList())
     }
 
     override fun getComicDetails(comicId : Long) : Single<Comic> {

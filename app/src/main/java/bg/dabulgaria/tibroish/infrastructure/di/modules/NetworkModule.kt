@@ -2,9 +2,11 @@ package bg.dabulgaria.tibroish.infrastructure.di.modules
 
 import com.google.gson.Gson
 import bg.dabulgaria.tibroish.BuildConfig
+import bg.dabulgaria.tibroish.domain.config.IAppConfigRepository
 import bg.dabulgaria.tibroish.persistence.remote.MarvelsApiController
 import bg.dabulgaria.tibroish.persistence.remote.VDApiController
 import bg.dabulgaria.tibroish.persistence.remote.VDApiInterceptor
+import bg.dabulgaria.tibroish.persistence.remote.api.TiBroishApiController
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -33,33 +35,29 @@ class NetworkModule() {
                 .build()
     }
 
-
     @Provides
     @Singleton
-    fun providesMarvelsApiController( okHttpClient : OkHttpClient, gson : Gson ): MarvelsApiController{
+    fun providesTiBroishApiController( okHttpClient : OkHttpClient,
+                                      gson : Gson,
+                                      appConfigRepo: IAppConfigRepository): TiBroishApiController{
 
         val retrofit = Retrofit.Builder()
-                .baseUrl( BuildConfig.API_ENDPOINT)
+                .baseUrl( getTiBroishEndpoint(appConfigRepo) )
                 .client( okHttpClient )
                 .addConverterFactory( GsonConverterFactory.create( gson ) )
                 .addCallAdapterFactory( RxJava3CallAdapterFactory.create() )
                 .build()
 
-        return retrofit.create(MarvelsApiController::class.java )
+        return retrofit.create(TiBroishApiController::class.java )
     }
 
-    @Provides
-    @Singleton
-    fun providesVDApiController( okHttpClient : OkHttpClient, gson : Gson ): VDApiController{
+    private fun getTiBroishEndpoint(appConfigRepo: IAppConfigRepository):String{
 
-        val retrofit = Retrofit.Builder()
-                .baseUrl( BuildConfig.VD_API_ENDPOINT)
-                .client( okHttpClient )
-                .addConverterFactory( GsonConverterFactory.create( gson ) )
-                .addCallAdapterFactory( RxJava3CallAdapterFactory.create() )
-                .build()
-
-        return retrofit.create(VDApiController::class.java )
+        val config = appConfigRepo.appConfig
+        if(BuildConfig.FLAVOR == "production")
+            return config.apiBaseUrl
+        else
+            return config.apiBaseUrlStage
     }
 
 }

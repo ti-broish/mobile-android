@@ -12,3 +12,4 @@
 /.git
 /.gradle
 app/src/main/assets/appconfig.properties
+app/docs-json.json

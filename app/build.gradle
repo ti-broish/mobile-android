@@ -3,6 +3,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.dokka'
+apply plugin: "com.yelp.codegen.plugin"
+apply plugin: 'org.openapi.generator'
 
 android {
     compileSdkVersion 29
@@ -67,6 +69,11 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofit2Version"
     implementation "com.squareup.retrofit2:converter-scalars:$retrofit2Version"
 
+    implementation "com.squareup.moshi:moshi:1.11.0"
+    implementation "com.squareup.moshi:moshi-adapters:1.11.0"
+    implementation "com.squareup.okhttp3:okhttp:4.5.0"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.11.0"
+
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
@@ -75,6 +82,7 @@ dependencies {
 
     implementation 'io.reactivex.rxjava3:rxjava:3.0.6'
     implementation 'io.reactivex.rxjava3:rxkotlin:3.0.1'
+
     // Dagger core
     api "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
@@ -105,5 +113,19 @@ dependencies {
 }
 
 repositories {
+    jcenter()
     mavenCentral()
+}
+
+openApiGenerate {
+    generatorName = "kotlin"
+    inputSpec = "$rootDir/app/docs-json.json".toString()
+    outputDir = "$buildDir/generated".toString()
+    apiPackage = "bg.dabulgaria.tibroish.persistence.api"
+    invokerPackage = "bg.dabulgaria.tibroish.persistence.repo"
+    modelPackage = "bg.dabulgaria.tibroish.persistence.remote.model"
+    validateSpec = false
+    configOptions = [
+            dateLibrary: "java8"
+    ]
 }

@@ -14,11 +14,13 @@ class AppConfigRepository @Inject constructor(@AppContext private val context: C
             val properties = Properties()
             val inputStream = context.getAssets().open("appconfig.properties")
             properties.load(inputStream)
-            return AppConfig(properties.getProperty(API_BASE_URL_KEY))
+            return AppConfig(properties.getProperty(API_BASE_URL_KEY),
+                    properties.getProperty(API_BASE_URL_STAGE_KEY))
         }
 
     companion object{
 
-        val API_BASE_URL_KEY = "ApiBaseUrl"
+        const val API_BASE_URL_KEY = "ApiBaseUrl"
+        const val API_BASE_URL_STAGE_KEY = "ApiBaseUrlStage"
     }
 }
