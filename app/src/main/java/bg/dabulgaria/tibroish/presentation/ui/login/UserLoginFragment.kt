@@ -1,11 +1,13 @@
 package bg.dabulgaria.tibroish.presentation.ui.login
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import bg.dabulgaria.tibroish.R
+import com.google.firebase.auth.FirebaseAuth
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,12 +24,16 @@ class UserLoginFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private var mAuth: FirebaseAuth? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+        mAuth = FirebaseAuth.getInstance()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
