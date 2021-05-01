@@ -82,10 +82,10 @@ class ApplicationModule {
         return Logger()
     }
 
-    @Provides
-    @Singleton
-    fun providesFirebaseAuth(): FirebaseAuth {
-
-        return FirebaseAuth.getInstance()
-    }
+//    @Provides
+//    @Singleton
+//    fun providesFirebaseAuth(): FirebaseAuth {
+//
+//        return FirebaseAuth.getInstance()
+//    }
 }

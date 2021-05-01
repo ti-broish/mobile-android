@@ -1,25 +1,17 @@
 package bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery//package bg.dabulgaria.tibroish.presentation.ui.protocol.list
 
+
 import android.os.Bundle
-import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.infrastructure.permission.IPermissionRequester
 import bg.dabulgaria.tibroish.infrastructure.permission.PermissionCodes
-import bg.dabulgaria.tibroish.persistence.remote.ILocationsRemoteRepo
+import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
-import bg.dabulgaria.tibroish.presentation.providers.INetworkInfoProvider
-import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
 import bg.dabulgaria.tibroish.presentation.main.IMainNavigator
-import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.main.IPermissionResponseListener
-import bg.dabulgaria.tibroish.presentation.ui.photopicker.camera.CameraPickerPresenter
 import io.reactivex.rxjava3.core.Single
-
-import io.reactivex.rxjava3.disposables.Disposable
-
-
 import javax.inject.Inject
 
 interface IPhotoPickerPresenter : IBasePresenter<IPhotoPickerView> {

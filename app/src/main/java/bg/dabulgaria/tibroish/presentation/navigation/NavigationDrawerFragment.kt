@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import bg.dabulgaria.tibroish.R
+import kotlinx.android.synthetic.main.fragment_comic_list.*
+import kotlinx.android.synthetic.main.fragment_navigation_drawer.*
 import kotlinx.android.synthetic.main.fragment_navigation_drawer.view.*
 
 /**
@@ -163,15 +165,23 @@ class NavigationDrawerFragment : Fragment() {
         } else super.onOptionsItemSelected(item)
     }
 
+    fun setEnabled(enabled:Boolean){
+
+        drawerToggle?.setDrawerIndicatorEnabled(enabled)
+        navItemsRecyclerView?.visibility = if(enabled) View.VISIBLE else View.GONE
+        actionBar?.setHomeButtonEnabled(enabled)
+        actionBar?.setDisplayHomeAsUpEnabled(enabled)
+    }
+
     /**
      * Per the navigation drawer design guidelines, updates the action bar to show the global app
      * 'context', rather than just what's in the current screen.
      */
     private fun showGlobalContextActionBar() {
         val actionBar = actionBar
-        actionBar!!.setDisplayShowTitleEnabled(true)
-        actionBar.navigationMode = ActionBar.NAVIGATION_MODE_STANDARD
-        actionBar.setTitle(R.string.app_name)
+        actionBar?.setDisplayShowTitleEnabled(true)
+        actionBar?.navigationMode = ActionBar.NAVIGATION_MODE_STANDARD
+        actionBar?.setTitle(R.string.app_name)
     }
 
     private val actionBar: ActionBar?

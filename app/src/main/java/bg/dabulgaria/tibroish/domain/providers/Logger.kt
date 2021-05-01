@@ -13,10 +13,10 @@ class Logger : ILogger {
     }
 
     override fun i(tag: String?, message: String?) {
-        Log.i(tag, message)
+        Log.i(tag, message ?:"")
     }
 
     override fun d(tag: String?, message: String?) {
-        Log.d(tag, message)
+        Log.d(tag, message?:"")
     }
 }

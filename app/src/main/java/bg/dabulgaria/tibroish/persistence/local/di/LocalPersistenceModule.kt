@@ -10,14 +10,12 @@ import bg.dabulgaria.tibroish.persistence.local.ProtocolImagesRepository
 import bg.dabulgaria.tibroish.persistence.local.ProtocolsRepository
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
 
 @Module
 interface LocalPersistenceModule {
 
     @Binds
-    fun bindsIAppConfigRepository(implementer: AppConfigRepository) : IAppConfigRepository
+    fun bindsIAppConfigRepository(implementation: AppConfigRepository) : IAppConfigRepository
 
     @Binds
     fun bindsIProtocolsRepository(implementation: ProtocolsRepository): IProtocolsRepository
@@ -27,5 +25,4 @@ interface LocalPersistenceModule {
 
     @Binds
     fun bindsIGalleryImagesRepository(implementation: GalleryImagesRepository): IGalleryImagesRepository
-
 }

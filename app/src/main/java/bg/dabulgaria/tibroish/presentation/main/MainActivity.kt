@@ -20,12 +20,12 @@ import bg.dabulgaria.tibroish.presentation.navigation.NavigationDrawerFragment
 import bg.dabulgaria.tibroish.presentation.navigation.OnMenuClickListener
 import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
-
-
 
 class MainActivity : BaseActivity(),
         IMainScreenView,
@@ -40,6 +40,8 @@ class MainActivity : BaseActivity(),
     lateinit var mainNavigator: IMainNavigator
     @Inject
     lateinit var permissionsResponseHandler: IPermissionResponseHandler
+//    @Inject
+//    lateinit var firebaseAuth: FirebaseAuth
 
     private var drawerLayout :DrawerLayout? = null
     private var navigationDrawerFragment :NavigationDrawerFragment ? = null
@@ -62,8 +64,19 @@ class MainActivity : BaseActivity(),
 
         mainNavigator.setView(this)
 
-        if( savedInstanceState == null)
+        val user = 1// TODO get from firebaseAuth.currentUser
+        if( user != null ){
+
+            mainNavigator.showLoginScreen()
+            drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            navigationDrawerFragment?.setEnabled( false )
+        }
+        else if( savedInstanceState == null ) {
+
             mainNavigator.showHomeScreen()
+            drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            navigationDrawerFragment?.setEnabled( true )
+        }
     }
 
     override fun onDestroy() {

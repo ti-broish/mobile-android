@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
+import bg.dabulgaria.tibroish.presentation.ui.login.LoginFragment
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.camera.CameraPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolFragment
@@ -117,6 +118,21 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
     override fun onPermissionResult(permissionCode:Int, granted:Boolean){
 
         permissionResponseListener?.onPermissionResult(permissionCode, granted)
+    }
+
+    override fun showLoginScreen() {
+
+        view ?: return
+
+        clearBackStack()
+
+        var content = view?.supportFragmentMngr?.findFragmentByTag(LoginFragment.TAG )
+        if (content == null) {
+
+            content = LoginFragment.newInstance()
+        }
+
+        view?.showScreen(content, LoginFragment.TAG, false, false)
     }
 
     private fun clearBackStack() {

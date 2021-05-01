@@ -3,6 +3,8 @@ package bg.dabulgaria.tibroish.infrastructure.di.components
 
 import bg.dabulgaria.tibroish.DaApplication
 import bg.dabulgaria.tibroish.infrastructure.di.modules.*
+import bg.dabulgaria.tibroish.persistence.local.di.LocalPersistenceModule
+import bg.dabulgaria.tibroish.persistence.remote.di.RemotePersistenceModule
 
 import javax.inject.Singleton
 
@@ -18,6 +20,8 @@ import dagger.android.AndroidInjector
                 ActivityModule::class,
                 DeviceModule::class,
                 NetworkModule::class,
+                RemotePersistenceModule::class,
+                LocalPersistenceModule::class,
                 BuildModule::class)
 )
 interface ApplicationComponent :AndroidInjector<DaApplication> {

@@ -4,6 +4,7 @@ import android.app.Application
 import bg.dabulgaria.tibroish.infrastructure.di.components.DaggerApplicationComponent
 
 import bg.dabulgaria.tibroish.infrastructure.di.modules.DeviceModule
+import com.google.firebase.FirebaseApp
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -19,11 +20,14 @@ class DaApplication : Application(), HasAndroidInjector {
 
         super.onCreate()
 
+        //FirebaseApp.initializeApp(this)
+
         DaggerApplicationComponent.builder()
                 .application( this )
                 .device( DeviceModule( this ) )
                 .build()
                 .inject(this)
+
     }
 
     override fun androidInjector(): AndroidInjector<Any> {

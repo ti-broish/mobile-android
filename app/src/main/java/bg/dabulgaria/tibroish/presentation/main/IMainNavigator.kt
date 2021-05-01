@@ -6,6 +6,12 @@ interface IMainNavigator: OnMenuClickListener {
 
     fun setView(view: IMainScreenView?)
 
+    fun navigateBack()
+
+    fun onPermissionResult(permissionCode:Int, granted:Boolean)
+
+    var permissionResponseListener: IPermissionResponseListener?
+
     fun showHomeScreen()
 
     fun showAddProtocol()
@@ -16,9 +22,5 @@ interface IMainNavigator: OnMenuClickListener {
 
     fun showCameraPicker(protocolId:Long)
 
-    fun navigateBack()
-
-    fun onPermissionResult(permissionCode:Int, granted:Boolean)
-
-    var permissionResponseListener: IPermissionResponseListener?
+    fun showLoginScreen()
 }

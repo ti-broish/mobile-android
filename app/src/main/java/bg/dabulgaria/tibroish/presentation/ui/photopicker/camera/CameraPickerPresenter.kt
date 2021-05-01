@@ -4,12 +4,9 @@ import android.os.Bundle
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.image.PickedImage
 import bg.dabulgaria.tibroish.domain.providers.ILogger
-import bg.dabulgaria.tibroish.persistence.remote.ILocationsRemoteRepo
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
-import bg.dabulgaria.tibroish.presentation.providers.INetworkInfoProvider
-import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
 import bg.dabulgaria.tibroish.presentation.main.IMainNavigator
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import io.reactivex.rxjava3.core.Single
@@ -30,7 +27,6 @@ class CameraPickerPresenter @Inject constructor(private val interactor : ICamera
                                                private val schedulersProvider : ISchedulersProvider,
                                                private val logger: ILogger,
                                                private val mainRouter: IMainNavigator,
-                                               private val locationsRemoteRepo: ILocationsRemoteRepo,
                                                dispHandler: IDisposableHandler,)
     : BasePresenter<ICameraPickerView>(dispHandler), ICameraPickerPresenter {
 
@@ -60,22 +56,6 @@ class CameraPickerPresenter @Inject constructor(private val interactor : ICamera
         TODO("Not Implemented")
     }
 
-    private fun getLocations(refresh: Boolean) : Disposable {
-
-        return Single.fromCallable{ locationsRemoteRepo.getLocations() }
-                .subscribeOn( schedulersProvider.ioScheduler())
-                .observeOn( schedulersProvider.uiScheduler())
-                .subscribe({
-
-                    view?.onComicsLoaded(it)
-                    view?.onLoadingStateChange(false )
-                },
-                        {
-
-                            onError( throwable = it )
-                        })
-
-    }
 
     override fun onError( throwable : Throwable ){
 
