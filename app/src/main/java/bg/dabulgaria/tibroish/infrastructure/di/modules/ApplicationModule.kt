@@ -1,6 +1,7 @@
 package bg.dabulgaria.tibroish.infrastructure.di.modules
 
 import android.content.Context
+import androidx.core.view.ViewCompat
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -8,15 +9,9 @@ import bg.dabulgaria.tibroish.DaApplication
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.domain.calculators.HashCalculator
 import bg.dabulgaria.tibroish.domain.calculators.IHashCalculator
-import bg.dabulgaria.tibroish.domain.interactors.ComicInteractor
-import bg.dabulgaria.tibroish.domain.interactors.IComicInteractor
 import bg.dabulgaria.tibroish.domain.providers.ITimestampProvider
 import bg.dabulgaria.tibroish.domain.providers.TimestampProvider
-import bg.dabulgaria.tibroish.persistence.remote.MarvelsRemoteRepository
-import bg.dabulgaria.tibroish.domain.repositories.remote.IMarvelsRemoteRepository
-import bg.dabulgaria.tibroish.domain.repositories.local.IComicsLocalRepository
-import bg.dabulgaria.tibroish.persistence.local.ComicsLocalRepository
-import bg.dabulgaria.tibroish.persistence.local.MarvelsDatabase
+import bg.dabulgaria.tibroish.persistence.local.TiBroishDatabase
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.infrastructure.schedulers.SchedulersProvider
 
@@ -28,9 +23,13 @@ import androidx.room.Room
 import bg.dabulgaria.tibroish.domain.config.IAppConfigRepository
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.providers.Logger
+import bg.dabulgaria.tibroish.infrastructure.di.annotations.ActivityScope
 import bg.dabulgaria.tibroish.persistence.local.AppConfigRepository
 import bg.dabulgaria.tibroish.persistence.remote.ILocationsRemoteRepo
 import bg.dabulgaria.tibroish.persistence.remote.LocationsRemoteRepo
+import bg.dabulgaria.tibroish.presentation.main.IMainNavigator
+import bg.dabulgaria.tibroish.presentation.main.MainNavigator
+import dagger.Binds
 
 
 @Module
@@ -54,19 +53,19 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    internal fun providesMarvelsDatabase( @AppContext context: Context ) :MarvelsDatabase{
+    fun bindsMainNavigator(implementation: MainNavigator): IMainNavigator = implementation
+
+    @Provides
+    @Singleton
+    internal fun providesMarvelsDatabase( @AppContext context: Context ) :TiBroishDatabase{
 
         return Room.databaseBuilder( context,
-                                     MarvelsDatabase::class.java,
+                                     TiBroishDatabase::class.java,
                                      "marvels_db" )
                 .build()
     }
 
-    @Provides
-    internal fun providesLocalStorageRepository(database :MarvelsDatabase): IComicsLocalRepository {
 
-        return ComicsLocalRepository( database)
-    }
 
     @Provides
     internal fun providesSchedulersProvider(schedulersProvider: SchedulersProvider): ISchedulersProvider {
@@ -74,11 +73,6 @@ class ApplicationModule {
         return schedulersProvider
     }
 
-    @Provides
-    internal fun providesMarvelsApiRepository( comicApiRepository: MarvelsRemoteRepository): IMarvelsRemoteRepository {
-
-        return comicApiRepository
-    }
 
     @Provides
     @Singleton
@@ -94,11 +88,6 @@ class ApplicationModule {
         return TimestampProvider()
     }
 
-    @Provides
-    fun providesComicInteractor(comicInteractor: ComicInteractor): IComicInteractor {
-
-        return comicInteractor
-    }
 
     @Provides
     @Singleton

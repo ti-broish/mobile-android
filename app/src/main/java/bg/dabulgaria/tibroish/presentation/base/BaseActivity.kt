@@ -1,23 +1,23 @@
 package bg.dabulgaria.tibroish.presentation.base
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.presentation.main.IMainScreenView
 import dagger.android.AndroidInjection
 
-import bg.dabulgaria.tibroish.R
-
-open class BaseActivity : AppCompatActivity() {
-
+open class BaseActivity : AppCompatActivity(), IMainScreenView {
 
     //region show screen
-    fun showScreen(content : Fragment,
-                   contentTag : String,
-                   addToBackStack : Boolean,
-                   transitionContent : Boolean) {
+    override fun showScreen(content: Fragment,
+                   contentTag: String,
+                   addToBackStack: Boolean,
+                   transitionContent: Boolean) {
 
         val ft = getSupportFragmentManager().beginTransaction()
 
@@ -27,7 +27,7 @@ open class BaseActivity : AppCompatActivity() {
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         }
 
-        ft.replace( R.id.container, content, contentTag )
+        ft.replace(R.id.container, content, contentTag)
 
         if (addToBackStack) {
             ft.addToBackStack(contentTag + System.identityHashCode(content))
@@ -38,10 +38,27 @@ open class BaseActivity : AppCompatActivity() {
     //endregion
 
     //region AppCompatActivity implementation
-    override fun onCreate(savedInstanceState : Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
 
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
+    }
+
+    override fun navigateBack() {
+
+        setOrientationOnBack()
+        getSupportFragmentManager().popBackStackImmediate()
+    }
+
+    override fun onBackPressed() {
+
+        val backStackEntryCount = supportFragmentManager.backStackEntryCount
+
+        if( backStackEntryCount >0){
+            navigateBack()
+        }
+        else
+            super.onBackPressed()
     }
 
     override fun onOptionsItemSelected(item : MenuItem) : Boolean {
@@ -65,6 +82,25 @@ open class BaseActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    override val appCompatActivity: AppCompatActivity
+        get() = this
+
+    override val supportFragmentMngr: FragmentManager?
+            = this.supportFragmentManager
+
+    protected fun setOrientationOnBack()
+    {
+        val backStackEntryCount = supportFragmentManager.backStackEntryCount
+        if (backStackEntryCount <= 1) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            return
+        }
+
+        val orientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        val backEntry = supportFragmentManager.getBackStackEntryAt(backStackEntryCount - 2)
+        val tagName = backEntry.name
     }
     //endregion
 }

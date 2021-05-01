@@ -1,17 +1,25 @@
 package bg.dabulgaria.tibroish.presentation.main
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import android.util.Log
 import androidx.fragment.app.FragmentManager
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
+import bg.dabulgaria.tibroish.presentation.ui.photopicker.camera.CameraPickerFragment
+import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerFragment
+import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolFragment
+import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolViewData
 import javax.inject.Inject
 
 class MainNavigator @Inject constructor(@AppContext private val appContext: Context )
     :IMainNavigator{
 
     private var view: IMainScreenView? = null
+    override var permissionResponseListener: IPermissionResponseListener? = null
 
     override fun setView(view: IMainScreenView?) {
 
@@ -28,7 +36,9 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
                 showHomeScreen()
             }
             NavItemAction.Profile ->{}
-            NavItemAction.SendProtocol -> {}
+            NavItemAction.SendProtocol -> {
+                showAddProtocol()
+            }
             NavItemAction.SendSignal -> {}
             NavItemAction.MyProtocols -> {}
             NavItemAction.MySignals -> {}
@@ -42,6 +52,8 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
 
         view ?: return
 
+        clearBackStack()
+
         var homeFragment = view?.supportFragmentMngr?.findFragmentByTag(HomeFragment.TAG )
         if (homeFragment == null) {
 
@@ -51,27 +63,61 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
         view?.showScreen(homeFragment, HomeFragment.TAG, false, false)
     }
 
-//    override fun showComicList() {
-//
-//        var comicListFragment = view?.supportFragmentMngr?.findFragmentByTag(ComicListFragment.TAG )
-//        if (comicListFragment == null) {
-//
-//            comicListFragment = ComicListFragment.newInstance()
-//        }
-//
-//        view?.showScreen(comicListFragment, ComicListFragment.TAG, false, false)
-//    }
+    override fun openAppSettings() {
 
-//    override fun showComicDetails(comicDetailsViewData: ComicDetailsViewData) {
-//
-////        var comicDetailsFragment = view?.supportFragmentMngr?.findFragmentByTag(ComicDetailsFragment.TAG )
-////        if (comicDetailsFragment == null) {
-////
-////            comicDetailsFragment = ComicDetailsFragment.newInstance(comicDetailsViewData )
-////        }
-////
-////        view?.showScreen(comicDetailsFragment, ComicListFragment.TAG, true, true)
-//    }
+        val intent = Intent()
+        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        intent.addCategory(Intent.CATEGORY_DEFAULT)
+        intent.data = Uri.parse("package:" + appContext.packageName)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+        appContext.startActivity(intent)
+    }
+
+    override fun showAddProtocol() {
+
+        var content = view?.supportFragmentMngr?.findFragmentByTag(AddProtocolFragment.TAG )
+        if (content == null) {
+
+            clearBackStack()
+            content = AddProtocolFragment.newInstance(AddProtocolViewData())
+        }
+
+        view?.showScreen(content, AddProtocolFragment.TAG, addToBackStack = true, transitionContent = true)
+    }
+
+    override fun showPhotoPicker(protocolId:Long) {
+
+        var content = view?.supportFragmentMngr?.findFragmentByTag(PhotoPickerFragment.TAG )
+        if (content == null) {
+
+            content = PhotoPickerFragment.newInstance(protocolId)
+        }
+
+        view?.showScreen(content, PhotoPickerFragment.TAG, addToBackStack = true, transitionContent = true)
+    }
+
+    override fun showCameraPicker(protocolId:Long) {
+
+        var content = view?.supportFragmentMngr?.findFragmentByTag(CameraPickerFragment.TAG )
+        if (content == null) {
+
+            clearBackStack()
+            content = CameraPickerFragment.newInstance(protocolId)
+        }
+
+        view?.showScreen(content, CameraPickerFragment.TAG, addToBackStack = true, transitionContent = true)
+    }
+
+    override fun navigateBack() {
+        view?.navigateBack()
+    }
+
+    override fun onPermissionResult(permissionCode:Int, granted:Boolean){
+
+        permissionResponseListener?.onPermissionResult(permissionCode, granted)
+    }
 
     private fun clearBackStack() {
 

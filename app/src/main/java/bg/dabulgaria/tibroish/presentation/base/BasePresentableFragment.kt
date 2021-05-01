@@ -2,9 +2,11 @@ package bg.dabulgaria.tibroish.presentation.base
 
 import android.os.Bundle
 import android.view.View
+import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerPresenter
 import javax.inject.Inject
 
-class BasePresentableFragment<IView:IBaseView, IPresenter:IBasePresenter<IView>>: BaseFragment() {
+open class BasePresentableFragment<IView:IBaseView, IPresenter:IBasePresenter<IView>>: BaseFragment() {
 
 
     @Inject
@@ -12,15 +14,16 @@ class BasePresentableFragment<IView:IBaseView, IPresenter:IBasePresenter<IView>>
 
     private fun getBaseView():IView = this as IView
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        presenter.onRestoreData(if( arguments != null ) arguments else  savedInstanceState)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         presenter.onViewCreated( getBaseView() )
-    }
-
-    override fun onDestroyView() {
-        presenter.onViewDestroyed()
-        super.onDestroyView()
     }
 
 
@@ -34,4 +37,13 @@ class BasePresentableFragment<IView:IBaseView, IPresenter:IBasePresenter<IView>>
         super.onStop()
     }
 
+    override fun onDestroyView() {
+        presenter.onViewDestroyed()
+        super.onDestroyView()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        presenter.onSaveData(outState = outState)
+        super.onSaveInstanceState(outState)
+    }
 }
