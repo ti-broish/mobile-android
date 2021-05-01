@@ -25,7 +25,7 @@ class PhotoPickerInteractor @Inject constructor(private val galleryImagesReposit
         val width = context.resources.displayMetrics.widthPixels
         val margin =  context.resources.getDimensionPixelSize(R.dimen.picker_images_margin)
         val displaySize =  ((width - ( margin * columnsCount+1 )).toFloat() / columnsCount.toFloat()).toInt()
-        val images =  galleryImagesRepository.getImages().map {
+        val images = galleryImagesRepository.getImages().map {
             photoItemTypeAdapter.toPhotoItem( it, displaySize ) }
 
         for(image in images){

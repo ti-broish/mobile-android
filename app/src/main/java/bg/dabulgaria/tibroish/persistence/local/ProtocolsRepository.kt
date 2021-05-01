@@ -25,7 +25,8 @@ constructor(private val database:TiBroishDatabase ) : IProtocolsRepository {
 
     override fun insert(protocol: Protocol) {
 
-        database.daoProtocol().insert( protocol )
+        val id = database.daoProtocol().insert( protocol )
+        protocol.id = id
     }
 
     override fun update(protocol: Protocol) {

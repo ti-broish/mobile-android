@@ -8,4 +8,6 @@ import bg.dabulgaria.tibroish.domain.protocol.Protocol
 abstract class TiBroishDatabase: RoomDatabase() {
 
     abstract fun daoProtocol(): DaoProtocol
+
+    abstract fun daoProtocolImage(): DaoProtocolImage
 }

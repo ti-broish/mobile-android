@@ -8,7 +8,7 @@ import bg.dabulgaria.tibroish.persistence.local.model.LocalComics
 interface DaoProtocol {
 
     @Insert
-    fun insert(protocol: Protocol)
+    fun insert(protocol: Protocol):Long
 
     @Query("SELECT * FROM Protocol WHERE id = :protocolId")
     fun getById(protocolId: Long): Protocol
@@ -17,8 +17,8 @@ interface DaoProtocol {
     fun getAll(): List<Protocol>
 
     @Update
-    fun update(comics: Protocol)
+    fun update(protocol: Protocol)
 
     @Delete
-    fun delete(comics: Protocol)
+    fun delete(protocol: Protocol)
 }

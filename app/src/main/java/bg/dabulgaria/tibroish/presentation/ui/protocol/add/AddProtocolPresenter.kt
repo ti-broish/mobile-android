@@ -3,6 +3,7 @@ package bg.dabulgaria.tibroish.presentation.ui.protocol.add
 import android.os.Bundle
 import android.util.Log
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.domain.protocol.Protocol
 import bg.dabulgaria.tibroish.infrastructure.permission.AppPermission
 import bg.dabulgaria.tibroish.infrastructure.permission.IPermissionRequester
 import bg.dabulgaria.tibroish.infrastructure.permission.PermissionCodes
@@ -14,6 +15,7 @@ import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.main.IMainNavigator
 import bg.dabulgaria.tibroish.presentation.main.IPermissionResponseListener
+import io.reactivex.rxjava3.core.Single
 
 
 import javax.inject.Inject
@@ -27,6 +29,7 @@ interface IAddProtocolPresenter: IBasePresenter<IAddProtocolView> {
 
 class AddProtocolPresenter @Inject constructor(private val schedulersProvider : ISchedulersProvider,
                                                private val mainNavigator : IMainNavigator,
+                                               private val interactor:IAddProtocolInteractor,
                                                dispHandler: IDisposableHandler)
     : BasePresenter<IAddProtocolView>(dispHandler), IAddProtocolPresenter{
 
@@ -54,8 +57,25 @@ class AddProtocolPresenter @Inject constructor(private val schedulersProvider : 
 
     override fun onAddFromGalleryClick() {
 
-        val protocolId = data?.protocolId ?:return
-        mainNavigator.showPhotoPicker(protocolId)
+        val dat = data?: return
+
+        if( dat.protocol == null ){
+
+            val protocol = Protocol()
+            add( Single.fromCallable{interactor.addNew(protocol)}
+                    .subscribeOn(schedulersProvider.ioScheduler())
+                    .observeOn(schedulersProvider.uiScheduler())
+                    .subscribe( {
+                        dat.protocol = it
+                        mainNavigator.showPhotoPicker(it.id)
+                    },{
+                        onError(it)
+                    }))
+
+            return
+        }
+
+        dat.protocol?.id?.let { mainNavigator.showPhotoPicker(it) }
     }
 
     override fun onViewHide() {

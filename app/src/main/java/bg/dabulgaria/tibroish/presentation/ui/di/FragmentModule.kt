@@ -15,16 +15,21 @@ interface FragmentModule {
     @ContributesAndroidInjector
     fun providesHomeFragment(): HomeFragment
 
+    //region Add Protocol screen
     @ContributesAndroidInjector
     fun bindAddProtocolFragment(): AddProtocolFragment
 
     @Binds
-    fun bindsDetailsView( detailsFragment: AddProtocolFragment): IAddProtocolView
+    fun bindsAddProtocolView( detailsFragment: AddProtocolFragment): IAddProtocolView
 
     @Binds
     fun bindsIAddProtocolPresenter( detailsPresenter: AddProtocolPresenter): IAddProtocolPresenter
 
-    //region Gallery PhotoPicker
+    @Binds
+    fun bindsIAddProtocolInteractor( detailsPresenter: AddProtocolInteractor): IAddProtocolInteractor
+    //endregion Add Protocol screen
+
+    //region Gallery Photo Picker screen
     @ContributesAndroidInjector
     fun bindPhotoPickerFragment(): PhotoPickerFragment
 
@@ -36,7 +41,7 @@ interface FragmentModule {
 
     @Binds
     fun bindsIPhotoItemTypeAdapter( implemenation: PhotoItemTypeAdapter): IPhotoItemTypeAdapter
-    //endregion Gallery PhotoPicker
+    //endregion Gallery Photo Picker screen
 
 
 }

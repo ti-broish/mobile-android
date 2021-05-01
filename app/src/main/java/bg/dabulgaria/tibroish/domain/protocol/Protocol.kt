@@ -1,6 +1,7 @@
 package bg.dabulgaria.tibroish.domain.protocol
 
 import androidx.room.*
+import bg.dabulgaria.tibroish.domain.protocol.image.ProtocolImage
 import java.io.Serializable
 import java.util.*
 
@@ -32,10 +33,29 @@ class ProtocolTypeConverter {
 
 @Entity( tableName = "Protocol")
 @TypeConverters( ProtocolTypeConverter::class)
-class Protocol constructor(@PrimaryKey(autoGenerate = true)
+open class Protocol constructor(@PrimaryKey(autoGenerate = true)
                            @ColumnInfo(name = "id")
                            var id:Long=-1,
                            var uuid:String="",
                            var serverId:String ="",
                            var status:ProtocolStatus = ProtocolStatus.New) :Serializable {
+
+    constructor(source: Protocol) : this(source.id,
+            source.uuid,
+            source.serverId,
+            source.status)
+}
+
+class ProtocolExt(id:Long=-1,
+                  uuid:String="",
+                  serverId:String ="",
+                  status:ProtocolStatus = ProtocolStatus.New)
+    :Protocol( id, uuid, serverId, status), Serializable{
+
+    constructor(source: Protocol) : this(source.id,
+            source.uuid,
+            source.serverId,
+            source.status)
+
+    val photos = mutableListOf<ProtocolImage>()
 }
