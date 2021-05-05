@@ -13,3 +13,5 @@
 /.gradle
 app/src/main/assets/appconfig.properties
 app/docs-json.json
+app/signing.properties
+app/keystores/
