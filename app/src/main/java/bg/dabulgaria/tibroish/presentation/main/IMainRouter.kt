@@ -2,9 +2,11 @@ package bg.dabulgaria.tibroish.presentation.main
 
 import bg.dabulgaria.tibroish.presentation.navigation.OnMenuClickListener
 
-interface IMainNavigator: OnMenuClickListener {
+interface IMainRouter: OnMenuClickListener {
 
     fun setView(view: IMainScreenView?)
+
+    fun setPresenter(presenter: IMainPresenter?)
 
     fun navigateBack()
 
@@ -25,4 +27,8 @@ interface IMainNavigator: OnMenuClickListener {
     fun showLoginScreen()
 
     fun onAuthEvent()
+
+    fun showRegisterScreen(email:String)
+
+    fun showForgotPasswordScreen(email:String)
 }

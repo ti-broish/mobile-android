@@ -3,6 +3,7 @@ package bg.dabulgaria.tibroish.infrastructure.di.modules
 import com.google.gson.Gson
 import bg.dabulgaria.tibroish.BuildConfig
 import bg.dabulgaria.tibroish.domain.config.IAppConfigRepository
+import bg.dabulgaria.tibroish.infrastructure.BuildConstants
 import bg.dabulgaria.tibroish.persistence.remote.MarvelsApiController
 import bg.dabulgaria.tibroish.persistence.remote.VDApiController
 import bg.dabulgaria.tibroish.persistence.remote.VDApiInterceptor
@@ -54,7 +55,7 @@ class NetworkModule() {
     private fun getTiBroishEndpoint(appConfigRepo: IAppConfigRepository):String{
 
         val config = appConfigRepo.appConfig
-        if(BuildConfig.FLAVOR == "production")
+        if(BuildConfig.FLAVOR == BuildConstants.PRODUCTION_FLAVOR)
             return config.apiBaseUrl
         else
             return config.apiBaseUrlStage

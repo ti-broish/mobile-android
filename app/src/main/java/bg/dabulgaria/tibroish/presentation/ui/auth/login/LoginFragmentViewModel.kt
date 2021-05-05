@@ -4,7 +4,7 @@ import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import bg.dabulgaria.tibroish.presentation.main.IMainNavigator
+import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginFragmentViewModel : ViewModel() {
@@ -13,7 +13,7 @@ class LoginFragmentViewModel : ViewModel() {
     private val passwordValidState: MutableLiveData<Boolean> = MutableLiveData(true)
 
     var auth: FirebaseAuth? = null
-    var mainNavigator: IMainNavigator? = null
+    var mMainRouter: IMainRouter? = null
 
     fun getEmailValidState(): MutableLiveData<Boolean> {
         return emailValidState
@@ -52,7 +52,10 @@ class LoginFragmentViewModel : ViewModel() {
                 }
                 ?.addOnSuccessListener { authResult->
 
-                    mainNavigator?.onAuthEvent()
+                    if( authResult.user.isEmailVerified) {
+
+                        mMainRouter?.onAuthEvent()
+                    }
                 }
                 ?.addOnCanceledListener {
                     Log.d(TAG, "Login Canceled")

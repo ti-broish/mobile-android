@@ -1,7 +1,9 @@
 package bg.dabulgaria.tibroish.presentation.ui.di
 
+import bg.dabulgaria.tibroish.presentation.ui.auth.login.ILoginPresenter
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
 import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginFragment
+import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginPresenter
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.*
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.*
 import dagger.Binds
@@ -42,7 +44,11 @@ interface FragmentModule {
     fun bindsIPhotoItemTypeAdapter( implemenation: PhotoItemTypeAdapter): IPhotoItemTypeAdapter
     //endregion Gallery Photo Picker screen
 
+    //region Login screen
     @ContributesAndroidInjector
     fun bindLoginFragment(): LoginFragment
 
+    @Binds
+    fun bindILoginPresenter(implemenation: LoginPresenter): ILoginPresenter
+    //endregion Login screen
 }

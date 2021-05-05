@@ -1,96 +1,86 @@
 package bg.dabulgaria.tibroish.presentation.ui.auth.login
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.TextView.OnEditorActionListener
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.presentation.base.BaseFragment
-import bg.dabulgaria.tibroish.presentation.main.IMainNavigator
-import com.google.firebase.auth.FirebaseAuth
+import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
+import bg.dabulgaria.tibroish.presentation.base.IBaseView
 import kotlinx.android.synthetic.main.fragment_user_login.*
-import javax.inject.Inject
 
 
-class LoginFragment : BaseFragment() {
+interface ILoginView :IBaseView{
 
-    private lateinit var viewModel: LoginFragmentViewModel
-    @Inject
-    protected lateinit var mainNavigator: IMainNavigator
+    fun onDataLoaded(data:LoginViewData)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    fun onLoading(loading:Boolean)
+}
 
-        viewModel = ViewModelProvider(this).get(LoginFragmentViewModel::class.java)
+class LoginFragment : BasePresentableFragment<ILoginView, ILoginPresenter>(), ILoginView {
 
-        viewModel.auth = FirebaseAuth.getInstance()
-        viewModel.mainNavigator = mainNavigator
-
-        observeEmailValidState()
-        observePasswordValidState()
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_login, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+        = inflater.inflate(R.layout.fragment_user_login, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
+
         super.onActivityCreated(savedInstanceState)
         setupOnClickListeners()
     }
 
     private fun setupOnClickListeners() {
         
-        button_login?.setOnClickListener { onLoginButtonClicked() }
-        button_register?.setOnClickListener { onRegisterButtonClicked() }
-        button_forgot_password?.setOnClickListener { onForgotPasswordButtonClicked() }
-    }
+        button_login?.setOnClickListener { onLogin() }
 
-    private fun observePasswordValidState() {
-        viewModel.getPasswordValidState().observe(this, Observer {
-            val error: String? = if (it) {
-                null
-            } else {
-                getString(R.string.invalid_password)
-            }
-            input_password?.error = error
-        })
-    }
-
-    private fun observeEmailValidState() {
-        viewModel.getEmailValidState().observe(this, Observer {
-            val error: String? = if (it) {
-                null
-            } else {
-                getString(R.string.invalid_email)
-            }
-            input_username?.error = error
-        })
-    }
-
-    private fun onLoginButtonClicked() {
-
-        val email = input_username_edit_text?.text?.toString() ?:""
-        val isEmailValid = viewModel.processEmail(email)
-        val password = input_password_edit_text?.text?.toString() ?:""
-        val isPasswordValid = viewModel.processPassword(password)
-
-        if (!isEmailValid || !isPasswordValid) {
-            return
+        button_register?.setOnClickListener {
+            hideSoftKeyboard()
+            presenter.onRegisterButtonClicked( input_username_edit_text?.text?.toString() ?:"" )
         }
-        viewModel.login(email, password);
+
+        button_forgot_password?.setOnClickListener {
+            hideSoftKeyboard()
+            presenter.onForgotPasswordButtonClicked( input_username_edit_text?.text?.toString() ?:"")
+        }
+
+        input_password_edit_text.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
+
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                onLogin()
+            }
+            false
+        })
     }
 
-    private fun onRegisterButtonClicked() {
-        TODO("Not yet implemented")
+    override fun onDataLoaded(data:LoginViewData){
+
+        input_password?.error = if(data.passValid) null else getString(R.string.invalid_password)
+
+        if(!data.passValid)
+            showSoftKeyboard(input_password_edit_text)
+
+        input_username?.error = if (data.emailValid) null else getString(R.string.invalid_email)
+
+        if(!data.emailValid)
+            showSoftKeyboard(input_username_edit_text)
     }
 
-    private fun onForgotPasswordButtonClicked() {
-        TODO("Not yet implemented")
+    override fun onLoading(loading: Boolean) {
+
+        loginOverlayView?.visibility = if(loading) View.VISIBLE else View.GONE
+        loginProgressBar?.visibility = if(loading) View.VISIBLE else View.GONE
+    }
+
+    private fun onLogin(){
+
+        hideSoftKeyboard()
+
+        presenter.onLoginButtonClicked(
+                input_username_edit_text?.text?.toString() ?:"",
+                input_password_edit_text?.text?.toString() ?:"")
     }
 
     companion object {

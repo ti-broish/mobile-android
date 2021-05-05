@@ -1,13 +1,15 @@
 package bg.dabulgaria.tibroish.presentation.base
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerPresenter
 import javax.inject.Inject
 
-open class BasePresentableFragment<IView:IBaseView, IPresenter:IBasePresenter<IView>>: BaseFragment() {
-
+open class BasePresentableFragment<IView:IBaseView, IPresenter:IBasePresenter<IView>>: BaseFragment(), IBaseView {
 
     @Inject
     lateinit var presenter:IPresenter
@@ -45,5 +47,10 @@ open class BasePresentableFragment<IView:IBaseView, IPresenter:IBasePresenter<IV
     override fun onSaveInstanceState(outState: Bundle) {
         presenter.onSaveData(outState = outState)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onError(errorMessage: String) {
+
+        Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show()
     }
 }

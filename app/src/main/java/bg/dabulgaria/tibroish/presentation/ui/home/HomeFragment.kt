@@ -8,20 +8,17 @@ import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.organisation.IOrganisationRepository
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
-import bg.dabulgaria.tibroish.infrastructure.schedulers.SchedulersProvider
 import bg.dabulgaria.tibroish.presentation.base.BaseFragment
-import bg.dabulgaria.tibroish.presentation.main.IMainNavigator
+import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
-import io.reactivex.rxjava3.core.Single
 import kotlinx.android.synthetic.main.fragment_home.*
-import java.util.logging.Logger
 import javax.inject.Inject
 
 class HomeFragment : BaseFragment() {
 
 
     @Inject
-    protected lateinit var mainNavigator: IMainNavigator
+    protected lateinit var mMainRouter: IMainRouter
     @Inject
     lateinit var organisationRepository: IOrganisationRepository
     @Inject
@@ -43,10 +40,10 @@ class HomeFragment : BaseFragment() {
     override fun onStart() {
         super.onStart()
 
-        sendProtocol.setOnClickListener {  mainNavigator.onNavigateToItem( NavItemAction.SendProtocol) }
-        sendSignal.setOnClickListener {  mainNavigator.onNavigateToItem( NavItemAction.SendSignal) }
-        rightsAndObligations.setOnClickListener {  mainNavigator.onNavigateToItem( NavItemAction.RightsAndObligations) }
-        tiBorishLive.setOnClickListener {  mainNavigator.onNavigateToItem( NavItemAction.YouCountLive ) }
+        sendProtocol.setOnClickListener {  mMainRouter.onNavigateToItem( NavItemAction.SendProtocol) }
+        sendSignal.setOnClickListener {  mMainRouter.onNavigateToItem( NavItemAction.SendSignal) }
+        rightsAndObligations.setOnClickListener {  mMainRouter.onNavigateToItem( NavItemAction.RightsAndObligations) }
+        tiBorishLive.setOnClickListener {  mMainRouter.onNavigateToItem( NavItemAction.YouCountLive ) }
 
     }
 

@@ -7,6 +7,20 @@ apply plugin: 'org.openapi.generator'
 apply plugin: 'com.google.gms.google-services'
 
 android {
+
+    signingConfigs {
+        AppSigning {
+            def Properties signingProps = new Properties()
+            signingProps.load(new FileInputStream(file('../app/signing.properties')))
+            storeFile file(signingProps["store"])
+            storePassword signingProps["storePass"]
+            keyAlias signingProps["alias"]
+            keyPassword signingProps["keypass"]
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
     compileSdkVersion 30
     defaultConfig {
         applicationId "bg.dabulgaria.android"
@@ -15,16 +29,18 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-
-        buildConfigField "String", "API_ENDPOINT", "\"http://gateway.marvel.com/v1/public/\""
-        buildConfigField "String", "VD_API_ENDPOINT", "\"https://selodirekt.com/\""
-        buildConfigField "String", "PRIVATE_KEY", "\"\""
-        buildConfigField "String", "PUBLIC_KEY", "\"\""
+        signingConfig signingConfigs.AppSigning
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.AppSigning
+        }
+        debug{
+            debuggable true
+            signingConfig signingConfigs.AppSigning
+
         }
     }
     buildToolsVersion '29.0.3'
@@ -41,12 +57,14 @@ android {
             applicationId = "bg.dabulgaria.tibroish"
             def APP_NAME = "Ти Броиш"
             resValue "string", "app_name", APP_NAME
+            signingConfig signingConfigs.AppSigning
         }
         staging{
 
             applicationId = "bg.dabulgaria.tibroish.apn"
             def APP_NAME = "Ти Броиш Stage"
             resValue "string", "app_name", APP_NAME
+            signingConfig signingConfigs.AppSigning
         }
     }
 }

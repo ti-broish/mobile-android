@@ -16,10 +16,12 @@ import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolViewData
 import javax.inject.Inject
 
-class MainNavigator @Inject constructor(@AppContext private val appContext: Context )
-    :IMainNavigator{
+class MainRouter @Inject constructor(@AppContext private val appContext: Context )
+    :IMainRouter{
 
     private var view: IMainScreenView? = null
+    private var presenter: IMainPresenter? = null
+
     override var permissionResponseListener: IPermissionResponseListener? = null
 
     override fun setView(view: IMainScreenView?) {
@@ -27,9 +29,12 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
         this.view = view
     }
 
-    override fun onAuthEvent() {
+    override fun setPresenter(presenter: IMainPresenter?) {
+        this.presenter = presenter
+    }
 
-        view?.onAuthEvent(true)
+    override fun onAuthEvent() {
+        presenter?.onAuthEvent(true)
     }
 
     override fun onNavigateToItem(action: NavItemAction) {
@@ -140,6 +145,14 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
         view?.showScreen(content, LoginFragment.TAG, false, false)
     }
 
+    override fun showRegisterScreen(email: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun showForgotPasswordScreen(email: String) {
+        TODO("Not yet implemented")
+    }
+
     private fun clearBackStack() {
 
         try {
@@ -153,6 +166,6 @@ class MainNavigator @Inject constructor(@AppContext private val appContext: Cont
     //endregion IMainNavigator implementation
 
     companion object {
-        val TAG = MainNavigator::class.java.simpleName
+        val TAG = MainRouter::class.java.simpleName
     }
 }

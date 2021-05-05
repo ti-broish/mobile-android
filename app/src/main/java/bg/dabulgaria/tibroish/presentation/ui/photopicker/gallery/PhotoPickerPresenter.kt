@@ -9,7 +9,7 @@ import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
-import bg.dabulgaria.tibroish.presentation.main.IMainNavigator
+import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.main.IPermissionResponseListener
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
@@ -26,7 +26,7 @@ interface IPhotoPickerPresenter : IBasePresenter<IPhotoPickerView> {
 class PhotoPickerPresenter @Inject constructor(private val interactor : IPhotoPickerInteractor,
                                                private val schedulersProvider : ISchedulersProvider,
                                                private val logger: ILogger,
-                                               private val mainNavigator: IMainNavigator,
+                                               private val mainRouter: IMainRouter,
                                                dispHandler: IDisposableHandler,
                                                private val permissionRequester : IPermissionRequester)
     : BasePresenter<IPhotoPickerView>(dispHandler), IPhotoPickerPresenter, IPermissionResponseListener {
@@ -91,18 +91,18 @@ class PhotoPickerPresenter @Inject constructor(private val interactor : IPhotoPi
         }
         else if(data?.photosPermissionRequested == true
                 && !permissionRequester.shouldShowRequestPermissionRationale(permission) ){
-            mainNavigator.openAppSettings()
+            mainRouter.openAppSettings()
         }
         else{
             data?.photosPermissionRequested = true
-            mainNavigator.permissionResponseListener = this
+            mainRouter.permissionResponseListener = this
             permissionRequester.requestPermission(permission)
         }
     }
 
-    override fun onError( throwable : Throwable ){
+    override fun onError( throwable : Throwable? ){
 
-        logger.e(TAG, throwable.message, throwable)
+        logger.e(TAG, throwable)
 
         view?.onLoadingStateChange(ViewState.Error)
 

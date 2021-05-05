@@ -1,6 +1,7 @@
-package bg.dabulgaria.tibroish.domain.providers
+package bg.dabulgaria.tibroish.persistence.local
 
 import android.util.Log
+import bg.dabulgaria.tibroish.domain.providers.ILogger
 
 class Logger : ILogger {
 

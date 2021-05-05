@@ -27,6 +27,8 @@
     <string name="login_login">Вход</string>
     <string name="login_register">Регистрация</string>
     <string name="login_forgot_password">Забравена парола</string>
+    <string name="to_continue_confirm_email">За да продължите трябва да потвърдите имейл адреса си</string>
+    <string name="invalid_mail_or_pass">Невавлиден email или парола</string>
 
     <!-- Common -->
     <string name="invalid_email">Невалиден имейл адрес</string>

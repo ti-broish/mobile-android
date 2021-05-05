@@ -19,5 +19,7 @@ interface IMainScreenView{
 
     val appCompatActivity: AppCompatActivity
 
-    fun onAuthEvent(coldStart:Boolean)
+    fun showNavigation(show:Boolean)
+
+    fun closeDrawer()
 }

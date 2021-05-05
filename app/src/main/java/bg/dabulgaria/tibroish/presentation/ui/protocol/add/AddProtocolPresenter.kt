@@ -1,20 +1,13 @@
 package bg.dabulgaria.tibroish.presentation.ui.protocol.add
 
 import android.os.Bundle
-import android.util.Log
-import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.protocol.Protocol
-import bg.dabulgaria.tibroish.infrastructure.permission.AppPermission
-import bg.dabulgaria.tibroish.infrastructure.permission.IPermissionRequester
-import bg.dabulgaria.tibroish.infrastructure.permission.PermissionCodes
+import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
-import bg.dabulgaria.tibroish.presentation.providers.INetworkInfoProvider
-import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
-import bg.dabulgaria.tibroish.presentation.main.IMainNavigator
-import bg.dabulgaria.tibroish.presentation.main.IPermissionResponseListener
+import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import io.reactivex.rxjava3.core.Single
 
 
@@ -28,8 +21,9 @@ interface IAddProtocolPresenter: IBasePresenter<IAddProtocolView> {
 }
 
 class AddProtocolPresenter @Inject constructor(private val schedulersProvider : ISchedulersProvider,
-                                               private val mainNavigator : IMainNavigator,
-                                               private val interactor:IAddProtocolInteractor,
+                                               private val mainRouter : IMainRouter,
+                                               private val interactor: IAddProtocolInteractor,
+                                               private val logger : ILogger,
                                                dispHandler: IDisposableHandler)
     : BasePresenter<IAddProtocolView>(dispHandler), IAddProtocolPresenter{
 
@@ -67,7 +61,7 @@ class AddProtocolPresenter @Inject constructor(private val schedulersProvider : 
                     .observeOn(schedulersProvider.uiScheduler())
                     .subscribe( {
                         dat.protocol = it
-                        mainNavigator.showPhotoPicker(it.id)
+                        mainRouter.showPhotoPicker(it.id)
                     },{
                         onError(it)
                     }))
@@ -75,17 +69,17 @@ class AddProtocolPresenter @Inject constructor(private val schedulersProvider : 
             return
         }
 
-        dat.protocol?.id?.let { mainNavigator.showPhotoPicker(it) }
+        dat.protocol?.id?.let { mainRouter.showPhotoPicker(it) }
     }
 
     override fun onViewHide() {
-        mainNavigator.permissionResponseListener = null
+        mainRouter.permissionResponseListener = null
         super.onViewHide()
     }
 
-    override fun onError( throwable : Throwable ){
+    override fun onError( throwable : Throwable? ){
 
-        Log.e(TAG, throwable.message, throwable)
+        logger.e(TAG, throwable)
 
         view?.onLoadingStateChange(false )
 

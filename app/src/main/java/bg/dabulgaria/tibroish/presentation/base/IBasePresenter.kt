@@ -23,7 +23,7 @@ interface IBasePresenter<IView: IBaseView>  {
 
     fun loadData()
 
-    fun onError( throwable : Throwable )
+    fun onError( throwable : Throwable? )
 }
 
 abstract class BasePresenter<IView:IBaseView> ( disposableHandler: IDisposableHandler)
@@ -52,7 +52,7 @@ abstract class BasePresenter<IView:IBaseView> ( disposableHandler: IDisposableHa
     override fun onViewHide() {
     }
 
-    override fun onError( throwable : Throwable ){
+    override fun onError( throwable : Throwable?){
 
         val resId = if( !networkInfoProvider.isNetworkConnected )
                     R.string.internet_connection_offline
