@@ -1,11 +1,12 @@
-package bg.dabulgaria.tibroish.persistence.remote
+package bg.dabulgaria.tibroish.persistence.remote.api
 
+import bg.dabulgaria.tibroish.persistence.remote.ApiException
 import com.android.volley.toolbox.HttpHeaderParser
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.UnsupportedEncodingException
 
-class VDApiInterceptor (private val userAgent: String) : Interceptor {
+class ApiInterceptor (private val userAgent: String) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
 
@@ -13,9 +14,9 @@ class VDApiInterceptor (private val userAgent: String) : Interceptor {
 
         // Customize the request
         val request = original.newBuilder()
-                .header(ApiHeader.AcceptEncoding, "gzip")
-                .header(ApiHeader.ContentType, "application/json")
-                .header(ApiHeader.UserAgent, userAgent)
+                //.header(ApiHeader.AcceptEncoding, "gzip")
+                //.header(ApiHeader.ContentType, "application/json")
+                //.header(ApiHeader.UserAgent, userAgent)
                 .build()
 
         val response = chain.proceed(request)
@@ -49,6 +50,6 @@ class VDApiInterceptor (private val userAgent: String) : Interceptor {
             }
         }
 
-        throw ApiException( response, responseData)
+        throw ApiException(response, responseData)
     }
 }

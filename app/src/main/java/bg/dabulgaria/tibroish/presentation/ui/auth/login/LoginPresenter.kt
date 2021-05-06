@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.util.Patterns
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.providers.ILogger
-import bg.dabulgaria.tibroish.domain.user.IAuthRepository
+import bg.dabulgaria.tibroish.domain.auth.IAuthRepository
 import bg.dabulgaria.tibroish.domain.user.IUserLocalRepository
 import bg.dabulgaria.tibroish.domain.user.IUserTypeAdapter
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
@@ -112,7 +112,7 @@ class LoginPresenter @Inject constructor(private val userLocalRepo : IUserLocalR
 
             val user = userTypeAdapter.toUser(firebaseUser)
 
-            firebaseUser.getIdToken(false)
+            firebaseUser.getIdToken(true)
                     .addOnFailureListener { throwable->
 
                         logger.e(LoginFragmentViewModel.TAG, throwable)

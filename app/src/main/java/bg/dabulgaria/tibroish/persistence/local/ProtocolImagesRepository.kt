@@ -6,7 +6,7 @@ import bg.dabulgaria.tibroish.domain.protocol.image.ProtocolImage
 import javax.inject.Inject
 
 class ProtocolImagesRepository @Inject
-constructor(private val database:TiBroishDatabase ) : IProtocolImagesRepository {
+constructor(private val database:TiBroishDatabase ) :BaseTiBroishRepository(database), IProtocolImagesRepository {
 
     companion object {
 
@@ -28,18 +28,19 @@ constructor(private val database:TiBroishDatabase ) : IProtocolImagesRepository 
         return database.daoProtocolImage().getById( id )
     }
 
-    override fun insert(protocol: ProtocolImage) {
+    override fun insert(image: ProtocolImage) {
 
-        val id = database.daoProtocolImage().insert( protocol )
-        protocol.id = id
+        val id = database.daoProtocolImage().insert( image )
+        image.id = id
     }
 
-    override fun update(protocol: ProtocolImage) {
-        database.daoProtocolImage().update(protocol)
+    override fun update(image: ProtocolImage) {
+        database.daoProtocolImage().update(image)
     }
 
-    override fun delete(protocol: ProtocolImage) {
-        database.daoProtocolImage().delete(protocol)
+    override fun delete(image: ProtocolImage) {
+        database.daoProtocolImage().delete(image)
     }
+
 
 }

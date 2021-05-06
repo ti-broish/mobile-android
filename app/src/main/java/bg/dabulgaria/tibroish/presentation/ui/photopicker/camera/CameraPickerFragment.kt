@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.Locations.LocationsS
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
 import dagger.android.support.AndroidSupportInjection
@@ -21,8 +20,6 @@ import kotlinx.android.synthetic.main.fragment_comic_list.*
 interface ICameraPickerView : IBaseView {
 
     fun onLoadingStateChange(isLoading : Boolean )
-
-    fun onComicsLoaded(locations : LocationsS )
 }
 
 class CameraPickerFragment : BasePresentableFragment<ICameraPickerView,ICameraPickerPresenter>(), ICameraPickerView {
@@ -61,13 +58,6 @@ class CameraPickerFragment : BasePresentableFragment<ICameraPickerView,ICameraPi
         listSwipeRefreshLayout?.setRefreshing(isLoading)
     }
 
-    override fun onComicsLoaded(locationsS: LocationsS) {
-
-        mAdapter?.updateList(locationsS )
-
-        val listIsEmpty = locationsS.regions.isNullOrEmpty()
-        infoText?.setVisibility(if (listIsEmpty) View.VISIBLE else View.GONE)
-    }
 
     override fun onError(errorMessage: String) {
 
