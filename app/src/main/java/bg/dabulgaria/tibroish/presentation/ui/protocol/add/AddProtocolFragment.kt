@@ -1,12 +1,15 @@
 package bg.dabulgaria.tibroish.presentation.ui.protocol.add
 
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.CallSuper
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
@@ -17,10 +20,14 @@ import javax.inject.Inject
 interface IAddProtocolView : IBaseView {
 
     fun onLoadingStateChange( isLoading : Boolean )
+
+    fun setData( data:AddProtocolViewData )
 }
 
 class AddProtocolFragment @Inject constructor()
     : BasePresentableFragment<IAddProtocolView, IAddProtocolPresenter>(), IAddProtocolView {
+
+    lateinit var adapter:AddProtocolAdapter
 
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?,
                               savedInstanceState : Bundle?) : View? {
@@ -30,8 +37,33 @@ class AddProtocolFragment @Inject constructor()
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        addProtocolGalleryBtn.setOnClickListener { presenter.onAddFromGalleryClick() }
-        addProtocolCameraBtn.setOnClickListener { presenter.onAddFromCameraClick() }
+        adapter = AddProtocolAdapter(presenter)
+        addProtocolRecyclerView.adapter = adapter
+        val layoutManager = GridLayoutManager( this.activity, 3 )
+
+        layoutManager.spanSizeLookup = object:GridLayoutManager.SpanSizeLookup(){
+
+            override fun getSpanSize(position: Int): Int {
+
+                if( position < 0 || position >= adapter.list.size)
+                    return 3
+
+                return when(adapter.list[position].type){
+                    AddProtocolListItemType.Image -> 1
+                    else -> 3
+                }
+            }
+        }
+        addProtocolRecyclerView.layoutManager = layoutManager
+    }
+
+    override fun setData( data:AddProtocolViewData ){
+
+        adapter.list.clear()
+        adapter.list.addAll(data.items)
+        adapter.notifyDataSetChanged()
+
+
     }
 
     override fun onLoadingStateChange(isLoading: Boolean) {
@@ -44,19 +76,6 @@ class AddProtocolFragment @Inject constructor()
         Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show()
     }
 
-    private fun setData(){
-
-//        titleTextView?.text = mAddProtocolViewData?.title
-//        descriptionTextView?.text = mAddProtocolViewData?.description
-//
-//        if( thumbnailImageView != null && mAddProtocolViewData != null ){
-//
-//            Glide.with(this)
-//                    .load(mAddProtocolViewData?.thumbUlr)
-//                    .transition(DrawableTransitionOptions.withCrossFade())
-//                    .into(thumbnailImageView!!)
-//        }
-    }
 
     companion object {
 

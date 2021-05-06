@@ -1,14 +1,11 @@
 package bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery//package bg.dabulgaria.tibroish.presentation.ui.protocol.list
 
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.Locations.RegionS
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import kotlinx.android.synthetic.main.gallery_picker_photo_item.view.*
@@ -43,9 +40,22 @@ class GridPickerAdapter @Inject constructor(private val presenter: IPhotoPickerP
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.itemView.photoImageView)
 
-        holder.itemView.photoImageView.setOnClickListener { presenter.onImageClick(item, position) }
-        holder.itemView.photoCheckBox.setOnClickListener { presenter.onImageClick(item, position) }
         holder.itemView.photoCheckBox.isChecked = item.isSelected
+
+        if(item.previouslySelected) {
+
+            holder.itemView.photoBoxView.visibility = View.VISIBLE
+            holder.itemView.photoBoxView.alpha = 1f
+            holder.itemView.photoImageView.setOnClickListener(null)
+            holder.itemView.photoCheckBox.setOnClickListener(null)
+        }
+        else {
+
+            holder.itemView.photoBoxView.visibility = View.GONE
+            holder.itemView.photoBoxView.alpha = 0f
+            holder.itemView.photoImageView.setOnClickListener { presenter.onImageClick(item, position) }
+            holder.itemView.photoCheckBox.setOnClickListener { presenter.onImageClick(item, position) }
+        }
     }
 
     fun updateList(newItemsList:List<PhotoItem>) {

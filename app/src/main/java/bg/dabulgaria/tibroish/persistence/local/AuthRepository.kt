@@ -2,7 +2,7 @@ package bg.dabulgaria.tibroish.persistence.local
 
 import android.content.Context
 import bg.dabulgaria.tibroish.domain.providers.ILogger
-import bg.dabulgaria.tibroish.domain.user.IAuthRepository
+import bg.dabulgaria.tibroish.domain.auth.IAuthRepository
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import java.lang.Exception
 import javax.inject.Inject

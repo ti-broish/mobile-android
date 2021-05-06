@@ -1,4 +1,4 @@
-package bg.dabulgaria.tibroish.persistence.remote
+package bg.dabulgaria.tibroish.persistence.remote.api
 
 object ApiHeader {
 

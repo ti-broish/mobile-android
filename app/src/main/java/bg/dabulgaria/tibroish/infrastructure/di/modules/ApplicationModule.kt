@@ -53,7 +53,7 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    internal fun providesMarvelsDatabase( @AppContext context: Context ): TiBroishDatabase{
+    internal fun providesTiBroishDatabase( @AppContext context: Context ): TiBroishDatabase{
 
         return Room.databaseBuilder( context, TiBroishDatabase::class.java, "ti_broish_db" )
                 .build()
@@ -64,7 +64,6 @@ class ApplicationModule {
 
         return schedulersProvider
     }
-
 
     @Provides
     @Singleton
