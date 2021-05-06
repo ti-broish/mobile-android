@@ -11,3 +11,7 @@
 /.idea
 /.git
 /.gradle
+app/docs-json.json
+app/signing.properties
+app/keystores/
+app/src/main/assets/appconfig.properties
