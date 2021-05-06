@@ -28,16 +28,16 @@ class VDApiInterceptor (private val userAgent: String) : Interceptor {
     // region parse API error
     private fun throwError(response: Response) {
 
-        val networkResponse = response.networkResponse()
-        val networkResponseBody = response.body()
+        val networkResponse = response.networkResponse
+        val networkResponseBody = response.body
         var responseData: String =""
         if (networkResponse != null && networkResponseBody != null) {
 
             try {
 
                 val headersMapMap = mutableMapOf<String, String>()
-                networkResponse.headers().names().map { name ->
-                    headersMapMap.put(name, networkResponse.headers().get(name)
+                networkResponse.headers.names().map { name ->
+                    headersMapMap.put(name, networkResponse.headers.get(name)
                             ?: "")
                 }
                 responseData = String(networkResponseBody.bytes(),

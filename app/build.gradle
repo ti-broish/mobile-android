@@ -2,8 +2,25 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'org.jetbrains.dokka'
+apply plugin: 'org.openapi.generator'
+apply plugin: 'com.google.gms.google-services'
 
 android {
+
+    signingConfigs {
+        AppSigning {
+            def Properties signingProps = new Properties()
+            signingProps.load(new FileInputStream(file('../app/signing.properties')))
+            storeFile file(signingProps["store"])
+            storePassword signingProps["storePass"]
+            keyAlias signingProps["alias"]
+            keyPassword signingProps["keypass"]
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
     compileSdkVersion 30
     defaultConfig {
         applicationId "bg.dabulgaria.android"
@@ -12,16 +29,18 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-
-        buildConfigField "String", "API_ENDPOINT", "\"http://gateway.marvel.com/v1/public/\""
-        buildConfigField "String", "VD_API_ENDPOINT", "\"https://selodirekt.com/\""
-        buildConfigField "String", "PRIVATE_KEY", "\"\""
-        buildConfigField "String", "PUBLIC_KEY", "\"\""
+        signingConfig signingConfigs.AppSigning
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.AppSigning
+        }
+        debug{
+            debuggable true
+            signingConfig signingConfigs.AppSigning
+
         }
     }
     buildToolsVersion '29.0.3'
@@ -38,12 +57,14 @@ android {
             applicationId = "bg.dabulgaria.tibroish"
             def APP_NAME = "Ти Броиш"
             resValue "string", "app_name", APP_NAME
+            signingConfig signingConfigs.AppSigning
         }
         staging{
 
-            applicationId = "bg.dabulgaria.tibroish.stage"
+            applicationId = "bg.dabulgaria.tibroish.apn"
             def APP_NAME = "Ти Броиш Stage"
             resValue "string", "app_name", APP_NAME
+            signingConfig signingConfigs.AppSigning
         }
     }
 }
@@ -56,12 +77,21 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "com.google.android.material:material:1.3.0"
+    implementation 'androidx.navigation:navigation-fragment:2.3.5'
+    implementation platform('com.google.firebase:firebase-bom:27.1.0')
+
+    implementation 'androidx.navigation:navigation-ui:2.3.5'
 
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
     implementation "com.squareup.retrofit2:retrofit:$retrofit2Version"
     implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofit2Version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit2Version"
     implementation "com.squareup.retrofit2:converter-scalars:$retrofit2Version"
+
+    implementation "com.squareup.moshi:moshi:1.11.0"
+    implementation "com.squareup.moshi:moshi-adapters:1.11.0"
+    implementation "com.squareup.okhttp3:okhttp:4.5.0"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.11.0"
 
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -71,6 +101,9 @@ dependencies {
 
     implementation 'io.reactivex.rxjava3:rxjava:3.0.6'
     implementation 'io.reactivex.rxjava3:rxkotlin:3.0.1'
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-auth'
+
     // Dagger core
     api "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
@@ -82,7 +115,7 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     // RxJava support for Room
-    implementation 'androidx.room:room-rxjava2:2.0.0'
+    implementation "androidx.room:room-rxjava2:$room_version"
     androidTestImplementation 'androidx.arch.core:core-testing:2.0.0'
     // Glide
     implementation "com.github.bumptech.glide:glide:$glideVersion"
@@ -90,6 +123,9 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
     // Volley
     api 'com.android.volley:volley:1.2.0'
+
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.6'
 
     // Test
     testImplementation 'junit:junit:4.13'
@@ -101,5 +137,19 @@ dependencies {
 }
 
 repositories {
+    jcenter()
     mavenCentral()
+}
+
+openApiGenerate {
+    generatorName = "kotlin"
+    inputSpec = "$rootDir/app/docs-json.json".toString()
+    outputDir = "$buildDir/generated".toString()
+    apiPackage = "bg.dabulgaria.tibroish.persistence.api"
+    invokerPackage = "bg.dabulgaria.tibroish.persistence.repo"
+    modelPackage = "bg.dabulgaria.tibroish.persistence.remote.model"
+    validateSpec = false
+    configOptions = [
+            dateLibrary: "java8"
+    ]
 }

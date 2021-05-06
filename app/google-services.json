@@ -1,0 +1,155 @@
+{
+  "project_info": {
+    "project_number": "381175256790",
+    "firebase_url": "https://ti-broish.firebaseio.com",
+    "project_id": "ti-broish",
+    "storage_bucket": "ti-broish.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381175256790:android:1bf81ab8e1281d67379b77",
+        "android_client_info": {
+          "package_name": "bg.dabulgaria.tibroish"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "381175256790-3p9tm3mstb9l5bq8ngn34a05flvkms8b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTBJ5F6kstg7r64kwTzpy1x4cnxgZ7Ua4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "381175256790-3p9tm3mstb9l5bq8ngn34a05flvkms8b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "381175256790-4blbe5dmg0p81jqha4ejfsk8u05qcnro.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dsi.tibroish"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381175256790:android:4ba836fb8d699fa5379b77",
+        "android_client_info": {
+          "package_name": "bg.dabulgaria.tibroish.apn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "381175256790-3p9tm3mstb9l5bq8ngn34a05flvkms8b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTBJ5F6kstg7r64kwTzpy1x4cnxgZ7Ua4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "381175256790-3p9tm3mstb9l5bq8ngn34a05flvkms8b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "381175256790-4blbe5dmg0p81jqha4ejfsk8u05qcnro.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dsi.tibroish"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381175256790:android:2388fb3ee10142bc379b77",
+        "android_client_info": {
+          "package_name": "bg.dabulgaria.tibroish.stream"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "381175256790-3p9tm3mstb9l5bq8ngn34a05flvkms8b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTBJ5F6kstg7r64kwTzpy1x4cnxgZ7Ua4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "381175256790-3p9tm3mstb9l5bq8ngn34a05flvkms8b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "381175256790-4blbe5dmg0p81jqha4ejfsk8u05qcnro.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dsi.tibroish"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381175256790:android:a2536fb32220cabb379b77",
+        "android_client_info": {
+          "package_name": "bg.dabulgaria.tibroish.stream.staging"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "381175256790-3p9tm3mstb9l5bq8ngn34a05flvkms8b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTBJ5F6kstg7r64kwTzpy1x4cnxgZ7Ua4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "381175256790-3p9tm3mstb9l5bq8ngn34a05flvkms8b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "381175256790-4blbe5dmg0p81jqha4ejfsk8u05qcnro.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dsi.tibroish"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
