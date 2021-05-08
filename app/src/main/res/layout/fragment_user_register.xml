@@ -20,13 +20,10 @@
             app:layout_constraintWidth_max="@dimen/text_input_max_width">
 
             <TextView
-                style="@style/AppTheme.TextAppearance.Large"
+                style="@style/AppTheme.Widget.TextView.ActivityTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
-                android:gravity="center_horizontal"
-                android:text="@string/register_registration"
-                android:textAllCaps="true" />
+                android:text="@string/register_registration" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/input_first_name"
