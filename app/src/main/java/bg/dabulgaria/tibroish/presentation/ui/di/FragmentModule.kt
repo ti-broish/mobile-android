@@ -6,6 +6,9 @@ import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginFragment
 import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginPresenter
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.*
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.*
+import bg.dabulgaria.tibroish.presentation.ui.registration.IRegistrationPresenter
+import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationFragment
+import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationPresenter
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -51,4 +54,10 @@ interface FragmentModule {
     @Binds
     fun bindILoginPresenter(implemenation: LoginPresenter): ILoginPresenter
     //endregion Login screen
+
+    @ContributesAndroidInjector
+    fun bindRegistrationFragment(): RegistrationFragment
+
+    @Binds
+    fun bindIRegistrationPresenter(implementation: RegistrationPresenter): IRegistrationPresenter
 }
