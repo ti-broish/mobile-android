@@ -14,6 +14,7 @@ import bg.dabulgaria.tibroish.presentation.ui.photopicker.camera.CameraPickerFra
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolViewData
+import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationFragment
 import javax.inject.Inject
 
 class MainRouter @Inject constructor(@AppContext private val appContext: Context )
@@ -146,7 +147,13 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
     }
 
     override fun showRegisterScreen(email: String) {
-        TODO("Not yet implemented")
+        val content =
+                view?.supportFragmentMngr?.findFragmentByTag(RegistrationFragment.TAG)
+                        ?: RegistrationFragment.newInstance()
+        view?.showScreen(content,
+                RegistrationFragment.TAG,
+                /* addToBackstack= */ false,
+                /* transitionContent= */ false)
     }
 
     override fun showForgotPasswordScreen(email: String) {
