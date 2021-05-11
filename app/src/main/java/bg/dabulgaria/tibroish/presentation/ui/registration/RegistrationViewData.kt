@@ -1,12 +1,13 @@
 package bg.dabulgaria.tibroish.presentation.ui.registration
 
 import android.os.Parcelable
+import bg.dabulgaria.tibroish.domain.organisation.Organization
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 class RegistrationViewData(
         val countryCodesData: MutableList<CountryCode>,
-        val organizationsData: MutableList<Organization>) : Parcelable
+        val organizationsData: MutableList<RegistrationOrganization>) : Parcelable
 
 class RegistrationConstants {
     companion object {

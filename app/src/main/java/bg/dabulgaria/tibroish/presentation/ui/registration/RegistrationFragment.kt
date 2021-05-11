@@ -8,6 +8,7 @@ import android.widget.*
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.domain.organisation.Organization
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
 import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginFragment
@@ -40,7 +41,7 @@ class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistratio
     }
 
     private fun setupOrganizations() {
-        presenter.getOrganizations { organizations: List<Organization>? ->
+        presenter.getOrganizations { organizations: List<RegistrationOrganization>? ->
             if (organizations == null) {
                 return@getOrganizations
             }
