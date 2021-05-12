@@ -1,26 +1,31 @@
 package bg.dabulgaria.tibroish.presentation.ui.registration
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
-
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.domain.organisation.Organization
+import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
+import bg.dabulgaria.tibroish.presentation.base.IBaseView
+import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginFragment
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.android.synthetic.main.fragment_user_register.*
 
-class RegisterActivity : AppCompatActivity() {
-    private lateinit var viewModel: RegisterActivityViewModel
+interface IRegisterView : IBaseView {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
+}
 
-        viewModel = ViewModelProvider(this).get(RegisterActivityViewModel::class.java)
+class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistrationPresenter>(), IRegisterView {
 
+    override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_user_register, container, false)
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
         setupCountryCodes()
         setupOrganizations()
@@ -28,30 +33,35 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun setupRegisterButton() {
-        findViewById<Button>(R.id.button_register).setOnClickListener(View.OnClickListener {
+        button_register?.setOnClickListener {
             if (validateFields()) {
-                viewModel.register("", "")
+                presenter.register("", "")
             }
-        })
+        }
     }
 
     private fun setupOrganizations() {
-
-        viewModel.getOrganizations().observe(this, Observer {
-            val adapter = OrganizationsAdapter(this, it)
-            val dropdown = findViewById<AutoCompleteTextView>(R.id.input_organization_dropdown)
+        presenter.getOrganizations { organizations: List<RegistrationOrganization>? ->
+            if (organizations == null) {
+                return@getOrganizations
+            }
+            val adapter = OrganizationsAdapter(requireContext(), organizations)
+            val dropdown = input_organization_dropdown
             dropdown.setAdapter(adapter)
             dropdown.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 dropdown.setText(adapter.getItem(position)?.name, /* filter= */ false)
                 adapter.filter.filter(null)
             }
-        })
+        }
     }
 
     private fun setupCountryCodes() {
-        viewModel.getCountryCodes().observe(this, Observer {
-            val adapter = CountryCodesArrayAdapter(this, it)
-            val dropdown = findViewById<AutoCompleteTextView>(R.id.input_area_code_dropdown)
+        presenter.getCountryCodes(requireContext(), callback = { countryCodes ->
+            if (countryCodes == null) {
+                return@getCountryCodes
+            }
+            val adapter = CountryCodesArrayAdapter(requireContext(), countryCodes)
+            val dropdown = input_area_code_dropdown
             dropdown.setAdapter(adapter)
             dropdown.setText(adapter.getDefaultSelectedItem().code, /* filter= */ false)
             dropdown.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
@@ -105,7 +115,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun processOrganization(): Boolean {
-        if (!viewModel.processOrganization(
+        if (!presenter.processOrganization(
                         getFieldText(R.id.input_organization_dropdown),
                         callback = {
                             setTextLayoutError(R.id.input_organization, it)
@@ -117,7 +127,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun processLastName(): Boolean {
-        if (!viewModel.processRequiredField(
+        if (!presenter.processRequiredField(
                         getFieldText(R.id.input_last_name_edit_text),
                         callback = {
                             setTextLayoutError(R.id.input_last_name, it)
@@ -129,7 +139,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun processFirstName(): Boolean {
-        if (!viewModel.processRequiredField(
+        if (!presenter.processRequiredField(
                         getFieldText(R.id.input_first_name_edit_text),
                         callback = {
                             setTextLayoutError(R.id.input_first_name, it)
@@ -141,11 +151,10 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun processPhoneNumber(): Boolean {
-        val areaCode =
-                findViewById<AutoCompleteTextView>(R.id.input_area_code_dropdown).text.toString()
+        val areaCode = input_area_code_dropdown?.text.toString()
         val localPhone = getFieldText(R.id.input_phone_number_edit_text)
         val fullPhoneNumber = areaCode + localPhone
-        if (!viewModel.processPhoneNumberField(
+        if (!presenter.processPhoneNumberField(
                         fullPhoneNumber,
                         callback = {
                             setTextLayoutError(R.id.input_phone_number, it)
@@ -157,8 +166,8 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun processOver18Checkbox(): Boolean {
-        val checkBox: CheckBox = findViewById(R.id.checkbox_over_18)
-        if (!viewModel.processRequiredCheckbox(
+        val checkBox: CheckBox = checkbox_over_18
+        if (!presenter.processRequiredCheckbox(
                         checkBox,
                         callback = {
                             checkBox.error = getString(it)
@@ -171,7 +180,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun processPassword(): Boolean {
-        if (!viewModel.processPassword(
+        if (!presenter.processPassword(
                         getFieldText(R.id.input_password_edit_text),
                         callback = {
                             setTextLayoutError(R.id.input_password, it)
@@ -183,7 +192,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun processRepeatPassword(): Boolean {
-        if (!viewModel.processRepeatPassword(
+        if (!presenter.processRepeatPassword(
                         getFieldText(R.id.input_password_edit_text),
                         getFieldText(R.id.input_repeat_password_edit_text),
                         callback = {
@@ -196,7 +205,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun processEgnLastFourDigits(): Boolean {
-        if (!viewModel.processEgnLastFourDigits(
+        if (!presenter.processEgnLastFourDigits(
                         getFieldText(R.id.input_egn_last_four_digits_edit_text),
                         callback = {
                             setTextLayoutError(R.id.input_egn_last_four_digits, it)
@@ -208,7 +217,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun processEmail(): Boolean {
-        if (!viewModel.processEmailField(
+        if (!presenter.processEmailField(
                         getFieldText(R.id.input_email_edit_text),
                         callback = {
                             setTextLayoutError(R.id.input_email, it)
@@ -220,14 +229,21 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun setTextLayoutError(@IdRes textLayoutId: Int, @StringRes stringRes: Int) {
-        getInputTextLayout(textLayoutId).error = getString(stringRes)
+        getInputTextLayout(textLayoutId)?.error = getString(stringRes)
     }
 
     private fun clearTextLayoutError(@IdRes textLayoutId: Int) {
-        getInputTextLayout(textLayoutId).error = null
+        getInputTextLayout(textLayoutId)?.error = null
     }
 
-    private fun getInputTextLayout(@IdRes resId: Int) = findViewById<TextInputLayout>(resId)
+    private fun getInputTextLayout(@IdRes resId: Int) = view?.findViewById<TextInputLayout>(resId)
 
-    private fun getFieldText(@IdRes resId: Int) = findViewById<EditText>(resId).text.toString()
+    private fun getFieldText(@IdRes resId: Int) = view?.findViewById<EditText>(resId)?.text.toString()
+
+    companion object {
+        val TAG = RegistrationFragment::class.java.simpleName
+
+        @JvmStatic
+        fun newInstance() = RegistrationFragment()
+    }
 }
