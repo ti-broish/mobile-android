@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.CheckBox
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.organisation.IOrganisationRepository
+import bg.dabulgaria.tibroish.domain.organisation.ITiBorishRemoteRepository
 import bg.dabulgaria.tibroish.domain.organisation.Organization
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
@@ -64,7 +64,7 @@ class RegistrationPresenter @Inject constructor(
     private var formValidator: FormValidator = FormValidator()
 
     @Inject
-    lateinit var organisationRepository: IOrganisationRepository
+    lateinit var tiBorishRemoteRepository: ITiBorishRemoteRepository
 
     override fun getCountryCodes(context: Context, callback: (List<CountryCode>?) -> Unit) {
         if (registrationViewData?.countryCodesData.isNullOrEmpty()) {
@@ -98,7 +98,7 @@ class RegistrationPresenter @Inject constructor(
 
     private suspend fun fetchOrganizations(): List<Organization> {
         return withContext(Dispatchers.IO) {
-            organisationRepository.getOrganisations()
+            tiBorishRemoteRepository.getOrganisations()
         }
     }
 
