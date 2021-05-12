@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.organisation.IOrganisationRepository
+import bg.dabulgaria.tibroish.domain.organisation.ITiBorishRemoteRepository
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.base.BaseFragment
@@ -20,7 +20,7 @@ class HomeFragment : BaseFragment() {
     @Inject
     protected lateinit var mMainRouter: IMainRouter
     @Inject
-    lateinit var organisationRepository: IOrganisationRepository
+    lateinit var mTiBorishRemoteRepository: ITiBorishRemoteRepository
     @Inject
     lateinit var logger: ILogger
     @Inject

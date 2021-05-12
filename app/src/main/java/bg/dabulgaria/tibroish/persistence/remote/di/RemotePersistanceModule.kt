@@ -1,8 +1,8 @@
 package bg.dabulgaria.tibroish.persistence.remote.di
 
-import bg.dabulgaria.tibroish.domain.organisation.IOrganisationRepository
+import bg.dabulgaria.tibroish.domain.organisation.ITiBorishRemoteRepository
 import bg.dabulgaria.tibroish.domain.user.IUserRemoteRepository
-import bg.dabulgaria.tibroish.persistence.remote.repo.OrganisationRepository
+import bg.dabulgaria.tibroish.persistence.remote.repo.TiBroishRemoteRepository
 import bg.dabulgaria.tibroish.persistence.remote.repo.UserRemoteRepository
 import dagger.Binds
 import dagger.Module
@@ -12,7 +12,7 @@ import javax.inject.Singleton
 interface RemotePersistenceModule {
 
     @Binds
-    fun bindsIOrganisationRepository(implementation: OrganisationRepository):IOrganisationRepository
+    fun bindsIOrganisationRepository(implementation: TiBroishRemoteRepository):ITiBorishRemoteRepository
 
     @Binds
     @Singleton

@@ -1,5 +1,6 @@
 package bg.dabulgaria.tibroish.presentation.ui.photopicker.camera//package bg.dabulgaria.tibroish.presentation.ui.protocol.list
 
+import android.media.Image
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import android.view.LayoutInflater
@@ -8,27 +9,24 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.Locations.LocationsS
-import bg.dabulgaria.tibroish.domain.Locations.RegionS
 import javax.inject.Inject
 
 
 class CameraPickerAdapter @Inject constructor(val presenter: ICameraPickerPresenter)
     : RecyclerView.Adapter<CameraPickerAdapter.ComicViewHolder>() {
 
-    val list = mutableListOf<RegionS>()
+    val list = mutableListOf<Image>()
 
     class ComicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         internal val titleTextView: AppCompatTextView = itemView.findViewById(R.id.titleTextView)
         internal val comicImageView: AppCompatImageView = itemView.findViewById(R.id.comicImageView)
 
-        internal fun bind(regionS: RegionS?) {
+        internal fun bind(regionS: Image?) {
 
             if (regionS == null)
                 return
 
-            titleTextView.text = regionS.name
 //            Glide.with(this.itemView)
 //                    .load(regionS.thumbUlr)
 //                    .transition(DrawableTransitionOptions.withCrossFade())
@@ -70,11 +68,11 @@ class CameraPickerAdapter @Inject constructor(val presenter: ICameraPickerPresen
         }
     }
 
-    fun updateList( locationsS: LocationsS) {
+    fun updateList( locationsS: Image) {
 
         list.clear()
-        if ( !locationsS.regions.isNullOrEmpty() )
-            list.addAll(locationsS.regions)
+//        if ( !locationsS.regions.isNullOrEmpty() )
+//            list.addAll(locationsS.regions)
 
         notifyDataSetChanged()
     }

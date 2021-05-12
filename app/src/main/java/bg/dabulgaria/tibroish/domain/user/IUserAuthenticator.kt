@@ -1,5 +1,6 @@
 package bg.dabulgaria.tibroish.domain.user
 
+import bg.dabulgaria.tibroish.domain.auth.IAuthRepository
 import javax.inject.Inject
 
 interface IUserAuthenticator {

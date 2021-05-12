@@ -54,5 +54,14 @@
     <string name="confirm_over_18">Моля потвърдете, че имате навършени 18 години</string>
     <string name="invalid_phone_number">Невалиден формат на телефонен номер.</string>
     <string name="invalid_organization">Изберете организация от списъка</string>
+    <string name="section_in">Секция в:</string>
+    <string name="bulgaria">България</string>
+    <string name="abroad">Чужбина</string>
+    <string name="mir">МИР</string>
+    <string name="municipality">Община</string>
+    <string name="town">Населено място</string>
+    <string name="region">Район</string>
+    <string name="section_number">Номер на секция</string>
+    <string name="unique_section_number">Единен номер на секция</string>
 
 </resources>

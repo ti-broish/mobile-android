@@ -55,6 +55,8 @@ class PhotoPickerFragment : BasePresentableFragment<IPhotoPickerView, IPhotoPick
     override fun onLoadingStateChange(viewState: ViewState) {
 
         listSwipeRefreshLayout?.isRefreshing = (viewState == ViewState.Loading)
+        photoPickerOverlayImageView?.visibility = if(viewState == ViewState.Loading) View.VISIBLE else View.GONE
+
         actionButton?.setOnClickListener { presenter.onDoneClick() }
         infoText?.visibility =  View.GONE
         actionButton?.setText( R.string.add )

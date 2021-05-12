@@ -1,6 +1,8 @@
 package bg.dabulgaria.tibroish.domain.protocol
 
-interface IProtocolsRepository {
+import bg.dabulgaria.tibroish.domain.io.IBaseTiBroishRepository
+
+interface IProtocolsRepository : IBaseTiBroishRepository {
 
     fun getAll(): List<Protocol>
     fun get(id: Long): Protocol
