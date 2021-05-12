@@ -9,7 +9,7 @@
 * https://github.com/swagger-api/swagger-codegen.git
 * Do not edit the class manually.
 */
-package bg.dabulgaria.tibroish.persistence.remote.model
+package bg.dabulgaria.tibroish.domain.locations
 
 import bg.dabulgaria.tibroish.persistence.remote.model.CityRegion
 import bg.dabulgaria.tibroish.persistence.remote.model.Town
@@ -25,12 +25,12 @@ import bg.dabulgaria.tibroish.persistence.remote.model.Town
  * @param sectionsCount 
  */
 data class Country (
-    val cityRegions: CityRegion,
+    //val cityRegions: CityRegion,
     val id: java.math.BigDecimal,
     val code: kotlin.String,
     val name: kotlin.String,
     val isAbroad: kotlin.Boolean,
-    val towns: kotlin.collections.List<Town>,
+    //val towns: kotlin.collections.List<Town>,
     val sectionsCount: java.math.BigDecimal
 ) {
 

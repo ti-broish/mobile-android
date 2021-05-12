@@ -11,6 +11,7 @@ data class PhotoItem(val id:String,
                      val height:Int,
                      val dateTaken:Date,
                      var isSelected: Boolean,
+                     var previouslySelected: Boolean,
                      val displaySize:Int): Serializable
 
 data class PhotoPickerViewData(val protocolId:Long): Serializable {

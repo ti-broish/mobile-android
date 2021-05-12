@@ -9,7 +9,7 @@ import java.io.Serializable
 import java.util.*
 
 enum class UploadStatus(val code:Int){
-    NotProcessed(0), Uploaded(1);
+    NotProcessed(0), Copied(1), Uploaded(2);
 
     companion object {
 
@@ -57,20 +57,20 @@ class DateTypeConverter {
 @TypeConverters( UploadStatusTypeConverter::class,
         PickedImageSourceTypeConverter::class,
         DateTypeConverter::class)
-class ProtocolImage(
+class ProtocolImage constructor(
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = "id")
-        var id:Long                     = -1,
+        var id:Long                     = 0,
         @ColumnInfo(name = "protocolId")
-        var protocolId:Long             = -1,
+        var protocolId:Long             = 0,
         var uuid:String                 = "",
         var serverId:String             = "",
+        var originalFilePath:String     = "",
         var localFilePath:String        = "",
         var localFileThumbPath:String   = "",
-        var uploadStatus :UploadStatus  = UploadStatus.NotProcessed,
+        var uploadStatus :UploadStatus        = UploadStatus.NotProcessed,
         var providerId:String           = "",
         val source: PickedImageSource   = PickedImageSource.None,
-        val imageFilePath:String        = "",
         val width:Int                   = -1,
         val height:Int                  = -1,
         val dateTaken: Date             = Date(0) ):Serializable

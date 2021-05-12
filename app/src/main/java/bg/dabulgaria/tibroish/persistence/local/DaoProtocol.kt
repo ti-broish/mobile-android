@@ -2,7 +2,6 @@ package bg.dabulgaria.tibroish.persistence.local
 
 import androidx.room.*
 import bg.dabulgaria.tibroish.domain.protocol.Protocol
-import bg.dabulgaria.tibroish.persistence.local.model.LocalComics
 
 @Dao
 interface DaoProtocol {

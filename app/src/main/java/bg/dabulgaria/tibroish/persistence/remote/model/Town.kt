@@ -11,11 +11,7 @@
 */
 package bg.dabulgaria.tibroish.persistence.remote.model
 
-import bg.dabulgaria.tibroish.persistence.remote.model.CityRegion
-import bg.dabulgaria.tibroish.persistence.remote.model.Country
-import bg.dabulgaria.tibroish.persistence.remote.model.Municipality
-import bg.dabulgaria.tibroish.persistence.remote.model.Section
-import bg.dabulgaria.tibroish.persistence.remote.model.Violation
+import bg.dabulgaria.tibroish.domain.locations.Country
 
 /**
  * 
@@ -29,14 +25,14 @@ import bg.dabulgaria.tibroish.persistence.remote.model.Violation
  * @param violations 
  */
 data class Town (
-    val id: java.math.BigDecimal,
-    val code: java.math.BigDecimal,
-    val name: kotlin.String,
-    val country: Country,
-    val municipality: Municipality,
-    val cityRegions: kotlin.collections.List<CityRegion>,
-    val sections: kotlin.collections.List<Section>,
-    val violations: kotlin.collections.List<Violation>
+        val id: java.math.BigDecimal,
+        val code: java.math.BigDecimal,
+        val name: kotlin.String,
+        val country: Country,
+        val municipality: Municipality,
+        val cityRegions: kotlin.collections.List<CityRegion>,
+        val sections: kotlin.collections.List<Section>,
+        val violations: kotlin.collections.List<Violation>
 ) {
 
 }

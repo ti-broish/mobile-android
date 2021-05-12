@@ -81,7 +81,15 @@ class PhotoPickerPresenter @Inject constructor(private val interactor : IPhotoPi
     }
 
     override fun onDoneClick() {
-        TODO("Not yet implemented")
+
+        val currentData = data?:return
+
+        view?.onLoadingStateChange(ViewState.Loading)
+
+        add(Single.fromCallable{ interactor.addImagesToProtocol(currentData)}
+                .subscribeOn(schedulersProvider.ioScheduler())
+                .observeOn(schedulersProvider.uiScheduler())
+                .subscribe( { onPhotosAdded() },{ th -> onError(th) }) )
     }
 
     override fun onRequestPermissionClick() {
@@ -115,6 +123,11 @@ class PhotoPickerPresenter @Inject constructor(private val interactor : IPhotoPi
             return
 
         loadData()
+    }
+
+    private fun onPhotosAdded(){
+
+        mainRouter.navigateBack()
     }
 
     private fun onLoaded(list: List<PhotoItem>){

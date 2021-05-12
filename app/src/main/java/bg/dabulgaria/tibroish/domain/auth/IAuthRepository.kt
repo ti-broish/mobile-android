@@ -1,4 +1,4 @@
-package bg.dabulgaria.tibroish.domain.user
+package bg.dabulgaria.tibroish.domain.auth
 
 interface IAuthRepository {
 

@@ -35,7 +35,7 @@ class ProtocolTypeConverter {
 @TypeConverters( ProtocolTypeConverter::class)
 open class Protocol constructor(@PrimaryKey(autoGenerate = true)
                            @ColumnInfo(name = "id")
-                           var id:Long=-1,
+                           var id:Long=0,
                            var uuid:String="",
                            var serverId:String ="",
                            var status:ProtocolStatus = ProtocolStatus.New) :Serializable {
@@ -57,5 +57,5 @@ class ProtocolExt(id:Long=-1,
             source.serverId,
             source.status)
 
-    val photos = mutableListOf<ProtocolImage>()
+    val images = mutableListOf<ProtocolImage>()
 }
