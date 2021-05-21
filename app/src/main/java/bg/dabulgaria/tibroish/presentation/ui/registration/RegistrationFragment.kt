@@ -1,6 +1,7 @@
 package bg.dabulgaria.tibroish.presentation.ui.registration
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,7 @@ import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.organisation.Organization
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
-import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginFragment
+import bg.dabulgaria.tibroish.presentation.ui.common.UserDataWrapper
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_user_register.*
 
@@ -35,13 +36,39 @@ class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistratio
     private fun setupRegisterButton() {
         button_register?.setOnClickListener {
             if (validateFields()) {
-                presenter.register("", "")
+                register()
             }
         }
     }
 
+    private fun register() {
+        presenter.register(
+            createUserDataWrapper(),
+            callback = object : IRegistrationCallback {
+                override fun onSuccess() {
+                    Log.i(TAG, "Registration success!")
+                    presenter.navigateToLoginScreen()
+                }
+            })
+    }
+
+    private fun createUserDataWrapper() = UserDataWrapper(
+        firstName = input_first_name_edit_text.text.toString(),
+        lastName = input_last_name_edit_text.text.toString(),
+        email = input_email_edit_text.text.toString(),
+        phone = getFullPhoneNumber(),
+        pin = input_egn_last_four_digits_edit_text.text.toString(),
+        organization = getSelectedOrganization()!!,
+        hasAgreedToKeepData = checkbox_consent.isChecked,
+        password = input_password_edit_text.text.toString()
+    )
+
+    private fun getSelectedOrganization(): Organization? {
+        return presenter.getOrganizationWithName(input_organization_dropdown?.text.toString())
+    }
+
     private fun setupOrganizations() {
-        presenter.getOrganizations { organizations: List<RegistrationOrganization>? ->
+        presenter.getOrganizations { organizations: List<Organization>? ->
             if (organizations == null) {
                 return@getOrganizations
             }
@@ -116,10 +143,11 @@ class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistratio
 
     private fun processOrganization(): Boolean {
         if (!presenter.processOrganization(
-                        getFieldText(R.id.input_organization_dropdown),
-                        callback = {
-                            setTextLayoutError(R.id.input_organization, it)
-                        })) {
+                input_organization_dropdown?.text.toString()
+            ) {
+                setTextLayoutError(R.id.input_organization, it)
+            }
+        ) {
             return false
         }
         clearTextLayoutError(R.id.input_organization)
@@ -151,9 +179,7 @@ class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistratio
     }
 
     private fun processPhoneNumber(): Boolean {
-        val areaCode = input_area_code_dropdown?.text.toString()
-        val localPhone = getFieldText(R.id.input_phone_number_edit_text)
-        val fullPhoneNumber = areaCode + localPhone
+        val fullPhoneNumber = getFullPhoneNumber()
         if (!presenter.processPhoneNumberField(
                         fullPhoneNumber,
                         callback = {
@@ -163,6 +189,12 @@ class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistratio
         }
         clearTextLayoutError(R.id.input_phone_number)
         return true
+    }
+
+    private fun getFullPhoneNumber(): String {
+        val areaCode = input_area_code_dropdown.text.toString()
+        val localPhone = getFieldText(R.id.input_phone_number_edit_text)
+        return areaCode + localPhone
     }
 
     private fun processOver18Checkbox(): Boolean {
