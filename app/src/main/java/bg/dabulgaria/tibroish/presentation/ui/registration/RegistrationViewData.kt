@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 class RegistrationViewData(
         val countryCodesData: MutableList<CountryCode>,
-        val organizationsData: MutableList<RegistrationOrganization>) : Parcelable
+        val organizationsData: MutableList<Organization>) : Parcelable
 
 class RegistrationConstants {
     companion object {

@@ -11,21 +11,23 @@
 */
 package bg.dabulgaria.tibroish.domain.organisation
 
-import bg.dabulgaria.tibroish.persistence.remote.model.User
-
+import android.os.Parcelable
 import com.squareup.moshi.Json
+import kotlinx.android.parcel.Parcelize
+import java.io.Serializable
+
 /**
  * 
  * @param id 
  * @param name 
  * @param type
  */
+@Parcelize
 data class Organization (
     val id: java.math.BigDecimal,
     val name: kotlin.String,
-    val users: kotlin.collections.List<User>,
     val type: Type
-) {
+) : Parcelable, Serializable {
 
     /**
     * 

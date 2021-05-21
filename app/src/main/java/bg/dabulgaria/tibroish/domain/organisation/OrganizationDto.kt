@@ -11,6 +11,8 @@
 */
 package bg.dabulgaria.tibroish.domain.organisation
 
+import kotlinx.android.parcel.Parcelize
+
 
 /**
  * 
@@ -22,7 +24,5 @@ data class OrganizationDto (
     val id: java.math.BigDecimal,
     val name: kotlin.String,
     val type: kotlin.String
-) {
-
-}
+)
 
