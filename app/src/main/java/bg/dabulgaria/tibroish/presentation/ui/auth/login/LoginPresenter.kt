@@ -6,8 +6,10 @@ import android.util.Patterns
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.auth.IAuthRepository
+import bg.dabulgaria.tibroish.domain.organisation.ITiBorishRemoteRepository
 import bg.dabulgaria.tibroish.domain.user.IUserLocalRepository
 import bg.dabulgaria.tibroish.domain.user.IUserTypeAdapter
+import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
@@ -31,6 +33,8 @@ class LoginPresenter @Inject constructor(private val userLocalRepo : IUserLocalR
                                          private val authRepo : IAuthRepository,
                                          private val logger: ILogger,
                                          private val mainRouter: IMainRouter,
+                                         private val schedulersProvider: ISchedulersProvider,
+                                         private val tiBorishRemoteRepository :ITiBorishRemoteRepository,
                                          dispHandler: IDisposableHandler,)
     : BasePresenter<ILoginView>(dispHandler), ILoginPresenter {
 
@@ -108,21 +112,22 @@ class LoginPresenter @Inject constructor(private val userLocalRepo : IUserLocalR
             return
         }
 
-        if(firebaseUser.isEmailVerified) {
+        val mailVerified = true //TODO uncomment when email verification is fixed// firebaseUser.isEmailVerified
+        if(mailVerified) {
 
-            val user = userTypeAdapter.toUser(firebaseUser)
+            val userA = userTypeAdapter.toUser(firebaseUser)
 
             firebaseUser.getIdToken(true)
                     .addOnFailureListener { throwable->
 
-                        logger.e(LoginFragmentViewModel.TAG, throwable)
+                        logger.e(TAG, throwable)
                         view?.onLoading(false)
                         onError(throwable)
                     }
                     .addOnSuccessListener { getTokenResult ->
 
                         authRepo.token = getTokenResult.token?:""
-                        userLocalRepo.user = user
+                        userLocalRepo.user = userA
                         mainRouter.onAuthEvent()
                     }
         }
@@ -139,14 +144,6 @@ class LoginPresenter @Inject constructor(private val userLocalRepo : IUserLocalR
 
     override fun onError(throwable:Throwable?){
 
-//        if( throwable is FirebaseAuthWeakPasswordException) {
-//            mTxtPassword.setError(getString(R.string.error_weak_password));
-//            mTxtPassword.requestFocus();
-//        }
-        //        else if( throwable is FirebaseAuthUserCollisionException) {
-//            view?.onError(resourceProvider.getString(R.string.error_user_exists));
-//            mTxtEmail.requestFocus()
-//        }
         if( throwable is FirebaseAuthInvalidCredentialsException) {
             view?.onError(resourceProvider.getString(R.string.invalid_mail_or_pass));
         }

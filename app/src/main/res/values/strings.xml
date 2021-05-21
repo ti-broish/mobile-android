@@ -47,7 +47,7 @@
     <string name="register_last_name">Фамилия*</string>
     <string name="register_create_profile">Създай профил</string>
     <string name="register_registration">Регистрация</string>
-    <string name="error_weak_password">Паролата трябва да е поне 6 символа, да съдържа малка, голяма буква, цифра и специален сиимвол</string>
+    <string name="error_weak_password">Паролата трябва да е поне 6 символа, да съдържа малка, голяма буква, цифра и специален символ</string>
     <string name="error_user_exists">Съществува потребител с този имейл адрес</string>
     <string name="required_field">Това поле е задължително</string>
     <string name="egn_four_digits_required">Невалидни цифри от ЕГН (последните 4)</string>
@@ -65,5 +65,7 @@
     <string name="region">Район</string>
     <string name="section_number">Номер на секция</string>
     <string name="unique_section_number">Единен номер на секция</string>
+    <string name="country">Държава</string>
+    <string name="continueText">Продължи</string>
 
 </resources>

@@ -26,6 +26,8 @@ data class PhotoPickerViewData(val protocolId:Long): Serializable {
 class PhotoPickerConstants{
     companion object {
         val VIEW_DATA_KEY = "PhotoPickerConstants.AddProtocolViewData"
+
+        val REQUEST_IMAGE_CAPTURE = 1001
     }
 }
 

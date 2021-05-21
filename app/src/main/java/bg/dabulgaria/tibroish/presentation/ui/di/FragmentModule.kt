@@ -4,6 +4,8 @@ import bg.dabulgaria.tibroish.presentation.ui.auth.login.ILoginPresenter
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
 import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginFragment
 import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginPresenter
+import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerInteractor
+import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.SectionPickerInteractor
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.*
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.*
 import bg.dabulgaria.tibroish.presentation.ui.registration.IRegistrationPresenter
@@ -18,6 +20,11 @@ interface FragmentModule {
 
     @ContributesAndroidInjector
     fun providesHomeFragment(): HomeFragment
+
+    //region Section Picker
+    @Binds
+    fun bindsISectionPickerInteractor(implemenation: SectionPickerInteractor): ISectionPickerInteractor
+    //endregion Section Picker
 
     //region Add Protocol screen
     @ContributesAndroidInjector

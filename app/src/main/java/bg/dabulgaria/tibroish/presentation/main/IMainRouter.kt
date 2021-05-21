@@ -31,4 +31,6 @@ interface IMainRouter: OnMenuClickListener {
     fun showRegisterScreen(email:String)
 
     fun showForgotPasswordScreen(email:String)
+
+    fun openCamera(imageFilePath: String)
 }

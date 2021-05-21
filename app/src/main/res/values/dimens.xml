@@ -12,4 +12,6 @@
     <dimen name="login_text_input_max_width">300dp</dimen>
     <dimen name="sections_text_size">18sp</dimen>
     <dimen name="unique_section_text_size">20sp</dimen>
+    <dimen name="action_button_text_size">14sp</dimen>
+    <dimen name="action_button_min_text_size">6sp</dimen>
 </resources>
