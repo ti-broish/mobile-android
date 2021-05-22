@@ -154,7 +154,7 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
                         ?: RegistrationFragment.newInstance()
         view?.showScreen(content,
                 RegistrationFragment.TAG,
-                /* addToBackstack= */ false,
+                /* addToBackstack= */ true,
                 /* transitionContent= */ false)
     }
 
