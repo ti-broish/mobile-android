@@ -12,4 +12,5 @@
     <dimen name="text_input_max_width">300dp</dimen>
     <dimen name="sections_text_size">18sp</dimen>
     <dimen name="unique_section_text_size">20sp</dimen>
+    <dimen name="form_vertical_field_distance">8dp</dimen>
 </resources>
