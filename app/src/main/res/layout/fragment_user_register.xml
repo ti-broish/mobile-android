@@ -17,7 +17,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_max="@dimen/login_text_input_max_width">
+            app:layout_constraintWidth_max="@dimen/text_input_max_width">
 
             <TextView
                 style="@style/AppTheme.TextAppearance.Large"
@@ -96,7 +96,7 @@
                         android:id="@+id/input_area_code_dropdown"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:dropDownWidth="@dimen/login_text_input_max_width"
+                        android:dropDownWidth="@dimen/text_input_max_width"
                         android:inputType="none"
                         tools:text="+359" />
 
@@ -149,7 +149,7 @@
                     android:id="@+id/input_organization_dropdown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:dropDownWidth="@dimen/login_text_input_max_width"
+                    android:dropDownWidth="@dimen/text_input_max_width"
                     android:imeOptions="flagNoExtractUi"
                     android:inputType="text" />
 

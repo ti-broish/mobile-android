@@ -74,11 +74,11 @@ class RegistrationPresenter @Inject constructor(
     private val mainRouter: IMainRouter,
     disposableHandler: IDisposableHandler,
     private val logger: ILogger,
-    private val tiBroishRemoteRepository: ITiBorishRemoteRepository
+    private val tiBroishRemoteRepository: ITiBorishRemoteRepository,
+    private val formValidator: FormValidator
 ) :
     BasePresenter<IRegisterView>(disposableHandler), IRegistrationPresenter {
     private var registrationViewData: RegistrationViewData? = null
-    private var formValidator: FormValidator = FormValidator()
 
     companion object {
         @JvmField
@@ -286,7 +286,7 @@ class RegistrationPresenter @Inject constructor(
                 predicate = {
                     it.length == 4
                 },
-                callback = callback,
+                errorCallback = callback,
                 errorResponse = R.string.egn_four_digits_required
             )
         ) {
@@ -306,7 +306,7 @@ class RegistrationPresenter @Inject constructor(
         if (!formValidator.processConditionalField(
                 password,
                 predicate = { password == repeatPassword },
-                callback = callback,
+                errorCallback = callback,
                 errorResponse = R.string.passwords_do_not_match
             )
         ) {
@@ -322,7 +322,7 @@ class RegistrationPresenter @Inject constructor(
         if (!formValidator.processConditionalField(
                 password,
                 predicate = { it.length >= 6 },
-                callback = callback,
+                errorCallback = callback,
                 errorResponse = R.string.invalid_password_too_short
             )
         ) {
