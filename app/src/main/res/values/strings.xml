@@ -23,7 +23,7 @@
     <string name="app_has_no_image_permissions">Приложението няма достъп до снимките на телефона ви. \n Разрешете достъп за да видите снимките.</string>
 
     <!-- Login screen -->
-    <string name="login_username_label">Имейл адрес</string>
+    <string name="email_label">Имейл адрес</string>
     <string name="login_password_label">Парола</string>
     <string name="login_login">Вход</string>
     <string name="login_register">Регистрация</string>
@@ -65,5 +65,14 @@
     <string name="region">Район</string>
     <string name="section_number">Номер на секция</string>
     <string name="unique_section_number">Единен номер на секция</string>
+    <string name="forgot_password_send">Изпрати</string>
+    <string name="forgot_password">Забравена парола</string>
+    <string name="logo_content_description">Лого на ТиБроиш</string>
+    <string name="password_reset_success_title">Проверете Вашият имейл</string>
+    <string name="password_reset_success_message">За да промените паролата, отворете връзката,
+        получена на Вашия имейл адрес.</string>
+    <string name="password_reset_invalid_user">Не е открит регистриран потребител с въведения имейл адрес.</string>
+    <string name="password_reset_generic_error_message">Проблем при промяната на парола.</string>
+    <string name="dialog_title_error">Грешка</string>
 
 </resources>
