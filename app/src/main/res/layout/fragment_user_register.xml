@@ -49,6 +49,7 @@
                 android:id="@+id/input_last_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/form_vertical_field_distance"
                 android:hint="@string/register_last_name"
                 app:boxBackgroundColor="@null">
 
@@ -65,6 +66,7 @@
                 android:id="@+id/input_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/form_vertical_field_distance"
                 android:hint="@string/register_email"
                 app:boxBackgroundColor="@null">
 
@@ -80,6 +82,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/form_vertical_field_distance"
                 android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -123,6 +126,7 @@
                 android:id="@+id/input_egn_last_four_digits"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/form_vertical_field_distance"
                 android:hint="@string/register_last_4_digits_of_egn"
                 app:boxBackgroundColor="@null">
 
@@ -141,6 +145,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/form_vertical_field_distance"
                 android:hint="@string/register_organization"
                 android:labelFor="@+id/input_organization_dropdown"
                 app:boxBackgroundColor="@null">
@@ -159,6 +164,7 @@
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/form_vertical_field_distance"
                 android:hint="@string/register_password"
                 app:boxBackgroundColor="@null">
 
@@ -175,6 +181,7 @@
                 android:id="@+id/input_repeat_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/form_vertical_field_distance"
                 android:hint="@string/register_repeat_password"
                 app:boxBackgroundColor="@null">
 

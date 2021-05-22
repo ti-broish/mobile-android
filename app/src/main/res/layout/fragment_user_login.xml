@@ -46,7 +46,7 @@
             android:id="@+id/input_password"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/form_vertical_field_distance"
             android:hint="@string/login_password_label"
             app:boxBackgroundColor="@null"
             app:endIconMode="password_toggle"
