@@ -11,6 +11,7 @@
 */
 package bg.dabulgaria.tibroish.persistence.remote.model
 
+import bg.dabulgaria.tibroish.domain.locations.SectionRemote
 import bg.dabulgaria.tibroish.domain.organisation.Organization
 
 import com.squareup.moshi.Json
@@ -52,7 +53,7 @@ data class User (
         val assignedProtocols: kotlin.collections.List<Protocol>,
         val assignedViolations: kotlin.collections.List<Violation>,
         val stream: Stream,
-        val section: Section,
+        val section: SectionRemote,
         val registeredAt: java.time.OffsetDateTime
 ) {
 

@@ -2,6 +2,7 @@ package bg.dabulgaria.tibroish.domain.user
 
 import android.net.Uri
 import bg.dabulgaria.tibroish.domain.organisation.Organization
+
 import java.io.Serializable
 
 class User : Serializable {

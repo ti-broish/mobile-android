@@ -1,36 +1,39 @@
 package bg.dabulgaria.tibroish.presentation.ui.protocol.add
 
+
+import android.graphics.BitmapFactory
+import bg.dabulgaria.tibroish.domain.image.PickedImageSource
 import bg.dabulgaria.tibroish.domain.io.IFileRepository
-import bg.dabulgaria.tibroish.domain.organisation.ITiBorishRemoteRepository
 import bg.dabulgaria.tibroish.domain.protocol.IProtocolsRepository
 import bg.dabulgaria.tibroish.domain.protocol.Protocol
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolExt
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolStatus
+import bg.dabulgaria.tibroish.domain.protocol.image.IImageCopier
 import bg.dabulgaria.tibroish.domain.protocol.image.IProtocolImagesRepository
 import bg.dabulgaria.tibroish.domain.protocol.image.ProtocolImage
-import bg.dabulgaria.tibroish.domain.providers.ILogger
-import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
+import bg.dabulgaria.tibroish.domain.protocol.image.UploadStatus
+import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerInteractor
 import java.util.*
-
-
 import javax.inject.Inject
 
-interface IAddProtocolInteractor {
+
+interface IAddProtocolInteractor :ISectionPickerInteractor {
 
     fun addNew(protocol: Protocol): ProtocolExt
 
     fun loadData(viewData: AddProtocolViewData) :AddProtocolViewData
 
     fun deleteImage(image: ProtocolImage)
+
+    fun addCameraImage(viewData: AddProtocolViewData)
 }
 
 class AddProtocolInteractor @Inject constructor(private val protocolsRepo: IProtocolsRepository,
                                                 private val protocolsImagesRepo: IProtocolImagesRepository,
                                                 private val fileRepo: IFileRepository,
-                                                private val apiRepo: ITiBorishRemoteRepository,
-                                                private val resourceProvider: IResourceProvider,
-                                                private val logger:ILogger)
-    : IAddProtocolInteractor{
+                                                private val sectionPickerInteractor: ISectionPickerInteractor,
+                                                private val imageCopier: IImageCopier)
+    : IAddProtocolInteractor, ISectionPickerInteractor by sectionPickerInteractor{
 
     override fun addNew(protocol: Protocol): ProtocolExt {
 
@@ -44,6 +47,7 @@ class AddProtocolInteractor @Inject constructor(private val protocolsRepo: IProt
 
         val newViewData = AddProtocolViewData()
         newViewData.protocolId = viewData.protocolId
+        newViewData.sectionsData = loadSectionsData(viewData.sectionsData)
 
         if(newViewData.protocolId ?:0 > 0){
 
@@ -53,7 +57,7 @@ class AddProtocolInteractor @Inject constructor(private val protocolsRepo: IProt
         }
 
         newViewData.items.add(AddProtocolListItemHeader())
-        newViewData.items.add(AddProtocolListItemSection())
+        newViewData.items.add(AddProtocolListItemSection(newViewData.sectionsData))
 
         for( photo in newViewData.protocol?.images.orEmpty())
             newViewData.items.add(AddProtocolListItemImage(photo))
@@ -67,6 +71,35 @@ class AddProtocolInteractor @Inject constructor(private val protocolsRepo: IProt
 
         fileRepo.deleteFile(image.localFilePath)
         protocolsImagesRepo.delete(image)
+    }
+
+    override fun addCameraImage(data: AddProtocolViewData) {
+
+        val protocolId = data.protocolId
+                ?:return
+
+        val imageFilePath = imageCopier.copyToLocalUploadsFolder(data.imageForCameraPath)
+                ?: return
+
+        val options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        BitmapFactory.decodeFile(imageFilePath, options)
+
+        val protocolImage = ProtocolImage(id = 0,
+                protocolId = protocolId,
+                uuid = UUID.randomUUID().toString(),
+                serverId = "",
+                originalFilePath = imageFilePath,
+                localFilePath = imageFilePath,
+                localFileThumbPath = "",
+                uploadStatus = UploadStatus.NotProcessed,
+                providerId = "Camera_${UUID.randomUUID().toString()}",
+                source = PickedImageSource.Camera,
+                width = options.outWidth,
+                height = options.outHeight,
+                dateTaken = Date())
+
+        protocolsImagesRepo.insert(protocolImage)
     }
 
     companion object {

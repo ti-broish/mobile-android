@@ -6,6 +6,7 @@ import bg.dabulgaria.tibroish.domain.io.IFileRepository
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import java.io.File
+import java.util.*
 import javax.inject.Inject
 import kotlin.jvm.Throws
 
@@ -57,6 +58,15 @@ class FileRepository @Inject constructor(@AppContext private val context: Contex
             logger.e(LOG_TAG, e)
         }
         return file
+    }
+
+    override fun createNewJpgFile(folder: String): File?{
+
+        val folderPath = getFolder(folder)!!.absolutePath
+
+        val newFileName = UUID.randomUUID().toString()+".jpg"
+
+        return createNewFile(folderPath, newFileName)
     }
 
     override fun deleteFile(filePath: String): Boolean {

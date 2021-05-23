@@ -11,9 +11,8 @@
 */
 package bg.dabulgaria.tibroish.persistence.remote.model
 
-import bg.dabulgaria.tibroish.persistence.remote.model.Section
-import bg.dabulgaria.tibroish.persistence.remote.model.Stream
-import bg.dabulgaria.tibroish.persistence.remote.model.User
+import bg.dabulgaria.tibroish.domain.locations.SectionRemote
+
 
 /**
  * 
@@ -27,14 +26,14 @@ import bg.dabulgaria.tibroish.persistence.remote.model.User
  * @param endTime 
  */
 data class StreamChunk (
-    val id: kotlin.String,
-    val stream: Stream,
-    val section: Section,
-    val author: User,
-    val isActive: kotlin.Boolean,
-    val startTime: java.time.OffsetDateTime,
-    val url: kotlin.String? = null,
-    val endTime: java.time.OffsetDateTime? = null
+        val id: kotlin.String,
+        val stream: Stream,
+        val section: SectionRemote,
+        val author: User,
+        val isActive: kotlin.Boolean,
+        val startTime: java.time.OffsetDateTime,
+        val url: kotlin.String? = null,
+        val endTime: java.time.OffsetDateTime? = null
 ) {
 
 }
