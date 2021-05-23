@@ -17,6 +17,8 @@ import bg.dabulgaria.tibroish.presentation.main.IMainPresenter
 import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.main.MainPresenter
 import bg.dabulgaria.tibroish.presentation.main.MainRouter
+import bg.dabulgaria.tibroish.presentation.ui.common.DialogUtil
+import bg.dabulgaria.tibroish.presentation.ui.common.FormValidator
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -84,5 +86,17 @@ class ApplicationModule {
     fun providesLogger():ILogger{
 
         return Logger()
+    }
+
+    @Provides
+    @Singleton
+    fun providesFormValidator(): FormValidator {
+        return FormValidator()
+    }
+
+    @Provides
+    @Singleton
+    fun providesDialogUtil(): DialogUtil {
+        return DialogUtil()
     }
 }
