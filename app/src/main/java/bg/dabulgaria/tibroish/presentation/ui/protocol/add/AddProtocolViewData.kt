@@ -2,6 +2,7 @@ package bg.dabulgaria.tibroish.presentation.ui.protocol.add
 
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolExt
 import bg.dabulgaria.tibroish.domain.protocol.image.ProtocolImage
+import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.SectionsViewData
 import java.io.Serializable
 
 enum class AddProtocolListItemType{
@@ -13,7 +14,7 @@ sealed class AddProtocolListItem(val type: AddProtocolListItemType) :Serializabl
 class AddProtocolListItemHeader
     : AddProtocolListItem(AddProtocolListItemType.Header),Serializable
 
-class AddProtocolListItemSection
+class AddProtocolListItemSection (var sectionsViewData: SectionsViewData?)
     : AddProtocolListItem(AddProtocolListItemType.Section),Serializable
 
 class AddProtocolListItemImage(val image: ProtocolImage)
@@ -28,6 +29,9 @@ class AddProtocolViewData() : Serializable {
     var protocolId :Long? = null
     var protocol :ProtocolExt? =null
     val items = mutableListOf<AddProtocolListItem>()
+
+    var sectionsData: SectionsViewData?=null
+    var imageForCameraPath :String = ""
 }
 
 class AddProtocolConstants{

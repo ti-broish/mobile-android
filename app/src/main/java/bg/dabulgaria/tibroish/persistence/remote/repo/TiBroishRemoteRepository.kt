@@ -1,14 +1,17 @@
 package bg.dabulgaria.tibroish.persistence.remote.repo
 
-import android.util.Log
 import bg.dabulgaria.tibroish.domain.auth.IRemoteRepoAuthenticator
+import bg.dabulgaria.tibroish.domain.locations.CountryRemote
+import bg.dabulgaria.tibroish.domain.locations.ElectionRegionRemote
+import bg.dabulgaria.tibroish.domain.locations.SectionRemote
+import bg.dabulgaria.tibroish.domain.locations.TownRemote
 import bg.dabulgaria.tibroish.domain.organisation.ITiBorishRemoteRepository
 import bg.dabulgaria.tibroish.domain.organisation.Organization
+import bg.dabulgaria.tibroish.domain.user.User
 import bg.dabulgaria.tibroish.persistence.remote.api.AcceptValues
 import bg.dabulgaria.tibroish.persistence.remote.api.TiBroishApiController
-import bg.dabulgaria.tibroish.domain.locations.Country
-import bg.dabulgaria.tibroish.domain.user.User
-import bg.dabulgaria.tibroish.domain.user.UserS
+import bg.dabulgaria.tibroish.persistence.remote.model.SectionsRequestParams
+import bg.dabulgaria.tibroish.persistence.remote.model.TownsRequestParams
 import javax.inject.Inject
 
 class TiBroishRemoteRepository @Inject constructor(private val apiController: TiBroishApiController,
@@ -20,15 +23,53 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
                 .execute().body()!!
     }
 
-    override fun getCountries(): List<Country> {
-        return authenticator.executeCall { token ->
-            apiController.getCountries(getAuthorization(token))} !!.execute().body()!!
-    }
 
     override fun createUser(firebaseJwt: String, userData: User) {
         // TODO: add error handling
         apiController.createUser(getAuthorization(firebaseJwt), userData).execute()
     }
 
-    private fun getAuthorization(idToken: String): String = "Bearer $idToken"
+
+    override fun getCountries(): List<CountryRemote> {
+
+    val list = authenticator.executeCall { token ->
+           apiController.getCountries(getAuthorization(token))}
+
+       return list!!.sortedBy { it.name }
+   }
+
+   override fun getElectionRegions(): List<ElectionRegionRemote> {
+
+       val list = authenticator.executeCall { token ->
+           apiController.getElectionRegions(getAuthorization(token))}!!
+
+       list.map { it.municipalities= it.municipalities.sortedBy { munic-> munic.name } }
+
+       return list.sortedBy { it.code }
+   }
+
+   override fun getTowns(params:TownsRequestParams): List<TownRemote> {
+
+       val towns = authenticator.executeCall( { pParams, token ->
+           apiController.getTowns(getAuthorization(token),
+                   pParams.countryCode,
+                   pParams.electionRegionCode,
+                   pParams.municipalityCode)}, params)!!
+
+       towns.map { it.cityRegions = it.cityRegions?.sortedBy { region-> region.code } }
+       return towns.sortedBy { it.name }
+   }
+
+   override fun getSections(params:SectionsRequestParams): List<SectionRemote> {
+
+       val sections = authenticator.executeCall( { pParams, token ->
+           apiController.getSections(getAuthorization(token),
+                   pParams.townId,
+                   pParams.cityRegionCode)}, params) !!
+
+       return sections.sortedBy { it.code }
+   }
+
+   private fun getAuthorization(idToken: String): String = "Bearer $idToken"
+
 }

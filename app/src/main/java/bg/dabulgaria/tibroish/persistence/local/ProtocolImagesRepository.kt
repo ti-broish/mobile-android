@@ -6,7 +6,7 @@ import bg.dabulgaria.tibroish.domain.protocol.image.ProtocolImage
 import javax.inject.Inject
 
 class ProtocolImagesRepository @Inject
-constructor(private val database:TiBroishDatabase ) :BaseTiBroishRepository(database), IProtocolImagesRepository {
+constructor(private val database:TiBroishDatabase ) :BaseTiBroishLocalRepository(database), IProtocolImagesRepository {
 
     companion object {
 

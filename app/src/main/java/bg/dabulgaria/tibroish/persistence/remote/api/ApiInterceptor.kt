@@ -1,6 +1,7 @@
 package bg.dabulgaria.tibroish.persistence.remote.api
 
 import bg.dabulgaria.tibroish.persistence.remote.ApiException
+import bg.dabulgaria.tibroish.persistence.remote.AuthException
 import com.android.volley.toolbox.HttpHeaderParser
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -14,16 +15,17 @@ class ApiInterceptor (private val userAgent: String) : Interceptor {
 
         // Customize the request
         val request = original.newBuilder()
-                //.header(ApiHeader.AcceptEncoding, "gzip")
-                //.header(ApiHeader.ContentType, "application/json")
-                //.header(ApiHeader.UserAgent, userAgent)
+                .header(ApiHeader.AcceptEncoding, "gzip")
+                .header(ApiHeader.ContentType, "application/json")
+                .header(ApiHeader.UserAgent, userAgent)
                 .build()
 
         val response = chain.proceed(request)
-        if (!response.isSuccessful)
+        var success =response.isSuccessful
+        if (!success)
             throwError(response)
 
-        return response;
+        return response
     }
 
     // region parse API error
@@ -50,6 +52,16 @@ class ApiInterceptor (private val userAgent: String) : Interceptor {
             }
         }
 
-        throw ApiException(response, responseData)
+        var code =networkResponse?.code ?: 500
+
+        if(code == UNAUTHORIZED)
+            throw AuthException(response, responseData)
+        else
+            throw ApiException(response, responseData)
+    }
+
+    companion object{
+
+        const val UNAUTHORIZED = 401
     }
 }

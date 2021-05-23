@@ -10,6 +10,7 @@ interface IFileRepository {
 
     fun createNewFile(folderName: String, fileName: String): File?
 
+    fun createNewJpgFile(folder: String): File?
 
     fun deleteFile(filePath:String) :Boolean
 }
