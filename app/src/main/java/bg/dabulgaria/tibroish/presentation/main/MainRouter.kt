@@ -3,6 +3,7 @@ package bg.dabulgaria.tibroish.presentation.main
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import androidx.fragment.app.FragmentManager
@@ -10,6 +11,7 @@ import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
 import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginFragment
+import bg.dabulgaria.tibroish.presentation.ui.forgotpassword.ForgotPasswordFragment
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.camera.CameraPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolFragment
@@ -152,12 +154,21 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
                         ?: RegistrationFragment.newInstance()
         view?.showScreen(content,
                 RegistrationFragment.TAG,
-                /* addToBackstack= */ false,
+                /* addToBackstack= */ true,
                 /* transitionContent= */ false)
     }
 
     override fun showForgotPasswordScreen(email: String) {
-        TODO("Not yet implemented")
+        val content =
+            view?.supportFragmentMngr?.findFragmentByTag(ForgotPasswordFragment.TAG)
+                ?: ForgotPasswordFragment.newInstance()
+        val arguments = Bundle()
+        arguments.putString(ForgotPasswordFragment.KEY_EMAIL, email)
+        content.arguments = arguments
+        view?.showScreen(content,
+            ForgotPasswordFragment.TAG,
+            /* addToBackstack= */ true,
+            /* transitionContent= */ false)
     }
 
     private fun clearBackStack() {
