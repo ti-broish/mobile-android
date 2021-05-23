@@ -5,7 +5,7 @@ import bg.dabulgaria.tibroish.domain.organisation.Organization
 import bg.dabulgaria.tibroish.presentation.ui.common.FilterableArrayAdapter
 
 class OrganizationsAdapter(context: Context, objects: List<Organization>) :
-    FilterableArrayAdapter<Organization>(context, objects) {
+    FilterableArrayAdapter<Organization>(context, objects.toMutableList()) {
 
     override fun getFormattedTextForItem(item: Organization): String {
         return item.name

@@ -11,12 +11,7 @@
 */
 package bg.dabulgaria.tibroish.persistence.remote.model
 
-import bg.dabulgaria.tibroish.persistence.remote.model.Picture
-import bg.dabulgaria.tibroish.persistence.remote.model.ProtocolAction
-import bg.dabulgaria.tibroish.persistence.remote.model.ProtocolData
-import bg.dabulgaria.tibroish.persistence.remote.model.ProtocolResult
-import bg.dabulgaria.tibroish.persistence.remote.model.Section
-import bg.dabulgaria.tibroish.persistence.remote.model.User
+import bg.dabulgaria.tibroish.domain.locations.SectionRemote
 
 import com.squareup.moshi.Json
 /**
@@ -33,16 +28,16 @@ import com.squareup.moshi.Json
  * @param parent 
  */
 data class Protocol (
-    val id: kotlin.String,
-    val origin: kotlin.String,
-    val status: Protocol.Status,
-    val data: ProtocolData,
-    val section: Section,
-    val pictures: kotlin.collections.List<Picture>,
-    val assignees: kotlin.collections.List<User>,
-    val actions: kotlin.collections.List<ProtocolAction>,
-    val results: kotlin.collections.List<ProtocolResult>,
-    val parent: Protocol
+        val id: kotlin.String,
+        val origin: kotlin.String,
+        val status: Protocol.Status,
+        val data: ProtocolData,
+        val section: SectionRemote,
+        val pictures: kotlin.collections.List<Picture>,
+        val assignees: kotlin.collections.List<User>,
+        val actions: kotlin.collections.List<ProtocolAction>,
+        val results: kotlin.collections.List<ProtocolResult>,
+        val parent: Protocol
 ) {
 
     /**

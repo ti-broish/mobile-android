@@ -1,5 +1,6 @@
 package bg.dabulgaria.tibroish.presentation.ui.common
 
+import android.app.ActionBar
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -7,8 +8,9 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Filter
 import android.widget.TextView
+import bg.dabulgaria.tibroish.R
 
-abstract class FilterableArrayAdapter<T>(context: Context, objects: List<T>)
+abstract class FilterableArrayAdapter<T>(context: Context, objects: MutableList<T>)
     : ArrayAdapter<T>(context, /* resource= */ 0, objects) {
 
     private var layoutInflater: LayoutInflater
@@ -27,10 +29,11 @@ abstract class FilterableArrayAdapter<T>(context: Context, objects: List<T>)
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val rootView: View = convertView
-                ?: layoutInflater.inflate(
-                        android.R.layout.simple_list_item_1, parent, false)
-        rootView.findViewById<TextView>(android.R.id.text1).text =
-                getFormattedTextForItem(getItem(position)!!)
+                ?: layoutInflater.inflate(R.layout.filter_adapter_item, parent, false)
+
+        val textView = rootView.findViewById<TextView>(R.id.filterItemText)
+        textView.text = getFormattedTextForItem(getItem(position)!!)
+
         return rootView
     }
 

@@ -22,6 +22,8 @@ interface IAddProtocolView : IBaseView {
     fun onLoadingStateChange( isLoading : Boolean )
 
     fun setData( data:AddProtocolViewData )
+
+    fun setSectionsData(data:AddProtocolViewData)
 }
 
 class AddProtocolFragment @Inject constructor()
@@ -62,21 +64,34 @@ class AddProtocolFragment @Inject constructor()
         adapter.list.clear()
         adapter.list.addAll(data.items)
         adapter.notifyDataSetChanged()
+    }
 
+    override fun setSectionsData(data:AddProtocolViewData){
 
+        val index = adapter.list.indexOfFirst { it.type == AddProtocolListItemType.Section }
+        if( index <0 )
+            return
+
+        val item = adapter.list.getOrNull( index  )?: return
+
+        val sectionItem = item  as AddProtocolListItemSection
+        sectionItem.sectionsViewData = data.sectionsData
+
+        adapter.notifyItemChanged(index)
     }
 
     override fun onLoadingStateChange(isLoading: Boolean) {
 
-        listSwipeRefreshLayout?.isRefreshing = isLoading
+        val visibility = if(isLoading) View.VISIBLE else View.GONE
+        addProtocolProgressBar.visibility = visibility
+        addProtocolTransparentOverlay.visibility = visibility
     }
 
     override fun onError(errorMessage: String) {
 
         Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show()
     }
-
-
+    
     companion object {
 
         val TAG = AddProtocolFragment::class.java.simpleName

@@ -8,6 +8,7 @@ import bg.dabulgaria.tibroish.domain.user.UserAuthenticator
 import bg.dabulgaria.tibroish.domain.user.UserTypeAdapter
 import dagger.Binds
 import dagger.Module
+import javax.inject.Singleton
 
 @Module
 interface DomainModule {
@@ -19,6 +20,7 @@ interface DomainModule {
     fun bindIUserAuthenticator(implementation: UserAuthenticator): IUserAuthenticator
 
     @Binds
+    @Singleton
     fun bindIRemoteRepoAuthenticator(implementation: RemoteRepoAuthenticator): IRemoteRepoAuthenticator
 
 }

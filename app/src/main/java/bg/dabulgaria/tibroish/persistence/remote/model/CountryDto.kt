@@ -11,8 +11,8 @@
 */
 package bg.dabulgaria.tibroish.persistence.remote.model
 
-import bg.dabulgaria.tibroish.persistence.remote.model.CityRegion
-import bg.dabulgaria.tibroish.persistence.remote.model.Town
+import bg.dabulgaria.tibroish.domain.locations.CityRegionRemote
+import bg.dabulgaria.tibroish.domain.locations.TownRemote
 
 /**
  * 
@@ -25,13 +25,13 @@ import bg.dabulgaria.tibroish.persistence.remote.model.Town
  * @param sectionsCount 
  */
 data class CountryDto (
-    val cityRegions: CityRegion,
-    val code: kotlin.String,
-    val name: kotlin.String,
-    val isAbroad: kotlin.Boolean,
-    val id: java.math.BigDecimal,
-    val towns: kotlin.collections.List<Town>,
-    val sectionsCount: java.math.BigDecimal
+        val cityRegions: CityRegionRemote,
+        val code: kotlin.String,
+        val name: kotlin.String,
+        val isAbroad: kotlin.Boolean,
+        val id: java.math.BigDecimal,
+        val towns: kotlin.collections.List<TownRemote>,
+        val sectionsCount: java.math.BigDecimal
 ) {
 
 }

@@ -80,7 +80,7 @@ class PhotoPickerInteractor @Inject constructor(private val galleryImagesRepo: I
 
         for (protocolImage in protocolImages) {
 
-            val copiedPath = imageCopier.copyToUploadsFolder(protocolImage.originalFilePath)
+            val copiedPath = imageCopier.copyToLocalUploadsFolder(protocolImage.originalFilePath)
             protocolImage.localFilePath = copiedPath?:""
             if(protocolImage.localFilePath.isNotEmpty() )
                 protocolImage.uploadStatus = UploadStatus.Copied

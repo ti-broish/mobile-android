@@ -6,7 +6,7 @@ import bg.dabulgaria.tibroish.domain.protocol.Protocol
 import javax.inject.Inject
 
 class ProtocolsRepository @Inject
-constructor(private val database:TiBroishDatabase ) : BaseTiBroishRepository(database), IProtocolsRepository {
+constructor(private val database:TiBroishDatabase ) : BaseTiBroishLocalRepository(database), IProtocolsRepository {
 
     companion object {
 

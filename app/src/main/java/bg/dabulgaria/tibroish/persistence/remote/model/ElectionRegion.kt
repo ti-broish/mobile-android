@@ -11,35 +11,6 @@
 */
 package bg.dabulgaria.tibroish.persistence.remote.model
 
-import bg.dabulgaria.tibroish.domain.locations.Country
 
-/**
- * 
- * @param id 
- * @param code 
- * @param name 
- * @param isAbroad 
- * @param sections 
- * @param sectionsCount 
- * @param voters 
- * @param countries 
- * @param stats 
- * @param admUnits 
- * @param municipalities 
- */
-data class ElectionRegion (
-        val id: java.math.BigDecimal,
-        val code: kotlin.String,
-        val name: kotlin.String,
-        val isAbroad: kotlin.Boolean,
-        val sections: kotlin.collections.List<Section>,
-        val sectionsCount: java.math.BigDecimal,
-        val voters: java.math.BigDecimal,
-        val countries: kotlin.collections.List<Country>,
-        val stats: StatsDto,
-        val admUnits: kotlin.collections.List<kotlin.Any>,
-        val municipalities: kotlin.collections.List<Municipality>
-) {
 
-}
 

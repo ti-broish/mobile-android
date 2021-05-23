@@ -11,13 +11,9 @@
 */
 package bg.dabulgaria.tibroish.persistence.remote.model
 
-import bg.dabulgaria.tibroish.persistence.remote.model.Picture
-import bg.dabulgaria.tibroish.persistence.remote.model.Section
-import bg.dabulgaria.tibroish.persistence.remote.model.Town
-import bg.dabulgaria.tibroish.persistence.remote.model.User
-import bg.dabulgaria.tibroish.persistence.remote.model.ViolationComment
-import bg.dabulgaria.tibroish.persistence.remote.model.ViolationUpdate
 
+import bg.dabulgaria.tibroish.domain.locations.SectionRemote
+import bg.dabulgaria.tibroish.domain.locations.TownRemote
 import com.squareup.moshi.Json
 /**
  * 
@@ -33,16 +29,16 @@ import com.squareup.moshi.Json
  * @param section 
  */
 data class Violation (
-    val id: kotlin.String,
-    val description: kotlin.String,
-    val status: Violation.Status,
-    val isPublished: kotlin.Boolean,
-    val town: Town,
-    val pictures: kotlin.collections.List<Picture>,
-    val assignees: kotlin.collections.List<User>,
-    val updates: kotlin.collections.List<ViolationUpdate>,
-    val comments: kotlin.collections.List<ViolationComment>,
-    val section: Section? = null
+        val id: kotlin.String,
+        val description: kotlin.String,
+        val status: Violation.Status,
+        val isPublished: kotlin.Boolean,
+        val town: TownRemote,
+        val pictures: kotlin.collections.List<Picture>,
+        val assignees: kotlin.collections.List<User>,
+        val updates: kotlin.collections.List<ViolationUpdate>,
+        val comments: kotlin.collections.List<ViolationComment>,
+        val section: SectionRemote? = null
 ) {
 
     /**
