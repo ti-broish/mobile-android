@@ -11,9 +11,7 @@
 */
 package bg.dabulgaria.tibroish.persistence.remote.model
 
-import bg.dabulgaria.tibroish.persistence.remote.model.Section
-import bg.dabulgaria.tibroish.persistence.remote.model.StreamChunk
-import bg.dabulgaria.tibroish.persistence.remote.model.User
+import bg.dabulgaria.tibroish.domain.locations.SectionRemote
 
 /**
  * 
@@ -29,16 +27,16 @@ import bg.dabulgaria.tibroish.persistence.remote.model.User
  * @param updatedAt 
  */
 data class Stream (
-    val id: kotlin.String,
-    val chunks: kotlin.collections.List<StreamChunk>,
-    val user: User,
-    val streamUrl: kotlin.String,
-    val broadcastUrl: kotlin.String,
-    val isStreaming: kotlin.Boolean,
-    val isAssigned: kotlin.Boolean,
-    val createdAt: java.time.OffsetDateTime,
-    val section: Section? = null,
-    val updatedAt: java.time.OffsetDateTime? = null
+        val id: kotlin.String,
+        val chunks: kotlin.collections.List<StreamChunk>,
+        val user: User,
+        val streamUrl: kotlin.String,
+        val broadcastUrl: kotlin.String,
+        val isStreaming: kotlin.Boolean,
+        val isAssigned: kotlin.Boolean,
+        val createdAt: java.time.OffsetDateTime,
+        val section: SectionRemote? = null,
+        val updatedAt: java.time.OffsetDateTime? = null
 ) {
 
 }

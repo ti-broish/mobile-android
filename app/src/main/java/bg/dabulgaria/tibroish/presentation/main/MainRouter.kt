@@ -1,11 +1,14 @@
 package bg.dabulgaria.tibroish.presentation.main
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
+import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentManager
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
@@ -13,10 +16,12 @@ import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
 import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginFragment
 import bg.dabulgaria.tibroish.presentation.ui.forgotpassword.ForgotPasswordFragment
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.camera.CameraPickerFragment
+import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerConstants
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolViewData
 import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationFragment
+import java.io.File
 import javax.inject.Inject
 
 class MainRouter @Inject constructor(@AppContext private val appContext: Context )
@@ -169,6 +174,26 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
             ForgotPasswordFragment.TAG,
             /* addToBackstack= */ true,
             /* transitionContent= */ false)
+    }
+
+    override fun openCamera(imageFilePath: String){
+
+        val context = view?.appCompatActivity?:return
+
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
+        val imageFile = File(imageFilePath)
+        val photoURI: Uri = FileProvider.getUriForFile(
+                    context, "bg.dabulgaria.tibroish.file_provider_camera", imageFile)
+
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+        try {
+
+            view?.appCompatActivity?.startActivityForResult(takePictureIntent,
+                    PhotoPickerConstants.REQUEST_IMAGE_CAPTURE)
+        }
+        catch (e: ActivityNotFoundException) {
+        }
     }
 
     private fun clearBackStack() {

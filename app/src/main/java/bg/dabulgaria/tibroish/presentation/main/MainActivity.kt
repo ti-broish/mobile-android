@@ -1,6 +1,8 @@
 package bg.dabulgaria.tibroish.presentation.main
 
 
+import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -9,16 +11,16 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.user.IUserAuthenticator
 import bg.dabulgaria.tibroish.infrastructure.permission.IPermissionResponseHandler
 import bg.dabulgaria.tibroish.presentation.base.BaseActivity
-import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
+import bg.dabulgaria.tibroish.presentation.event.CameraPhotoTakenEvent
 import bg.dabulgaria.tibroish.presentation.navigation.NavigationDrawerFragment
-import bg.dabulgaria.tibroish.presentation.navigation.OnMenuClickListener
 import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
+import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerConstants
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
+import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(),
@@ -38,6 +40,9 @@ class MainActivity : BaseActivity(),
     private var navigationDrawerFragment :NavigationDrawerFragment ? = null
 
     private lateinit var navController: NavController
+
+    private val events = mutableListOf<Any>()
+    private var isStarted = false
 
     //region AppCompatActivity overrides
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,6 +85,34 @@ class MainActivity : BaseActivity(),
     override fun onSupportNavigateUp(): Boolean {
 
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PhotoPickerConstants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+
+            val event = CameraPhotoTakenEvent()
+            if( isStarted )
+                EventBus.getDefault().post(event)
+            else
+                events.add(event)
+        }
+    }
+
+    override fun onStart() {
+
+        super.onStart()
+        isStarted = true
+        events.map {  event -> EventBus.getDefault().post(event) }
+        events.clear()
+    }
+
+    override fun onStop() {
+
+        isStarted = false
+        super.onStop()
     }
     //region AppCompatActivity overrides
 

@@ -20,6 +20,8 @@ class UserRemoteRepository @Inject constructor(private val userTypeAdapter: IUse
         return userTypeAdapter.toUser(currentUser)
     }
 
+
+
     override fun logout(){
 
         auth.signOut()

@@ -4,7 +4,7 @@ import android.content.Context
 import bg.dabulgaria.tibroish.presentation.ui.common.FilterableArrayAdapter
 
 class CountryCodesArrayAdapter(context: Context, objects: List<CountryCode>)
-    : FilterableArrayAdapter<CountryCode>(context, objects) {
+    : FilterableArrayAdapter<CountryCode>(context, objects.toMutableList()) {
 
     companion object {
         private const val DEFAULT_SELECTED_COUNTRY: String = "Bulgaria"
