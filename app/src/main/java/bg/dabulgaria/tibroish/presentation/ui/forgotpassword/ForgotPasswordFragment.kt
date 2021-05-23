@@ -63,7 +63,7 @@ class ForgotPasswordFragment : BasePresentableFragment<IForgotPasswordView,
 
     override fun passwordResetSuccess() {
         dialogUtil.showDismissableDialog(
-            context = requireContext(),
+            activity = requireActivity(),
             titleResId = R.string.password_reset_success_title,
             messageResId = R.string.password_reset_success_message,
             dismissCallback = {})
@@ -71,7 +71,7 @@ class ForgotPasswordFragment : BasePresentableFragment<IForgotPasswordView,
 
     override fun passwordResetFail(@StringRes messageResId: Int) {
         dialogUtil.showDismissableDialog(
-            context = requireContext(),
+            activity = requireActivity(),
             titleResId = R.string.dialog_title_error,
             messageResId = messageResId,
             dismissCallback = {})
