@@ -1,6 +1,7 @@
 package bg.dabulgaria.tibroish.presentation.ui.rights
 
 import android.os.Bundle
+import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
@@ -12,7 +13,7 @@ import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import javax.inject.Inject
 
 interface IRightsAndObligationsPresenter: IBasePresenter<IRightsAndObligationsView> {
-
+    fun getRightsAndObligationsText(): String
 }
 
 class RightsAndObligationsPresenter @Inject constructor(private val schedulersProvider : ISchedulersProvider,
@@ -24,6 +25,7 @@ class RightsAndObligationsPresenter @Inject constructor(private val schedulersPr
     var data :RightsAndObligationsViewData? = null
 
     //region IRightsAndObligationsPresenter implementation
+
     override fun onRestoreData(bundle: Bundle?) {
         bundle?.let {
             data = bundle.getSerializable(RightsAndObligationsConstants.VIEW_DATA_KEY) as RightsAndObligationsViewData?
@@ -35,10 +37,7 @@ class RightsAndObligationsPresenter @Inject constructor(private val schedulersPr
     }
 
     override fun loadData() {
-
-        data?.title = "Test"
-        data?.subtitle = "Test subtitle"
-        data?.rightsAndObligationsText = "text"
+        data?.rightsAndObligationsText = resourceProvider.getString(R.string.rights_and_obligations_text)
     }
 
     override fun onViewHide() {
@@ -52,8 +51,12 @@ class RightsAndObligationsPresenter @Inject constructor(private val schedulersPr
 
         super.onError(throwable)
     }
-    //endregion IRightsAndObligationsPresenter implementation
 
+    override fun getRightsAndObligationsText(): String {
+        return resourceProvider.getString(R.string.rights_and_obligations_text)
+    }
+
+    //endregion IRightsAndObligationsPresenter implementation
 
 
     companion object {
