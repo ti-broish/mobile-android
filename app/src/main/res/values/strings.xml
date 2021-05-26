@@ -31,10 +31,6 @@
     <string name="to_continue_confirm_email">За да продължите трябва да потвърдите имейл адреса си</string>
     <string name="invalid_mail_or_pass">Невавлиден email или парола</string>
 
-    <!-- Rights and Obligations -->
-    <string name="rights_and_obligations_subtitle">Указания за застъпници\nПарламентарни избори 2021</string>
-    <string name="rights_and_obligations_text">Защитниците на вота присъстват...</string>
-
     <!-- Common -->
     <string name="invalid_email">Невалиден имейл адрес</string>
     <string name="invalid_password">Невалидна парола</string>

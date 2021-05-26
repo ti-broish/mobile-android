@@ -4,9 +4,6 @@ import java.io.Serializable
 
 
 class RightsAndObligationsViewData( ) : Serializable {
-
-    var title: String?= null
-    var subtitle: String?= null
     var rightsAndObligationsText:String?= null
 }
 
