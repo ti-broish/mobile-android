@@ -12,4 +12,8 @@
         <item name="android:textSize">24sp</item>
     </style>
 
+    <style name="Widget.MaterialComponents.Button.Icon.Secondary" parent="Widget.MaterialComponents.Button.Icon">
+        <item name="android:backgroundTint">@color/secondary_button_background</item>
+    </style>
+
 </resources>

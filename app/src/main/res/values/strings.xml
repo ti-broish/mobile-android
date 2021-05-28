@@ -76,5 +76,13 @@
     <string name="dialog_title_error">Грешка</string>
     <string name="country">Държава</string>
     <string name="continueText">Продължи</string>
+    <string name="profile_generic_error">Грешка при достъпване на профила</string>
+    <string name="profile_screen_title">Профил</string>
+    <string name="dialog_generic_title">Съобщение</string>
+    <string name="profile_changes_saved">Промените са запазени.</string>
+    <string name="profile_delete_success">Успешно изтрихте личните си данни.</string>
+    <string name="profile_delete_confirmation">Потвърдете изтриване на профила</string>
+    <string name="save">Запази</string>
+    <string name="delete_profile">Изтрий профил</string>
 
 </resources>

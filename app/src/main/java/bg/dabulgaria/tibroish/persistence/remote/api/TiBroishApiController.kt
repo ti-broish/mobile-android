@@ -37,4 +37,13 @@ interface TiBroishApiController {
                     @Query("town" ) townCode: Long,
                     @Query("city_region" ) cityRegionCode: String?): Call<List<SectionRemote>>
 
+    @GET("/me")
+    fun getUserDetails(@Header(ApiHeader.Authorization) authorization:String): Call<User>
+
+    @PATCH("/me")
+    fun updateUserDetails(
+        @Header(ApiHeader.Authorization) authorization:String, @Body userData: User): Call<Any>
+
+    @DELETE("/me")
+    fun deleteUser(@Header(ApiHeader.Authorization) authorization:String): Call<Any>
 }
