@@ -2,13 +2,13 @@
 <resources>
     <color name="colorPrimary">#00D5BD</color>
     <color name="colorPrimaryDark">#02F1CC</color>
-    <color name="asdas">#00BDAA</color>
     <color name="colorAccent">#FD0002</color>
     <color name="textBlack">#020202</color>
     <color name="textDarkGray">#626262</color>
     <color name="textLightGreen">#4CAF52</color>
     <color name="textRed">#C8181B</color>
     <color name="white">#FFFFFF</color>
+    <color name="secondary_button_background">#b8b8b8</color>
     <color name="dirtyWhite">#F0F0F0</color>
     <color name="half_transparent_white">#7FFFFFFF</color>
 </resources>
