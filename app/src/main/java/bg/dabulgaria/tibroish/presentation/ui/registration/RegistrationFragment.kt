@@ -31,6 +31,13 @@ class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistratio
         setupCountryCodes()
         setupOrganizations()
         setupRegisterButton()
+        setupLoginButton()
+    }
+
+    private fun setupLoginButton() {
+        button_login.setOnClickListener {
+            presenter.navigateToLoginScreen()
+        }
     }
 
     private fun setupRegisterButton() {
