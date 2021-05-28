@@ -7,11 +7,11 @@ import bg.dabulgaria.tibroish.domain.calculators.HashCalculator
 import bg.dabulgaria.tibroish.domain.calculators.IHashCalculator
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.providers.ITimestampProvider
-import bg.dabulgaria.tibroish.persistence.local.Logger
 import bg.dabulgaria.tibroish.domain.providers.TimestampProvider
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.infrastructure.schedulers.SchedulersProvider
+import bg.dabulgaria.tibroish.persistence.local.Logger
 import bg.dabulgaria.tibroish.persistence.local.TiBroishDatabase
 import bg.dabulgaria.tibroish.presentation.main.IMainPresenter
 import bg.dabulgaria.tibroish.presentation.main.IMainRouter
@@ -19,6 +19,7 @@ import bg.dabulgaria.tibroish.presentation.main.MainPresenter
 import bg.dabulgaria.tibroish.presentation.main.MainRouter
 import bg.dabulgaria.tibroish.presentation.ui.common.DialogUtil
 import bg.dabulgaria.tibroish.presentation.ui.common.FormValidator
+import bg.dabulgaria.tibroish.presentation.ui.common.IDialogUtil
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -96,7 +97,7 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    fun providesDialogUtil(): DialogUtil {
+    fun providesDialogUtil(): IDialogUtil {
         return DialogUtil()
     }
 }
