@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.organisation.ITiBorishRemoteRepository
+import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.base.BaseFragment
@@ -20,11 +20,10 @@ import javax.inject.Inject
 
 class HomeFragment : BaseFragment() {
 
-
     @Inject
     protected lateinit var mMainRouter: IMainRouter
     @Inject
-    lateinit var mTiBorishRemoteRepository: ITiBorishRemoteRepository
+    lateinit var mTiBroishRemoteRepository: ITiBroishRemoteRepository
     @Inject
     lateinit var logger: ILogger
     @Inject
