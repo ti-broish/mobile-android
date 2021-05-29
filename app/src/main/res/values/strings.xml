@@ -84,5 +84,7 @@
     <string name="profile_delete_confirmation">Потвърдете изтриване на профила</string>
     <string name="save">Запази</string>
     <string name="delete_profile">Изтрий профил</string>
-
+    <string name="please_choose_section">Моля изберете секция</string>
+    <string name="please_choose_min_images">Добавете още поне %d снимки</string>
+    <string name="protocol_send_successfully">Протоколът е изпратен успешно!</string>
 </resources>

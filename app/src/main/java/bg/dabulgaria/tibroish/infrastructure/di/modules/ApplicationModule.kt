@@ -6,6 +6,7 @@ import bg.dabulgaria.tibroish.DaApplication
 import bg.dabulgaria.tibroish.domain.calculators.HashCalculator
 import bg.dabulgaria.tibroish.domain.calculators.IHashCalculator
 import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
+import bg.dabulgaria.tibroish.domain.protocol.ProtocolStatusRemote
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.providers.ITimestampProvider
 import bg.dabulgaria.tibroish.domain.providers.TimestampProvider
@@ -20,6 +21,10 @@ import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.main.MainPresenter
 import bg.dabulgaria.tibroish.presentation.main.MainRouter
 import bg.dabulgaria.tibroish.presentation.ui.common.*
+import bg.dabulgaria.tibroish.presentation.providers.GallerySelectedImagesProvider
+import bg.dabulgaria.tibroish.presentation.providers.IGallerySelectedImagesProvider
+import bg.dabulgaria.tibroish.presentation.ui.common.DialogUtil
+import bg.dabulgaria.tibroish.presentation.ui.common.FormValidator
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -42,6 +47,7 @@ class ApplicationModule {
     @Singleton
     internal fun providesGson() : Gson {
         return GsonBuilder()
+                .registerTypeAdapter(ProtocolStatusRemote::class.java, ProtocolStatusRemote.deserializer)
                 .setDateFormat("dd/mm/yyyy HH:mm")
                 .create()
     }
@@ -56,9 +62,9 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    internal fun providesTiBroishDatabase( @AppContext context: Context ): TiBroishDatabase {
+    internal fun providesTiBroishDatabase(@AppContext context: Context): TiBroishDatabase {
 
-        return Room.databaseBuilder( context, TiBroishDatabase::class.java, "ti_broish_db" )
+        return Room.databaseBuilder(context, TiBroishDatabase::class.java, "ti_broish_db")
                 .addMigrations(Migration_1_2())
                 .build()
     }
@@ -115,5 +121,11 @@ class ApplicationModule {
     @Singleton
     fun providesOrganizationsDropdownUtil(): IOrganizationsDropdownUtil {
         return OrganizationsDropdownUtil()
+    }
+
+    @Provides
+    @Singleton
+    internal fun providesIGallerySelectedImagesProvider(implementation: GallerySelectedImagesProvider): IGallerySelectedImagesProvider {
+        return implementation
     }
 }
