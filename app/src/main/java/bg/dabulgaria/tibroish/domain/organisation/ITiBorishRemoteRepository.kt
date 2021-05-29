@@ -18,4 +18,10 @@ interface ITiBorishRemoteRepository {
     fun getTowns(params: TownsRequestParams): List<TownRemote>
 
     fun getSections(params: SectionsRequestParams): List<SectionRemote>
+
+    fun getUserDetails(): User
+
+    fun updateUserDetails(user: User)
+
+    fun deleteUser()
 }

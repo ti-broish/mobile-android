@@ -54,4 +54,8 @@
     <style name="AppThem.Widget.Button.Secondary" parent="@style/Widget.MaterialComponents.Button.TextButton">
     </style>
 
+    <style name="Widget.MaterialComponents.Button.Icon.Secondary" parent="Widget.MaterialComponents.Button.Icon">
+        <item name="android:backgroundTint">@color/secondary_button_background</item>
+    </style>
+
 </resources>

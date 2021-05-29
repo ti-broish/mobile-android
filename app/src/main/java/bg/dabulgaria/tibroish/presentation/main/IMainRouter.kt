@@ -33,6 +33,8 @@ interface IMainRouter: OnMenuClickListener {
     fun showForgotPasswordScreen(email:String)
 
     fun openCamera(imageFilePath: String)
-    
+
     fun showRightsAndObligations()
+
+    fun showProfile()
 }
