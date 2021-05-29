@@ -30,10 +30,7 @@ data class ProtocolDto (
     val id: java.math.BigDecimal,
     val section: SectionDto,
     val pictures: kotlin.collections.List<PictureDto>,
-    val assignees: kotlin.collections.List<UserDto>,
-    val status: kotlin.Any,
-    val results: ProtocolResultsDto,
-    val author: UserDto
+
 ) {
 
 }

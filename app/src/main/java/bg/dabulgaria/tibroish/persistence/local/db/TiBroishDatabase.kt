@@ -8,7 +8,7 @@ import bg.dabulgaria.tibroish.domain.protocol.Protocol
 import bg.dabulgaria.tibroish.domain.protocol.image.ProtocolImage
 
 @Database(entities = [Protocol::class, ProtocolImage::class],
-        version = 2,
+        version = 3,
         exportSchema = false
 )
 abstract class TiBroishDatabase: RoomDatabase() {

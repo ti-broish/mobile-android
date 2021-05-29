@@ -4,6 +4,7 @@ import android.app.Application
 import bg.dabulgaria.tibroish.infrastructure.di.components.DaggerApplicationComponent
 
 import bg.dabulgaria.tibroish.infrastructure.di.modules.DeviceModule
+import bg.dabulgaria.tibroish.infrastructure.di.modules.NetworkModule
 import com.google.firebase.FirebaseApp
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -22,8 +23,8 @@ class DaApplication : Application(), HasAndroidInjector {
         FirebaseApp.initializeApp(this);
 
         DaggerApplicationComponent.builder()
-                .application( this )
-                .device( DeviceModule( this ) )
+                .application(this)
+                .device( DeviceModule(this))
                 .build()
                 .inject(this)
 

@@ -9,12 +9,18 @@ import bg.dabulgaria.tibroish.domain.locations.SectionRemote
 import bg.dabulgaria.tibroish.domain.locations.TownRemote
 import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
 import bg.dabulgaria.tibroish.domain.organisation.Organization
+import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
+import bg.dabulgaria.tibroish.domain.protocol.ProtocolStatusRemote
+import bg.dabulgaria.tibroish.domain.protocol.SendProtocolRequest
 import bg.dabulgaria.tibroish.domain.user.User
 import bg.dabulgaria.tibroish.persistence.remote.api.AcceptValues
 import bg.dabulgaria.tibroish.persistence.remote.api.TiBroishApiController
 import bg.dabulgaria.tibroish.persistence.remote.model.SectionsRequestParams
 import bg.dabulgaria.tibroish.persistence.remote.model.TownsRequestParams
+import retrofit2.Call
+import java.util.*
 import javax.inject.Inject
+import kotlin.random.Random
 
 class TiBroishRemoteRepository @Inject constructor(private val apiController: TiBroishApiController,
                                                    private val authenticator: IRemoteRepoAuthenticator)
@@ -96,10 +102,28 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
 
     override fun uploadImage(imageRequest: UploadImageRequest): UploadImageResponse {
 
-        return authenticator.executeCall({ pParams, token ->
-            apiController.uploadImage(getAuthorization(token), pParams)
-        }, imageRequest)!!
+        val id = UUID.randomUUID().toString()
+        return UploadImageResponse( id,
+                "https://tibroish.bg/data/$id",
+                imageRequest.image.index.toInt(),
+                "",
+                imageRequest.image.index.toInt())
+/* TODO Uncomment when send image is fixed
+        return authenticator.executeCall( { pParams, token ->
+            apiController.uploadImage(getAuthorization(token), pParams )}, imageRequest)!!
+            */
     }
 
-    private fun getAuthorization(idToken: String): String = "Bearer $idToken"
+    override fun sendProtocol(request: SendProtocolRequest): ProtocolRemote {
+
+        return ProtocolRemote( Random.nextLong().toBigDecimal(),
+                SectionRemote("","","",""),
+                ProtocolStatusRemote.values()[Random.nextInt(0, ProtocolStatusRemote.values().size)])
+/* TODO Uncomment when send protocol is fixed
+
+        return authenticator.executeCall( { pParams, token ->
+            apiController.sendProtocol(getAuthorization(token), pParams )}, request)!!*/
+    }
+
+   private fun getAuthorization(idToken: String): String = "Bearer $idToken"
 }

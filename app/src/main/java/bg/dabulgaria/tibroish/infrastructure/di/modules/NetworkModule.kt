@@ -1,7 +1,9 @@
 package bg.dabulgaria.tibroish.infrastructure.di.modules
 
+import android.content.Context
 import com.google.gson.Gson
 import bg.dabulgaria.tibroish.BuildConfig
+import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.config.IAppConfigRepository
 import bg.dabulgaria.tibroish.infrastructure.BuildConstants
 import bg.dabulgaria.tibroish.persistence.remote.api.ApiInterceptor
@@ -27,11 +29,13 @@ class NetworkModule() {
     @Singleton
     fun providesOkHttpClient(): OkHttpClient{
 
+        val agent = "Ti Broish ${BuildConfig.FLAVOR} ${BuildConfig.VERSION_NAME} ${BuildConfig.VERSION_CODE}"
+
         val okHttpClientBuilder= OkHttpClient.Builder()
                 .connectTimeout(2L, TimeUnit.MINUTES)
                 .readTimeout(2L, TimeUnit.MINUTES)
                 .writeTimeout(2L, TimeUnit.MINUTES)
-                .addInterceptor(ApiInterceptor("TiBroish Android"))
+                .addInterceptor(ApiInterceptor(agent))
 
         if (BuildConfig.DEBUG)
             okHttpClientBuilder.addInterceptor(HttpLoggingInterceptor()

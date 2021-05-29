@@ -3,6 +3,8 @@ package bg.dabulgaria.tibroish.domain.organisation
 import bg.dabulgaria.tibroish.domain.image.UploadImageRequest
 import bg.dabulgaria.tibroish.domain.image.UploadImageResponse
 import bg.dabulgaria.tibroish.domain.locations.*
+import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
+import bg.dabulgaria.tibroish.domain.protocol.SendProtocolRequest
 import bg.dabulgaria.tibroish.domain.user.User
 import bg.dabulgaria.tibroish.persistence.remote.api.ApiHeader
 import bg.dabulgaria.tibroish.persistence.remote.model.*
@@ -32,4 +34,6 @@ interface ITiBroishRemoteRepository {
     fun deleteUser()
 
     fun uploadImage(image: UploadImageRequest): UploadImageResponse
+
+    fun sendProtocol(request: SendProtocolRequest):ProtocolRemote
 }
