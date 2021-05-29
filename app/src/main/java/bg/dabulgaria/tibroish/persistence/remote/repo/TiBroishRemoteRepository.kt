@@ -70,6 +70,24 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
        return sections.sortedBy { it.code }
    }
 
-   private fun getAuthorization(idToken: String): String = "Bearer $idToken"
+    override fun getUserDetails() : User {
+        return authenticator.executeCall { token ->
+            apiController.getUserDetails(getAuthorization(token))
+        }!!
+    }
+
+    override fun updateUserDetails(user: User) {
+        authenticator.executeCall { token ->
+            apiController.updateUserDetails(getAuthorization(token), user)
+        }
+    }
+
+    override fun deleteUser() {
+        authenticator.executeCall { token ->
+            apiController.deleteUser(getAuthorization(token))
+        }
+    }
+
+    private fun getAuthorization(idToken: String): String = "Bearer $idToken"
 
 }

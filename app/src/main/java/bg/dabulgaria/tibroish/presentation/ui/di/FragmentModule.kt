@@ -10,6 +10,9 @@ import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerInteractor
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.SectionPickerInteractor
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.*
+import bg.dabulgaria.tibroish.presentation.ui.profile.IProfilePresenter
+import bg.dabulgaria.tibroish.presentation.ui.profile.ProfileFragment
+import bg.dabulgaria.tibroish.presentation.ui.profile.ProfilePresenter
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.*
 import bg.dabulgaria.tibroish.presentation.ui.registration.IRegistrationPresenter
 import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationFragment
@@ -81,4 +84,13 @@ interface FragmentModule {
     fun bindIForgotPasswordPresenter(implementation: ForgotPasswordPresenter):
             IForgotPasswordPresenter
     //endregion Forgot Password screen
+
+    //region Profile screen
+    @ContributesAndroidInjector
+    fun bindProfileFragment(): ProfileFragment
+
+    @Binds
+    fun bindIProfilePresenter(implementation: ProfilePresenter):
+            IProfilePresenter
+    //endregion Profile screen
 }
