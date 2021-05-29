@@ -2,12 +2,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_margin="16dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 style="@style/AppTheme.Widget.TextView.ActivityTitle"
@@ -15,6 +22,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:textSize="24sp"
                 android:text="@string/rights_and_obligations"/>
 
             <TextView
@@ -23,25 +31,21 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rightsAndObligationsTitle"
+                android:textSize="22sp"
                 android:text="@string/rights_and_obligations_subtitle"/>
 
-            <ScrollView
+            <TextView
+                style="@style/AppTheme.Widget.TextView.InfoText"
+                android:id="@+id/rightsAndObligationsText"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_margin="16dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rightsAndObligationsSubtitle">
-
-                <TextView
-                    style="@style/AppTheme.Widget.TextView.InfoText"
-                    android:id="@+id/rightsAndObligationsText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="0dp"
-                    android:text="@string/rights_and_obligations_text"/>
-            </ScrollView>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="18sp"
+                android:text="@string/rights_and_obligations_text"
+                app:layout_constraintTop_toBottomOf="@id/rightsAndObligationsSubtitle"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

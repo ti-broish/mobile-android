@@ -16,8 +16,7 @@ interface IRightsAndObligationsPresenter: IBasePresenter<IRightsAndObligationsVi
     fun getRightsAndObligationsText(): String
 }
 
-class RightsAndObligationsPresenter @Inject constructor(private val schedulersProvider : ISchedulersProvider,
-                                               private val mainRouter : IMainRouter,
+class RightsAndObligationsPresenter @Inject constructor(private val mainRouter : IMainRouter,
                                                private val logger : ILogger,
                                                dispHandler: IDisposableHandler)
     : BasePresenter<IRightsAndObligationsView>(dispHandler), IRightsAndObligationsPresenter{
