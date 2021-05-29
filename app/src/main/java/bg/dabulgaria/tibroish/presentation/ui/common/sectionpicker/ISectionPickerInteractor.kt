@@ -1,7 +1,7 @@
 package bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker
 
 import bg.dabulgaria.tibroish.domain.locations.*
-import bg.dabulgaria.tibroish.domain.organisation.ITiBorishRemoteRepository
+import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
 import bg.dabulgaria.tibroish.persistence.remote.model.SectionsRequestParams
 import bg.dabulgaria.tibroish.persistence.remote.model.TownsRequestParams
 import javax.inject.Inject
@@ -21,7 +21,7 @@ interface ISectionPickerInteractor {
     fun onCityRegionSelected(oldData:SectionsViewData,cityRegion: CityRegionRemote): SectionsViewData
 }
 
-class SectionPickerInteractor @Inject constructor(private val apiRepo: ITiBorishRemoteRepository) :ISectionPickerInteractor{
+class SectionPickerInteractor @Inject constructor(private val apiRepo: ITiBroishRemoteRepository) :ISectionPickerInteractor{
 
     override fun loadSectionsData(oldData:SectionsViewData?):SectionsViewData{
 

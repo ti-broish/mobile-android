@@ -34,7 +34,8 @@ class NetworkModule() {
                 .addInterceptor(ApiInterceptor("TiBroish Android"))
 
         if (BuildConfig.DEBUG)
-            okHttpClientBuilder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            okHttpClientBuilder.addInterceptor(HttpLoggingInterceptor()
+                    .setLevel(HttpLoggingInterceptor.Level.HEADERS))
 
         return okHttpClientBuilder.build()
     }

@@ -1,5 +1,7 @@
 package bg.dabulgaria.tibroish.persistence.remote.api
 
+import bg.dabulgaria.tibroish.domain.image.UploadImageRequest
+import bg.dabulgaria.tibroish.domain.image.UploadImageResponse
 import bg.dabulgaria.tibroish.domain.locations.*
 import bg.dabulgaria.tibroish.domain.organisation.Organization
 import bg.dabulgaria.tibroish.domain.user.User
@@ -46,4 +48,8 @@ interface TiBroishApiController {
 
     @DELETE("/me")
     fun deleteUser(@Header(ApiHeader.Authorization) authorization:String): Call<Any>
+
+    @POST("/pictures")
+    fun uploadImage(@Header(ApiHeader.Authorization) authorization:String,
+                    @Body image: UploadImageRequest):Call<UploadImageResponse>
 }

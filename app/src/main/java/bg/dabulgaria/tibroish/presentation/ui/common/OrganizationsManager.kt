@@ -1,6 +1,6 @@
 package bg.dabulgaria.tibroish.presentation.ui.common
 
-import bg.dabulgaria.tibroish.domain.organisation.ITiBorishRemoteRepository
+import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
 import bg.dabulgaria.tibroish.domain.organisation.Organization
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -9,7 +9,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class OrganizationsManager @Inject constructor(
-    private val tiBroishRemoteRepository: ITiBorishRemoteRepository): IOrganizationsManager {
+    private val tiBroishRemoteRepository: ITiBroishRemoteRepository): IOrganizationsManager {
 
     override fun loadOrganizationsAsync(
         callback: (List<Organization>?) -> Unit
@@ -30,7 +30,7 @@ class OrganizationsManager @Inject constructor(
     }
 
     private suspend fun fetchOrganizations(
-        tiBroishRemoteRepository: ITiBorishRemoteRepository
+        tiBroishRemoteRepository: ITiBroishRemoteRepository
     ): List<Organization> {
         return withContext(Dispatchers.IO) {
             tiBroishRemoteRepository.getOrganisations()

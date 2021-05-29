@@ -150,6 +150,7 @@ class AddProtocolPresenter @Inject constructor(private val schedulersProvider : 
 
     override fun onViewHide() {
         mainRouter.permissionResponseListener = null
+        interactor.dispose()
         super.onViewHide()
     }
 

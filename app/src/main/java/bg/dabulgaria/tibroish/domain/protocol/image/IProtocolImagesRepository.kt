@@ -1,8 +1,8 @@
 package bg.dabulgaria.tibroish.domain.protocol.image
 
-import bg.dabulgaria.tibroish.domain.io.IBaseTiBroishRepository
+import bg.dabulgaria.tibroish.domain.io.IBaseTransactionalRepository
 
-interface IProtocolImagesRepository : IBaseTiBroishRepository {
+interface IProtocolImagesRepository : IBaseTransactionalRepository {
 
     fun getAll(): List<ProtocolImage>
 

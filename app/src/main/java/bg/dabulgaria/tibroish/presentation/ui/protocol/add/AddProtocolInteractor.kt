@@ -2,6 +2,7 @@ package bg.dabulgaria.tibroish.presentation.ui.protocol.add
 
 
 import android.graphics.BitmapFactory
+import bg.dabulgaria.tibroish.domain.image.IProtocolImageUploader
 import bg.dabulgaria.tibroish.domain.image.PickedImageSource
 import bg.dabulgaria.tibroish.domain.io.IFileRepository
 import bg.dabulgaria.tibroish.domain.protocol.IProtocolsRepository
@@ -12,12 +13,17 @@ import bg.dabulgaria.tibroish.domain.protocol.image.IImageCopier
 import bg.dabulgaria.tibroish.domain.protocol.image.IProtocolImagesRepository
 import bg.dabulgaria.tibroish.domain.protocol.image.ProtocolImage
 import bg.dabulgaria.tibroish.domain.protocol.image.UploadStatus
+import bg.dabulgaria.tibroish.domain.providers.ILogger
+import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
+import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerInteractor
+import io.reactivex.rxjava3.core.Observable
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-interface IAddProtocolInteractor :ISectionPickerInteractor {
+interface IAddProtocolInteractor :ISectionPickerInteractor, IDisposableHandler {
 
     fun addNew(protocol: Protocol): ProtocolExt
 
@@ -32,8 +38,13 @@ class AddProtocolInteractor @Inject constructor(private val protocolsRepo: IProt
                                                 private val protocolsImagesRepo: IProtocolImagesRepository,
                                                 private val fileRepo: IFileRepository,
                                                 private val sectionPickerInteractor: ISectionPickerInteractor,
-                                                private val imageCopier: IImageCopier)
-    : IAddProtocolInteractor, ISectionPickerInteractor by sectionPickerInteractor{
+                                                private val imageCopier: IImageCopier,
+                                                dispHandler: IDisposableHandler,
+                                                private val schedulersProvider : ISchedulersProvider,
+                                                private val protocolImageUploader:IProtocolImageUploader,
+                                                private val logger: ILogger)
+    : IAddProtocolInteractor, ISectionPickerInteractor by sectionPickerInteractor,
+        IDisposableHandler by dispHandler{
 
     override fun addNew(protocol: Protocol): ProtocolExt {
 
@@ -64,6 +75,8 @@ class AddProtocolInteractor @Inject constructor(private val protocolsRepo: IProt
 
         newViewData.items.add(AddProtocolListItemButtons())
 
+        newViewData.protocolId?.let { startImageUpload(it) }
+
         return newViewData
     }
 
@@ -92,7 +105,7 @@ class AddProtocolInteractor @Inject constructor(private val protocolsRepo: IProt
                 originalFilePath = imageFilePath,
                 localFilePath = imageFilePath,
                 localFileThumbPath = "",
-                uploadStatus = UploadStatus.NotProcessed,
+                uploadStatus = UploadStatus.Copied,
                 providerId = "Camera_${UUID.randomUUID().toString()}",
                 source = PickedImageSource.Camera,
                 width = options.outWidth,
@@ -100,6 +113,31 @@ class AddProtocolInteractor @Inject constructor(private val protocolsRepo: IProt
                 dateTaken = Date())
 
         protocolsImagesRepo.insert(protocolImage)
+
+        startImageUpload(protocolId)
+    }
+
+    fun startImageUpload(protocolId: Long){
+
+        add(Observable.interval(2, TimeUnit.SECONDS)
+                .subscribeOn(schedulersProvider.ioScheduler())
+                .observeOn(schedulersProvider.ioScheduler())
+                .doOnNext {
+
+                    var success = false
+                    try {
+
+                        protocolImageUploader.uploadImages(protocolId)
+                        success = true
+                    }
+                    catch (th:Throwable){}
+
+                    if(success)
+                        this.dispose()
+
+                } //endregion
+                .subscribe({  }) { e: Throwable? ->
+                    logger.e(TAG, e) } )
     }
 
     companion object {

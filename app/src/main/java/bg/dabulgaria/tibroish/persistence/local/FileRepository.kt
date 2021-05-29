@@ -6,6 +6,8 @@ import bg.dabulgaria.tibroish.domain.io.IFileRepository
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import java.io.File
+import java.io.FileInputStream
+import android.util.Base64
 import java.util.*
 import javax.inject.Inject
 import kotlin.jvm.Throws
@@ -73,6 +75,29 @@ class FileRepository @Inject constructor(@AppContext private val context: Contex
 
         val file = File(filePath)
         return if (file.exists()) file.delete() else true
+    }
+
+    override fun getFileName(filePath: String): String? {
+
+        val file = File(filePath)
+
+        if( !file.exists())
+            return null
+
+        return file.name
+    }
+
+    override fun getFileContentBase64Encoded(filePath: String): String? {
+
+        val file = File(filePath)
+
+        if( !file.exists())
+            return null
+
+        val fileInputStreamReader = FileInputStream(file)
+        val bytes = ByteArray(file.length().toInt())
+        fileInputStreamReader.read(bytes)
+        return String(Base64.encode(bytes, Base64.DEFAULT), Charsets.UTF_8 )
     }
 
     companion object{
