@@ -18,6 +18,7 @@ import bg.dabulgaria.tibroish.presentation.ui.forgotpassword.ForgotPasswordFragm
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.camera.CameraPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerConstants
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerFragment
+import bg.dabulgaria.tibroish.presentation.ui.profile.ProfileFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolViewData
 import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationFragment
@@ -54,7 +55,9 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
                 clearBackStack()
                 showHomeScreen()
             }
-            NavItemAction.Profile ->{}
+            NavItemAction.Profile ->{
+                showProfile()
+            }
             NavItemAction.SendProtocol -> {
                 showAddProtocol()
             }
@@ -127,6 +130,19 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
         }
 
         view?.showScreen(content, CameraPickerFragment.TAG, addToBackStack = true, transitionContent = true)
+    }
+
+    override fun showProfile() {
+        var content = view?.supportFragmentMngr?.findFragmentByTag(ProfileFragment.TAG )
+        if (content == null) {
+            clearBackStack()
+            content = ProfileFragment.newInstance()
+        }
+        view?.showScreen(
+            content,
+            ProfileFragment.TAG,
+            addToBackStack = true,
+            transitionContent = true)
     }
 
     override fun navigateBack() {
