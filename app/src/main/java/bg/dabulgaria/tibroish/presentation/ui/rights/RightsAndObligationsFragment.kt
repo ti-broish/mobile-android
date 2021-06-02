@@ -12,16 +12,20 @@ import android.widget.Toast
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
+import bg.dabulgaria.tibroish.presentation.ui.common.DialogUtil
 import javax.inject.Inject
 
 interface IRightsAndObligationsView : IBaseView {
 
 }
 
-class RightsAndObligationsFragment @Inject constructor()
+class RightsAndObligationsFragment constructor()
     : BasePresentableFragment<IRightsAndObligationsView, IRightsAndObligationsPresenter>(), IRightsAndObligationsView {
 
     private fun getRightsAndObligationsTextView() = view?.findViewById<TextView>(R.id.rightsAndObligationsText)
+
+    @Inject
+    lateinit var dialogUtil: DialogUtil
 
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?,
                               savedInstanceState : Bundle?) : View? {
@@ -40,7 +44,9 @@ class RightsAndObligationsFragment @Inject constructor()
 
     override fun onError(errorMessage: String) {
 
-        Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show()
+        dialogUtil.showDismissableDialog(activity= requireActivity(),
+                message = errorMessage,
+                dismissCallback = {} )
     }
 
     companion object {
