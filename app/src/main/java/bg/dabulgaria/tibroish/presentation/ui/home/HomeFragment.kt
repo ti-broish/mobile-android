@@ -67,9 +67,9 @@ class HomeFragment : BaseFragment() {
                 firstString.length + secondString.length + 1,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        tiBorishLive?.text = spannableString
+        tiBroishLive?.text = spannableString
 
-        tiBorishLive?.setOnClickListener {  mMainRouter.onNavigateToItem( NavItemAction.YouCountLive ) }
+        tiBroishLive?.setOnClickListener {  mMainRouter.onNavigateToItem( NavItemAction.YouCountLive ) }
     }
 
     companion object {

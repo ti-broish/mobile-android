@@ -10,9 +10,5 @@ interface IGallerySelectedImagesProvider{
 
 class GallerySelectedImagesProvider @Inject constructor() :IGallerySelectedImagesProvider {
 
-    private val _selectedImages:MutableList<PhotoItem> = mutableListOf()
-
-    override val selectedImages: MutableList<PhotoItem>
-        get() = _selectedImages
-
+    override val selectedImages: MutableList<PhotoItem> = mutableListOf()
 }
