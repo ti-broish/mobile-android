@@ -23,6 +23,8 @@ import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolViewData
 import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationFragment
 import java.io.File
+import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsFragment
+import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsViewData
 import javax.inject.Inject
 
 class MainRouter @Inject constructor(@AppContext private val appContext: Context )
@@ -64,7 +66,9 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
             NavItemAction.SendSignal -> {}
             NavItemAction.MyProtocols -> {}
             NavItemAction.MySignals -> {}
-            NavItemAction.RightsAndObligations -> {}
+            NavItemAction.RightsAndObligations -> {
+                showRightsAndObligations()
+            }
             NavItemAction.YouCountLive -> {}
             NavItemAction.Exit -> {}
         }
@@ -210,6 +214,18 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
         }
         catch (e: ActivityNotFoundException) {
         }
+    }
+
+    override fun showRightsAndObligations() {
+
+        var content = view?.supportFragmentMngr?.findFragmentByTag(RightsAndObligationsFragment.TAG )
+        if (content == null) {
+
+            clearBackStack()
+            content = RightsAndObligationsFragment.newInstance(RightsAndObligationsViewData())
+        }
+
+        view?.showScreen(content, RightsAndObligationsFragment.TAG, addToBackStack = true, transitionContent = true)
     }
 
     private fun clearBackStack() {
