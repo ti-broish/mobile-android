@@ -35,4 +35,6 @@ interface IMainRouter: OnMenuClickListener {
     fun openCamera(imageFilePath: String)
 
     fun showProfile()
+
+    fun showRightsAndObligations()
 }

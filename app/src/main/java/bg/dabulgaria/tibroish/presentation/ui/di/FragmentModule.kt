@@ -17,6 +17,9 @@ import bg.dabulgaria.tibroish.presentation.ui.protocol.add.*
 import bg.dabulgaria.tibroish.presentation.ui.registration.IRegistrationPresenter
 import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationFragment
 import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationPresenter
+import bg.dabulgaria.tibroish.presentation.ui.rights.IRightsAndObligationsPresenter
+import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsFragment
+import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsPresenter
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -93,4 +96,12 @@ interface FragmentModule {
     fun bindIProfilePresenter(implementation: ProfilePresenter):
             IProfilePresenter
     //endregion Profile screen
+
+    //region RightsAndObligations screen
+    @ContributesAndroidInjector
+    fun bindRightsAndObligationsFragment(): RightsAndObligationsFragment
+
+    @Binds
+    fun bindIRightsAndObligationsPresenter(implemenation: RightsAndObligationsPresenter): IRightsAndObligationsPresenter
+    //endregion Login screen
 }
