@@ -53,7 +53,7 @@ open class Protocol constructor(@PrimaryKey(autoGenerate = true)
             source.uuid,
             source.serverId,
             source.status,
-    source.remoteStatus)
+            source.remoteStatus)
 }
 
 class ProtocolExt(id:Long=-1,
