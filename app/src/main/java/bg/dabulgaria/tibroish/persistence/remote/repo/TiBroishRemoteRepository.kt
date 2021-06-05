@@ -13,6 +13,9 @@ import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolStatusRemote
 import bg.dabulgaria.tibroish.domain.protocol.SendProtocolRequest
 import bg.dabulgaria.tibroish.domain.user.User
+import bg.dabulgaria.tibroish.domain.violation.SendViolationRequest
+import bg.dabulgaria.tibroish.domain.violation.ViolationRemoteStatus
+import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.persistence.remote.api.AcceptValues
 import bg.dabulgaria.tibroish.persistence.remote.api.TiBroishApiController
 import bg.dabulgaria.tibroish.persistence.remote.model.SectionsRequestParams
@@ -102,27 +105,25 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
 
     override fun uploadImage(imageRequest: UploadImageRequest): UploadImageResponse {
 
-        val id = UUID.randomUUID().toString()
-        return UploadImageResponse( id,
-                "https://tibroish.bg/data/$id",
-                imageRequest.image.index.toInt(),
-                "",
-                imageRequest.image.index.toInt())
-/* TODO Uncomment when send image is fixed
         return authenticator.executeCall( { pParams, token ->
             apiController.uploadImage(getAuthorization(token), pParams )}, imageRequest)!!
-            */
     }
 
     override fun sendProtocol(request: SendProtocolRequest): ProtocolRemote {
 
-        return ProtocolRemote( Random.nextLong().toBigDecimal(),
-                SectionRemote("","","",""),
-                ProtocolStatusRemote.values()[Random.nextInt(0, ProtocolStatusRemote.values().size)])
-/* TODO Uncomment when send protocol is fixed
-
         return authenticator.executeCall( { pParams, token ->
-            apiController.sendProtocol(getAuthorization(token), pParams )}, request)!!*/
+            apiController.sendProtocol(getAuthorization(token), pParams )}, request)!!
+    }
+
+    override fun sendViolation(request: SendViolationRequest): VoteViolationRemote {
+/*
+        return VoteViolationRemote( id = Random.nextLong().toBigDecimal(),
+                section = SectionRemote("","","",""),
+                description = request.description,
+                status = ViolationRemoteStatus.values()[Random.nextInt(0, ViolationRemoteStatus.values().size)])
+*/
+        return authenticator.executeCall( { pParams, token ->
+            apiController.sendViolation(getAuthorization(token), pParams)}, request)!!
     }
 
    private fun getAuthorization(idToken: String): String = "Bearer $idToken"

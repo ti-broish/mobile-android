@@ -22,17 +22,17 @@ constructor(private val database: TiBroishDatabase) : BaseTiBroishLocalRepositor
 
     override fun getByProtocolId(protocolId: Long): List<ProtocolImage> {
 
-        return database.daoProtocolImage().getByProtocolId( protocolId )
+        return database.daoProtocolImage().getByProtocolId(protocolId)
     }
 
-    override fun get(id: Long): ProtocolImage {
+    override fun get(id: Long): ProtocolImage? {
 
-        return database.daoProtocolImage().getById( id )
+        return database.daoProtocolImage().getById(id)
     }
 
     override fun insert(image: ProtocolImage) {
 
-        val id = database.daoProtocolImage().insert( image )
+        val id = database.daoProtocolImage().insert(image)
         image.id = id
     }
 
@@ -44,5 +44,8 @@ constructor(private val database: TiBroishDatabase) : BaseTiBroishLocalRepositor
         database.daoProtocolImage().delete(image)
     }
 
+    override fun delete(protocolImageId: Long) {
+        database.daoProtocolImage().delete(protocolImageId)
+    }
 
 }

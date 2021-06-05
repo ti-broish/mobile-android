@@ -37,5 +37,7 @@ interface IMainRouter: OnMenuClickListener {
 
     fun showProfile()
 
+    fun showSendViolation()
+
     fun showRightsAndObligations()
 }

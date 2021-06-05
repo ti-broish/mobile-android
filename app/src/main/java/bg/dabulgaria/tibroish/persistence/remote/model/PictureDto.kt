@@ -20,11 +20,7 @@ package bg.dabulgaria.tibroish.persistence.remote.model
  * @param rotation 
  */
 data class PictureDto (
-    val id: kotlin.String,
-    val url: kotlin.String,
-    val path: kotlin.String,
-    val rotation: java.math.BigDecimal
-) {
-
-}
-
+    val id: String,
+    val url: String,
+    val path: String,
+    val rotation: Int)

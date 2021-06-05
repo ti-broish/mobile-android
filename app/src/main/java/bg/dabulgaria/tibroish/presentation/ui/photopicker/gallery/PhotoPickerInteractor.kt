@@ -3,15 +3,10 @@ package bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery
 import android.content.Context
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.image.IGalleryImagesRepository
-import bg.dabulgaria.tibroish.domain.image.PickedImage
 import bg.dabulgaria.tibroish.domain.image.PickedImageSource
 import bg.dabulgaria.tibroish.domain.protocol.image.IImageCopier
 import bg.dabulgaria.tibroish.domain.protocol.image.IProtocolImagesRepository
-import bg.dabulgaria.tibroish.domain.protocol.image.ProtocolImage
-import bg.dabulgaria.tibroish.domain.protocol.image.UploadStatus
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
-import bg.dabulgaria.tibroish.presentation.providers.IGallerySelectedImagesProvider
-import java.util.*
 import javax.inject.Inject
 
 

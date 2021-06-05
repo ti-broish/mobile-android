@@ -10,7 +10,7 @@ class UploadImage(val filename: String,
                   val index: Number) :Serializable {
 }
 
-class UploadImageRequest(val image:UploadImage) :Serializable
+class UploadImageRequest(val image:String) :Serializable
 
 
 class UploadImageResponse(val id: String,

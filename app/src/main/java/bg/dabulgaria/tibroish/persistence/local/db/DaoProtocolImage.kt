@@ -11,7 +11,7 @@ interface DaoProtocolImage {
     fun insert(protocol: ProtocolImage):Long
 
     @Query("SELECT * FROM ProtocolImage WHERE id = :imageId")
-    fun getById(imageId: Long): ProtocolImage
+    fun getById(imageId: Long): ProtocolImage?
 
     @Query("SELECT * FROM ProtocolImage WHERE protocolId = :protocolId ORDER BY id asc")
     fun getByProtocolId(protocolId:Long): List<ProtocolImage>
@@ -24,4 +24,7 @@ interface DaoProtocolImage {
 
     @Delete
     fun delete(image: ProtocolImage)
+
+    @Query("DELETE FROM ProtocolImage where id= :imageId")
+    fun delete(imageId: Long)
 }
