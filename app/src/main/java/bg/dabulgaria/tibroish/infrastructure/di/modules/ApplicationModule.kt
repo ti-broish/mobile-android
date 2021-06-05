@@ -127,4 +127,10 @@ class ApplicationModule {
     internal fun providesIGallerySelectedImagesProvider(implementation: GallerySelectedImagesProvider): IGallerySelectedImagesProvider {
         return implementation
     }
+
+    @Provides
+    @Singleton
+    fun providesStatusColorUtil(): IStatusColorUtil {
+        return StatusColorUtil()
+    }
 }

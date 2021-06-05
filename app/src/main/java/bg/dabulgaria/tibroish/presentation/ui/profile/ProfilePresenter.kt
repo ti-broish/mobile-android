@@ -14,6 +14,7 @@ import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.ui.common.FormValidator
 import bg.dabulgaria.tibroish.presentation.ui.common.IOrganizationsManager
 import bg.dabulgaria.tibroish.presentation.ui.profile.ProfileConstants.Companion.VIEW_DATA_KEY
+import bg.dabulgaria.tibroish.presentation.ui.protocol.list.ProtocolsConstants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -110,7 +111,9 @@ class ProfilePresenter @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 tiBroishRemoteRepository.updateUserDetails(user)
-                callback.onSuccess()
+                withContext(Dispatchers.Main) {
+                    callback.onSuccess()
+                }
             } catch (exception: Exception) {
                 withContext(Dispatchers.Main) {
                     onError(exception)
@@ -166,7 +169,9 @@ class ProfilePresenter @Inject constructor(
             try {
                 tiBroishRemoteRepository.deleteUser()
                 userAuthenticator.logout()
-                callback.onSuccess()
+                withContext(Dispatchers.Main) {
+                    callback.onSuccess()
+                }
             } catch (exception: Exception) {
                 withContext(Dispatchers.Main) {
                     onError(exception)
@@ -189,7 +194,9 @@ class ProfilePresenter @Inject constructor(
             )
     }
 
-    override fun onSaveData(outState: Bundle) {}
+    override fun onSaveData(outState: Bundle) {
+        outState.putParcelable(VIEW_DATA_KEY, viewData)
+    }
 
     override fun loadData() {
         if (viewData == null) {

@@ -40,4 +40,6 @@ interface IMainRouter: OnMenuClickListener {
     fun showSendViolation()
 
     fun showRightsAndObligations()
+
+    fun showMyProtocols()
 }
