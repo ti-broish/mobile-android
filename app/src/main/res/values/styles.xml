@@ -58,4 +58,10 @@
     <style name="AppThem.Widget.Button.Secondary" parent="@style/Widget.MaterialComponents.Button.TextButton">
     </style>
 
+    <style name="PrimaryBold20dpTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

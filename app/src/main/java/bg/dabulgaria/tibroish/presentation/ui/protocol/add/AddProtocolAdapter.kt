@@ -23,6 +23,7 @@ class AddProtocolAdapter @Inject constructor(val presenter: IAddProtocolPresente
             AddProtocolListItemType.Section.ordinal -> R.layout.add_protocol_section_item
             AddProtocolListItemType.Image.ordinal -> R.layout.add_protocol_photo_item
             AddProtocolListItemType.Buttons.ordinal -> R.layout.add_protocol_buttons_item
+            AddProtocolListItemType.SendSuccess.ordinal -> R.layout.add_protocol_send_success_item
             else-> throw NotImplementedError( "AddProtocolListItemType( $viewType ) ViewHolder layout not implemented")
         },
                 parent, false)
@@ -33,6 +34,7 @@ class AddProtocolAdapter @Inject constructor(val presenter: IAddProtocolPresente
             AddProtocolListItemType.Section.ordinal -> AddProtocolSectionViewHolder(view)
             AddProtocolListItemType.Image.ordinal -> AddProtocolImageViewHolder(view)
             AddProtocolListItemType.Buttons.ordinal -> AddProtocolButtonsViewHolder(view)
+            AddProtocolListItemType.SendSuccess.ordinal -> AddProtocolSendSuccessViewHolder(view)
             else -> throw NotImplementedError("AddProtocolListItemType( $viewType ) View holder class not implemented")
         }
     }

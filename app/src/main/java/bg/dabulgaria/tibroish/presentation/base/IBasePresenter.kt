@@ -60,6 +60,8 @@ abstract class BasePresenter<IView:IBaseView> ( disposableHandler: IDisposableHa
 
         if(registerEventBus)
             EventBus.getDefault().unregister(this)
+
+        dispose()
     }
 
     override fun onError( throwable : Throwable?){

@@ -21,12 +21,12 @@ interface IPhotoPickerView : IBaseView {
 
     fun onDataLoaded(viewData: PhotoPickerViewData)
 
-    fun onItemUpdated(photoItem:PhotoItem, index:Int)
+    fun onItemUpdated(photoItem: PhotoItem, index: Int)
 }
 
 class PhotoPickerFragment : BasePresentableFragment<IPhotoPickerView, IPhotoPickerPresenter>(), IPhotoPickerView {
 
-    private var adapter : GridPickerAdapter?=null
+    private var adapter: GridPickerAdapter? = null
 
     override fun onAttach(context: Context) {
 
@@ -34,7 +34,7 @@ class PhotoPickerFragment : BasePresentableFragment<IPhotoPickerView, IPhotoPick
         super.onAttach(context)
     }
 
-    override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_photo_picker, container, false)
     }
 
@@ -55,13 +55,13 @@ class PhotoPickerFragment : BasePresentableFragment<IPhotoPickerView, IPhotoPick
     override fun onLoadingStateChange(viewState: ViewState) {
 
         listSwipeRefreshLayout?.isRefreshing = (viewState == ViewState.Loading)
-        photoPickerOverlayImageView?.visibility = if(viewState == ViewState.Loading) View.VISIBLE else View.GONE
+        photoPickerOverlayImageView?.visibility = if (viewState == ViewState.Loading) View.VISIBLE else View.GONE
 
         actionButton?.setOnClickListener { presenter.onDoneClick() }
-        infoText?.visibility =  View.GONE
-        actionButton?.setText( R.string.add )
+        infoText?.visibility = View.GONE
+        actionButton?.setText(R.string.add)
 
-        when(viewState){
+        when (viewState) {
 
             ViewState.Loaded -> {
                 infoText?.setText(R.string.list_is_empty)
@@ -70,20 +70,20 @@ class PhotoPickerFragment : BasePresentableFragment<IPhotoPickerView, IPhotoPick
             ViewState.NoPermission -> {
 
                 infoText?.setText(R.string.app_has_no_image_permissions)
-                infoText?.visibility =  View.VISIBLE
-                actionButton?.setText( R.string.give_permission )
+                infoText?.visibility = View.VISIBLE
+                actionButton?.setText(R.string.give_permission)
                 actionButton?.setOnClickListener { presenter.onRequestPermissionClick() }
             }
         }
     }
 
-    override fun onDataLoaded(data: PhotoPickerViewData) {
+    override fun onDataLoaded(viewData: PhotoPickerViewData) {
 
-        adapter?.updateList( data.photoItems )
-        infoText?.visibility = if (data.photoItems.isEmpty()) View.VISIBLE else View.GONE
+        adapter?.updateList(viewData.photoItems)
+        infoText?.visibility = if (viewData.photoItems.isEmpty()) View.VISIBLE else View.GONE
     }
 
-    override fun onItemUpdated(photoItem:PhotoItem, index:Int){
+    override fun onItemUpdated(photoItem: PhotoItem, index: Int) {
 
         adapter?.updateItem(photoItem, index)
     }
@@ -92,7 +92,7 @@ class PhotoPickerFragment : BasePresentableFragment<IPhotoPickerView, IPhotoPick
 
         adapter?.notifyDataSetChanged()
 
-        infoText?.setVisibility( if( adapter?.itemCount == 0 ) View.VISIBLE else View.INVISIBLE )
+        infoText?.visibility = if (adapter?.itemCount == 0) View.VISIBLE else View.INVISIBLE
 
         Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show()
     }
@@ -102,10 +102,10 @@ class PhotoPickerFragment : BasePresentableFragment<IPhotoPickerView, IPhotoPick
 
         val TAG = PhotoPickerFragment::class.java.simpleName
 
-        fun newInstance(protocolId:Long): PhotoPickerFragment {
+        fun newInstance(selectedImages: List<PhotoId>): PhotoPickerFragment {
             return PhotoPickerFragment().apply {
                 arguments = Bundle().apply {
-                    putSerializable(PhotoPickerConstants.VIEW_DATA_KEY, PhotoPickerViewData(protocolId))
+                    putSerializable(PhotoPickerConstants.VIEW_DATA_KEY, PhotoPickerViewData(selectedImages))
                 }
             }
         }
