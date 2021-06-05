@@ -1,4 +1,4 @@
-package bg.dabulgaria.tibroish.persistence.local
+package bg.dabulgaria.tibroish.persistence.local.db
 
 import androidx.room.*
 import bg.dabulgaria.tibroish.domain.protocol.Protocol

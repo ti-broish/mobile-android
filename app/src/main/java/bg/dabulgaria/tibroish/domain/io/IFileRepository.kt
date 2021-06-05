@@ -13,4 +13,8 @@ interface IFileRepository {
     fun createNewJpgFile(folder: String): File?
 
     fun deleteFile(filePath:String) :Boolean
+
+    fun getFileName(filePath:String) :String?
+
+    fun getFileContentBase64Encoded(filePath: String):String?
 }

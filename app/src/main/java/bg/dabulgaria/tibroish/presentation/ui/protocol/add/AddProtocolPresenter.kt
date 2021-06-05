@@ -1,6 +1,7 @@
 package bg.dabulgaria.tibroish.presentation.ui.protocol.add
 
 import android.os.Bundle
+import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.io.IFileRepository
 import bg.dabulgaria.tibroish.domain.locations.*
 import bg.dabulgaria.tibroish.domain.protocol.Protocol
@@ -12,6 +13,8 @@ import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.persistence.local.Folders
 import bg.dabulgaria.tibroish.presentation.event.CameraPhotoTakenEvent
 import bg.dabulgaria.tibroish.presentation.main.IMainRouter
+import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
+import bg.dabulgaria.tibroish.presentation.providers.ResourceProvider
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerPresenter
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.SectionViewType
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.SectionsViewData
@@ -19,6 +22,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
 
 
 import javax.inject.Inject
@@ -32,6 +36,8 @@ interface IAddProtocolPresenter: ISectionPickerPresenter, IBasePresenter<IAddPro
     fun onContinue()
 
     fun onImageDeleteClick(item:AddProtocolListItemImage, position:Int)
+
+    fun onSuccessOkClick()
 }
 
 class AddProtocolPresenter @Inject constructor(private val schedulersProvider : ISchedulersProvider,
@@ -74,28 +80,22 @@ class AddProtocolPresenter @Inject constructor(private val schedulersProvider : 
 
         val currentData = data?: return
 
-        if( currentData.protocol == null ){
+        view?.onLoadingStateChange(true)
 
-            val protocol = Protocol()
-            add( Single.fromCallable{
+        add( Single.fromCallable{
 
-                interactor.addNew(protocol)
-            }
-                    .subscribeOn(schedulersProvider.ioScheduler())
-                    .observeOn(schedulersProvider.uiScheduler())
-                    .subscribe( {
-                        currentData.protocol = it
-                        currentData.protocolId = it.id
-                        mainRouter.showPhotoPicker(it.id)
-                    },{
-                        onError(it)
-                    }))
-
-            return
+            interactor.getProtocolImages(currentData)
         }
-        else {
-            currentData.protocol?.id?.let { mainRouter.showPhotoPicker(it) }
-        }
+                .subscribeOn(schedulersProvider.ioScheduler())
+                .observeOn(schedulersProvider.uiScheduler())
+                .subscribe( { selectedImages ->
+
+                    view?.onLoadingStateChange(false)
+                    mainRouter.showPhotoPicker(selectedImages)
+                },{
+                    onError(it)
+                }))
+
     }
 
     override fun onAddFromCameraClick() {
@@ -130,7 +130,37 @@ class AddProtocolPresenter @Inject constructor(private val schedulersProvider : 
     }
 
     override fun onContinue() {
-        TODO("Not yet implemented")
+
+        val viewData = data ?: return
+
+        if(data?.sectionsData?.mSelectedSection == null){
+
+            view?.onError(resourceProvider.getString(R.string.please_choose_section))
+            return
+        }
+
+        val neededImages = MIN_IMAGES - data?.protocol?.images.orEmpty().size
+        if(neededImages > 0){
+
+            view?.onError(resourceProvider.getString(R.string.please_choose_min_images, neededImages))
+            return
+        }
+
+        view?.onLoadingStateChange(true)
+
+        add(Single.fromCallable{interactor.sendProtocol(viewData)}
+                .subscribeOn(schedulersProvider.ioScheduler())
+                .observeOn(schedulersProvider.uiScheduler())
+                .subscribe( {
+
+                    val newData = AddProtocolViewData(viewData)
+                    view?.onLoadingStateChange(false)
+                    newData.items.clear()
+                    newData.items.add(AddProtocolListItemSendSuccess())
+                    onDataLoaded(newData)
+                },{
+                    onError(it)
+                }))
     }
 
     override fun onImageDeleteClick(item: AddProtocolListItemImage, position: Int) {
@@ -138,7 +168,7 @@ class AddProtocolPresenter @Inject constructor(private val schedulersProvider : 
         data?: return
 
         view?.onLoadingStateChange(true)
-        add( Single.fromCallable{interactor.deleteImage(item.image)}
+        add(Single.fromCallable{interactor.deleteImage(item.image)}
                 .subscribeOn(schedulersProvider.ioScheduler())
                 .observeOn(schedulersProvider.uiScheduler())
                 .subscribe( {
@@ -150,6 +180,7 @@ class AddProtocolPresenter @Inject constructor(private val schedulersProvider : 
 
     override fun onViewHide() {
         mainRouter.permissionResponseListener = null
+        interactor.dispose()
         super.onViewHide()
     }
 
@@ -178,41 +209,48 @@ class AddProtocolPresenter @Inject constructor(private val schedulersProvider : 
                 .subscribe( { onSectionDataLoaded( it ) },{ th -> onError(th) }) )
     }
 
-    override fun onCountrySelected(country:CountryRemote){
+    override fun onCountrySelected(country: CountryRemote) {
 
-        onSectionFieldSelected( country, { data, item ->
+        onSectionFieldSelected(country, { data, item ->
             interactor.onCountrySelected(data, item)
         })
     }
 
     override fun onElectionRegionSelected(electionRegion: ElectionRegionRemote) {
 
-        onSectionFieldSelected( electionRegion, { data, item ->
+        onSectionFieldSelected(electionRegion, { data, item ->
             interactor.onElectionRegionSelected(data, item)
         })
     }
 
     override fun onMunicipalitySelected(municipality: MunicipalityRemote) {
 
-        onSectionFieldSelected( municipality, { data, item ->
+        onSectionFieldSelected(municipality, { data, item ->
             interactor.onMunicipalitySelected(data, item)
         })
     }
 
     override fun onTownSelected(town: TownRemote) {
 
-        onSectionFieldSelected( town, { data, item ->
+        onSectionFieldSelected(town, { data, item ->
             interactor.onTownSelected(data, item)
         })
     }
 
     override fun onCityRegionSelected(cityRegion: CityRegionRemote) {
 
-        onSectionFieldSelected( cityRegion, { data, item ->
+        onSectionFieldSelected(cityRegion, { data, item ->
             interactor.onCityRegionSelected(data, item)
         })
     }
 
+    override fun onSectionSelected(section: SectionRemote) {
+
+        val sectionsData = data?.sectionsData ?:return
+        data?.sectionsData = interactor.onSectionSelected(sectionsData, section)
+    }
+
+    override fun onSuccessOkClick() = mainRouter.showHomeScreen()
     //endregion ISectionPickerPresenter implementation
 
     private fun <ItemType> onSectionFieldSelected(item:ItemType, loadMethod:(data:SectionsViewData, item:ItemType )->SectionsViewData){
@@ -280,5 +318,6 @@ class AddProtocolPresenter @Inject constructor(private val schedulersProvider : 
     companion object {
 
         private val TAG = AddProtocolPresenter::class.simpleName
+        private val MIN_IMAGES = 4
     }
 }

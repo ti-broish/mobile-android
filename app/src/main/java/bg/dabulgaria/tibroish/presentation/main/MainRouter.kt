@@ -16,6 +16,7 @@ import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
 import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginFragment
 import bg.dabulgaria.tibroish.presentation.ui.forgotpassword.ForgotPasswordFragment
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.camera.CameraPickerFragment
+import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoId
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerConstants
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.profile.ProfileFragment
@@ -109,20 +110,20 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
         view?.showScreen(content, AddProtocolFragment.TAG, addToBackStack = true, transitionContent = true)
     }
 
-    override fun showPhotoPicker(protocolId:Long) {
+    override fun showPhotoPicker(selectedImages: List<PhotoId>) {
 
-        var content = view?.supportFragmentMngr?.findFragmentByTag(PhotoPickerFragment.TAG )
+        var content = view?.supportFragmentMngr?.findFragmentByTag(PhotoPickerFragment.TAG)
         if (content == null) {
 
-            content = PhotoPickerFragment.newInstance(protocolId)
+            content = PhotoPickerFragment.newInstance(selectedImages)
         }
 
         view?.showScreen(content, PhotoPickerFragment.TAG, addToBackStack = true, transitionContent = true)
     }
 
-    override fun showCameraPicker(protocolId:Long) {
+    override fun showCameraPicker(protocolId: Long) {
 
-        var content = view?.supportFragmentMngr?.findFragmentByTag(CameraPickerFragment.TAG )
+        var content = view?.supportFragmentMngr?.findFragmentByTag(CameraPickerFragment.TAG)
         if (content == null) {
 
             clearBackStack()

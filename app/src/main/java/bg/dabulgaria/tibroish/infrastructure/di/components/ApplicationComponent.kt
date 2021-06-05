@@ -33,8 +33,9 @@ interface ApplicationComponent :AndroidInjector<DaApplication> {
 
         @BindsInstance
         fun application(app : DaApplication) : Builder
-        //fun network(networkModule : NetworkModule) : Builder
+
         fun device( deviceModule : DeviceModule) : Builder
+
         fun build(): ApplicationComponent
     }
 

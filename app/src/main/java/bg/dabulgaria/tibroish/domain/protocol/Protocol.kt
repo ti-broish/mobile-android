@@ -25,37 +25,49 @@ enum class ProtocolStatus constructor(val code:Int){
 
 class ProtocolTypeConverter {
     @TypeConverter
-    fun toProtocolStatus(value: Int):ProtocolStatus? = ProtocolStatus.Companion.get( value )
+    fun toProtocolStatus(value: Int):ProtocolStatus? = ProtocolStatus[value]
 
     @TypeConverter
     fun fromProtocolStatus(value: ProtocolStatus) = value.code
 }
 
-@Entity( tableName = "Protocol")
-@TypeConverters( ProtocolTypeConverter::class)
+class ProtocolRemoteStatusConverter {
+    @TypeConverter
+    fun toProtocolStatusRemote(value: String?):ProtocolStatusRemote? = if(value==null) null else ProtocolStatusRemote[value]
+
+    @TypeConverter
+    fun fromProtocolStatusRemote(value: ProtocolStatusRemote?) = value?.stringValue
+}
+
+@Entity(tableName = "Protocol")
+@TypeConverters(ProtocolTypeConverter::class, ProtocolRemoteStatusConverter::class)
 open class Protocol constructor(@PrimaryKey(autoGenerate = true)
-                           @ColumnInfo(name = "id")
-                           var id:Long=0,
-                           var uuid:String="",
-                           var serverId:String ="",
-                           var status:ProtocolStatus = ProtocolStatus.New) :Serializable {
+                                @ColumnInfo(name = "id")
+                                var id: Long = 0,
+                                var uuid: String = "",
+                                var serverId: String = "",
+                                var status: ProtocolStatus = ProtocolStatus.New,
+                                var remoteStatus: ProtocolStatusRemote?= null) : Serializable {
 
     constructor(source: Protocol) : this(source.id,
             source.uuid,
             source.serverId,
-            source.status)
+            source.status,
+            source.remoteStatus)
 }
 
 class ProtocolExt(id:Long=-1,
                   uuid:String="",
                   serverId:String ="",
-                  status:ProtocolStatus = ProtocolStatus.New)
-    :Protocol( id, uuid, serverId, status), Serializable{
+                  status:ProtocolStatus = ProtocolStatus.New,
+                  remoteStatus: ProtocolStatusRemote?)
+    :Protocol( id, uuid, serverId, status, remoteStatus), Serializable{
 
     constructor(source: Protocol) : this(source.id,
             source.uuid,
             source.serverId,
-            source.status)
+            source.status,
+            source.remoteStatus)
 
     val images = mutableListOf<ProtocolImage>()
 }

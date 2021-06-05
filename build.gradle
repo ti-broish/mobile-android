@@ -7,7 +7,7 @@ buildscript {
         rxjavaVersion = '3.0.5'
         appCompatVersion = '1.2.0'
         recyclerViewVersion = '1.2.0'
-        room_version = "2.2.6"
+        room_version = "2.3.0"
         glideVersion = "4.11.0"
         retrofit2Version = '2.9.0'
     }
