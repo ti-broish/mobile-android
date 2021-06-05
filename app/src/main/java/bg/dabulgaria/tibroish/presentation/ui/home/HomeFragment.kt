@@ -1,11 +1,15 @@
 package bg.dabulgaria.tibroish.presentation.ui.home
 
+import android.os.Build
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.organisation.ITiBorishRemoteRepository
+import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.base.BaseFragment
@@ -16,11 +20,10 @@ import javax.inject.Inject
 
 class HomeFragment : BaseFragment() {
 
-
     @Inject
     protected lateinit var mMainRouter: IMainRouter
     @Inject
-    lateinit var mTiBorishRemoteRepository: ITiBorishRemoteRepository
+    lateinit var mTiBroishRemoteRepository: ITiBroishRemoteRepository
     @Inject
     lateinit var logger: ILogger
     @Inject
@@ -40,11 +43,33 @@ class HomeFragment : BaseFragment() {
     override fun onStart() {
         super.onStart()
 
-        sendProtocol.setOnClickListener {  mMainRouter.onNavigateToItem( NavItemAction.SendProtocol) }
-        sendSignal.setOnClickListener {  mMainRouter.onNavigateToItem( NavItemAction.SendSignal) }
-        rightsAndObligations.setOnClickListener {  mMainRouter.onNavigateToItem( NavItemAction.RightsAndObligations) }
-        tiBorishLive.setOnClickListener {  mMainRouter.onNavigateToItem( NavItemAction.YouCountLive ) }
+        sendProtocol?.setOnClickListener {  mMainRouter.onNavigateToItem( NavItemAction.SendProtocol) }
+        sendSignal?.setOnClickListener {  mMainRouter.onNavigateToItem( NavItemAction.SendSignal) }
+        rightsAndObligations?.setOnClickListener {  mMainRouter.onNavigateToItem( NavItemAction.RightsAndObligations) }
 
+        initLiveButton()
+    }
+
+    private fun initLiveButton(){
+
+        val color = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            resources.getColor(R.color.textRed, null)
+        } else {
+            resources.getColor(R.color.textRed)
+        }
+
+        val firstString = getString(R.string.ti_broish)
+        val secondString = getString(R.string.live)
+
+        val spannableString = SpannableString( "${firstString} ${secondString}" )
+        spannableString.setSpan(ForegroundColorSpan(color),
+                firstString.length + 1,
+                firstString.length + secondString.length + 1,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        tiBroishLive?.text = spannableString
+
+        tiBroishLive?.setOnClickListener {  mMainRouter.onNavigateToItem( NavItemAction.YouCountLive ) }
     }
 
     companion object {

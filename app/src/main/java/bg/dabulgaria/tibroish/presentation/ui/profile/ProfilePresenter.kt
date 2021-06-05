@@ -2,7 +2,7 @@ package bg.dabulgaria.tibroish.presentation.ui.profile
 
 import android.os.Bundle
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.organisation.ITiBorishRemoteRepository
+import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
 import bg.dabulgaria.tibroish.domain.organisation.Organization
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.user.IUserAuthenticator
@@ -61,7 +61,7 @@ class ProfilePresenter @Inject constructor(
     private val mainRouter: IMainRouter,
     disposableHandler: IDisposableHandler,
     private val logger: ILogger,
-    private val tiBroishRemoteRepository: ITiBorishRemoteRepository,
+    private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
     private val formValidator: FormValidator,
     private val organizationsManager: IOrganizationsManager,
     private val userAuthenticator: IUserAuthenticator

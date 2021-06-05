@@ -1,7 +1,7 @@
 package bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker
 
 import bg.dabulgaria.tibroish.domain.locations.*
-import bg.dabulgaria.tibroish.domain.organisation.ITiBorishRemoteRepository
+import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
 import bg.dabulgaria.tibroish.persistence.remote.model.SectionsRequestParams
 import bg.dabulgaria.tibroish.persistence.remote.model.TownsRequestParams
 import javax.inject.Inject
@@ -12,16 +12,18 @@ interface ISectionPickerInteractor {
 
     fun onCountrySelected(oldData:SectionsViewData, country:CountryRemote):SectionsViewData
 
-    fun onElectionRegionSelected(oldData:SectionsViewData,electionRegion:ElectionRegionRemote): SectionsViewData
+    fun onElectionRegionSelected(oldData:SectionsViewData, electionRegion:ElectionRegionRemote): SectionsViewData
 
-    fun onMunicipalitySelected(oldData:SectionsViewData,municipality: MunicipalityRemote): SectionsViewData
+    fun onMunicipalitySelected(oldData:SectionsViewData, municipality: MunicipalityRemote): SectionsViewData
 
-    fun onTownSelected(oldData:SectionsViewData,town: TownRemote): SectionsViewData
+    fun onTownSelected(oldData:SectionsViewData, town: TownRemote): SectionsViewData
 
-    fun onCityRegionSelected(oldData:SectionsViewData,cityRegion: CityRegionRemote): SectionsViewData
+    fun onCityRegionSelected(oldData:SectionsViewData, cityRegion: CityRegionRemote): SectionsViewData
+
+    fun onSectionSelected(oldData:SectionsViewData, section: SectionRemote): SectionsViewData
 }
 
-class SectionPickerInteractor @Inject constructor(private val apiRepo: ITiBorishRemoteRepository) :ISectionPickerInteractor{
+class SectionPickerInteractor @Inject constructor(private val apiRepo: ITiBroishRemoteRepository) :ISectionPickerInteractor{
 
     override fun loadSectionsData(oldData:SectionsViewData?):SectionsViewData{
 
@@ -151,6 +153,13 @@ class SectionPickerInteractor @Inject constructor(private val apiRepo: ITiBorish
         data.mSelectedCityRegion = cityRegion
         data.mSelectedSection = null
 
+        return data
+    }
+
+    override fun onSectionSelected(oldData: SectionsViewData, section: SectionRemote): SectionsViewData {
+
+        val data = SectionsViewData(oldData)
+        data.mSelectedSection = section
         return data
     }
 
