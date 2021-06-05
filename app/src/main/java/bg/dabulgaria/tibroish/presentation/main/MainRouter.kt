@@ -11,6 +11,7 @@ import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentManager
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
+import bg.dabulgaria.tibroish.presentation.ui.common.item.send.SendItemViewData
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
 import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginFragment
@@ -21,8 +22,8 @@ import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerCon
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.profile.ProfileFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolFragment
-import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolViewData
 import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationFragment
+import bg.dabulgaria.tibroish.presentation.ui.violation.send.SendViolationFragment
 import java.io.File
 import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsFragment
 import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsViewData
@@ -64,7 +65,9 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
             NavItemAction.SendProtocol -> {
                 showAddProtocol()
             }
-            NavItemAction.SendSignal -> {}
+            NavItemAction.SendSignal -> {
+                showSendViolation()
+            }
             NavItemAction.MyProtocols -> {}
             NavItemAction.MySignals -> {}
             NavItemAction.RightsAndObligations -> {
@@ -108,7 +111,7 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
         if (content == null) {
 
             clearBackStack()
-            content = AddProtocolFragment.newInstance(AddProtocolViewData())
+            content = AddProtocolFragment.newInstance(SendItemViewData())
         }
 
         view?.showScreen(content, AddProtocolFragment.TAG, addToBackStack = true, transitionContent = true)
@@ -215,6 +218,18 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
         }
         catch (e: ActivityNotFoundException) {
         }
+    }
+
+    override fun showSendViolation() {
+
+        var content = view?.supportFragmentMngr?.findFragmentByTag(SendViolationFragment.TAG )
+        if (content == null) {
+
+            clearBackStack()
+            content = SendViolationFragment.newInstance(SendItemViewData())
+        }
+
+        view?.showScreen(content, SendViolationFragment.TAG, addToBackStack = true, transitionContent = true)
     }
 
     override fun showRightsAndObligations() {

@@ -10,7 +10,7 @@ interface DaoProtocol {
     fun insert(protocol: Protocol):Long
 
     @Query("SELECT * FROM Protocol WHERE id = :protocolId")
-    fun getById(protocolId: Long): Protocol
+    fun getById(protocolId: Long): Protocol?
 
     @Query("SELECT * FROM Protocol ORDER BY id desc")
     fun getAll(): List<Protocol>

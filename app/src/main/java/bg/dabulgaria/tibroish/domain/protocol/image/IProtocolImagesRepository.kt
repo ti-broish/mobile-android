@@ -6,13 +6,15 @@ interface IProtocolImagesRepository : IBaseTransactionalRepository {
 
     fun getAll(): List<ProtocolImage>
 
-    fun get(id: Long): ProtocolImage
+    fun get(id: Long): ProtocolImage?
 
     fun getByProtocolId(protocolId: Long): List<ProtocolImage>
 
-    fun insert(protocol: ProtocolImage)
+    fun insert(image: ProtocolImage)
 
-    fun update(protocol: ProtocolImage)
+    fun update(image: ProtocolImage)
 
-    fun delete(protocol: ProtocolImage)
+    fun delete(image: ProtocolImage)
+
+    fun delete(protocolImageId: Long)
 }

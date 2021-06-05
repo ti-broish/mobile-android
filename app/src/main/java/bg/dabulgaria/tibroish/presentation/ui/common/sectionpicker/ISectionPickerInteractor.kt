@@ -21,16 +21,20 @@ interface ISectionPickerInteractor {
     fun onCityRegionSelected(oldData:SectionsViewData, cityRegion: CityRegionRemote): SectionsViewData
 
     fun onSectionSelected(oldData:SectionsViewData, section: SectionRemote): SectionsViewData
+
+    var autoFillSection: Boolean
 }
 
 class SectionPickerInteractor @Inject constructor(private val apiRepo: ITiBroishRemoteRepository) :ISectionPickerInteractor{
 
+    override var autoFillSection:Boolean = true
+
     override fun loadSectionsData(oldData:SectionsViewData?):SectionsViewData{
 
-        val data = if( oldData!= null )
+        val data = if(oldData!= null)
             SectionsViewData(oldData)
         else
-            SectionsViewData( SectionViewType.Home)
+            SectionsViewData(SectionViewType.Home)
 
         if(data.countries.isEmpty() || data.electionRegions.isEmpty()) {
 
@@ -43,35 +47,53 @@ class SectionPickerInteractor @Inject constructor(private val apiRepo: ITiBroish
             data.electionRegions = apiRepo.getElectionRegions()
         }
 
-        if(data.mSelectedCountry != null && data.towns.isEmpty())
-            data.towns = apiRepo.getTowns( TownsRequestParams(
-                    data.mSelectedCountry?.code?:"", null, null ) )
+        if(data.selectedCountry != null && data.towns.isEmpty()) {
 
-        if(data.mSelectedElectionRegion != null && data.municipalities.isEmpty())
-            data.mSelectedElectionRegion?.municipalities?.let{ data.municipalities }
+            data.towns = apiRepo.getTowns(TownsRequestParams(
+                    data.selectedCountry?.code ?: "", null, null))
 
-        if(data.mSelectedMunicipality != null && data.municipalities.isEmpty())
+            if(data.towns.size == 1)
+                data.selectedTown = data.towns.first()
+        }
+
+        if(data.selectedElectionRegion != null && data.municipalities.isEmpty()) {
+
+            data.selectedElectionRegion?.municipalities?.let { data.municipalities = it }
+
+            if(data.municipalities.size == 1)
+                data.selectedMunicipality = data.municipalities.first()
+        }
+
+        if(data.selectedMunicipality != null && data.towns.isEmpty())
             data.towns = apiRepo.getTowns(
-                    TownsRequestParams( BG_CODE, data.mSelectedElectionRegion?.code, data.mSelectedMunicipality?.code ) )
+                    TownsRequestParams(BG_CODE, data.selectedElectionRegion?.code, data.selectedMunicipality?.code))
 
-        if(data.mSelectedTown != null){
+        if(data.selectedTown != null){
 
-            data.cityRegions = data.mSelectedTown?.cityRegions.orEmpty()
+            data.cityRegions = data.selectedTown?.cityRegions.orEmpty()
             val hasCityRegions = data.viewType != SectionViewType.Abroad && data.cityRegions.isNotEmpty()
 
             if(hasCityRegions)
                 data.viewType = SectionViewType.HomeCityRegion
             else {
-                data.sections = apiRepo.getSections(SectionsRequestParams(data.mSelectedTown?.code?:-1, null))
+                data.sections = apiRepo.getSections(SectionsRequestParams(data.selectedTown?.code?:-1, null))
+
+                if(autoFillSection && data.sections.size == 1)
+                    data.selectedSection = data.sections.first()
 
                 if(data.viewType != SectionViewType.Abroad)
                     data.viewType = SectionViewType.Home
             }
         }
 
-        if(data.mSelectedCityRegion != null && data.sections.isEmpty())
+        if(data.selectedCityRegion != null && data.sections.isEmpty()) {
+
             data.sections = apiRepo.getSections(SectionsRequestParams(
-                    data.mSelectedTown?.code ?:-1, data.mSelectedCityRegion?.code ))
+                    data.selectedTown?.code ?: -1, data.selectedCityRegion?.code))
+
+            if(autoFillSection && data.sections.size == 1)
+                data.selectedSection = data.sections.first()
+        }
 
         return data
     }
@@ -79,14 +101,27 @@ class SectionPickerInteractor @Inject constructor(private val apiRepo: ITiBroish
     override fun onCountrySelected(oldData:SectionsViewData, country:CountryRemote):SectionsViewData{
 
         val data = SectionsViewData(oldData)
-        data.mSelectedElectionRegion = null
-        data.mSelectedMunicipality = null
-        data.mSelectedTown = null
-        data.mSelectedCityRegion = null
-        data.mSelectedSection = null
-        data.mSelectedCountry = country
+        data.selectedElectionRegion = null
+        data.selectedMunicipality = null
+        data.selectedTown = null
+        data.selectedCityRegion = null
+        data.selectedSection = null
+        data.selectedCountry = country
         data.towns = apiRepo.getTowns( TownsRequestParams( country.code, null, null ) )
+
         data.sections = emptyList()
+
+        if(data.towns.size == 1) {
+
+            data.selectedTown = data.towns.first()
+
+            data.selectedTown?.id?.let {
+
+                data.sections = apiRepo.getSections(SectionsRequestParams(it, null))
+                if(autoFillSection && data.sections.size == 1)
+                    data.selectedSection = data.sections.first()
+            }
+        }
 
         return data
     }
@@ -94,13 +129,35 @@ class SectionPickerInteractor @Inject constructor(private val apiRepo: ITiBroish
     override fun onElectionRegionSelected(oldData: SectionsViewData, electionRegion: ElectionRegionRemote): SectionsViewData {
 
         val data = SectionsViewData(oldData)
-        data.mSelectedElectionRegion = electionRegion
-        data.mSelectedMunicipality = null
-        data.mSelectedTown = null
-        data.mSelectedCityRegion = null
-        data.mSelectedSection = null
-        data.mSelectedCountry = null
+        data.selectedElectionRegion = electionRegion
+        data.selectedMunicipality = null
+        data.selectedTown = null
+        data.selectedCityRegion = null
+        data.selectedSection = null
+        data.selectedCountry = null
         data.municipalities = electionRegion.municipalities
+
+        if(data.municipalities.size == 1) {
+
+            data.selectedMunicipality = data.municipalities.first()
+
+            data.towns = apiRepo.getTowns(
+                    TownsRequestParams( BG_CODE,
+                            data.selectedElectionRegion?.code,
+                            data.selectedMunicipality!!.code ) )
+
+            if(data.towns.size == 1) {
+
+                data.selectedTown = data.towns.first()
+                data.cityRegions = data.selectedTown?.cityRegions.orEmpty()
+
+                data.viewType = if(data.cityRegions.isNotEmpty())
+                    SectionViewType.HomeCityRegion
+                else
+                    SectionViewType.Home
+            }
+        }
+
         data.sections = emptyList()
 
         return data
@@ -109,14 +166,14 @@ class SectionPickerInteractor @Inject constructor(private val apiRepo: ITiBroish
     override fun onMunicipalitySelected(oldData: SectionsViewData, municipality: MunicipalityRemote): SectionsViewData {
 
         val data = SectionsViewData(oldData)
-        data.mSelectedMunicipality = municipality
+        data.selectedMunicipality = municipality
         data.towns = apiRepo.getTowns(
-                TownsRequestParams( BG_CODE, data.mSelectedElectionRegion?.code, municipality.code ) )
+                TownsRequestParams( BG_CODE, data.selectedElectionRegion?.code, municipality.code ) )
 
-        data.mSelectedTown = null
-        data.mSelectedCityRegion = null
-        data.mSelectedSection = null
-        data.mSelectedCountry = null
+        data.selectedTown = null
+        data.selectedCityRegion = null
+        data.selectedSection = null
+        data.selectedCountry = null
 
         return data
     }
@@ -127,18 +184,22 @@ class SectionPickerInteractor @Inject constructor(private val apiRepo: ITiBroish
         data.cityRegions = town.cityRegions.orEmpty()
         val hasCityRegions = data.viewType != SectionViewType.Abroad && data.cityRegions.isNotEmpty()
 
+        data.selectedSection = null
+
         if(hasCityRegions)
             data.viewType = SectionViewType.HomeCityRegion
         else {
             data.sections = apiRepo.getSections(SectionsRequestParams(town.id, null))
 
+            if(autoFillSection && data.sections.size == 1)
+                data.selectedSection = data.sections.first()
+
             if(data.viewType != SectionViewType.Abroad)
                 data.viewType = SectionViewType.Home
         }
 
-        data.mSelectedTown = town
-        data.mSelectedCityRegion = null
-        data.mSelectedSection = null
+        data.selectedTown = town
+        data.selectedCityRegion = null
 
         return data
     }
@@ -148,10 +209,10 @@ class SectionPickerInteractor @Inject constructor(private val apiRepo: ITiBroish
         val data = SectionsViewData(oldData)
 
         data.sections = apiRepo.getSections(
-                SectionsRequestParams(data.mSelectedTown?.id ?:-1, cityRegion.code ))
+                SectionsRequestParams(data.selectedTown?.id ?:-1, cityRegion.code ))
 
-        data.mSelectedCityRegion = cityRegion
-        data.mSelectedSection = null
+        data.selectedCityRegion = cityRegion
+        data.selectedSection = null
 
         return data
     }
@@ -159,7 +220,7 @@ class SectionPickerInteractor @Inject constructor(private val apiRepo: ITiBroish
     override fun onSectionSelected(oldData: SectionsViewData, section: SectionRemote): SectionsViewData {
 
         val data = SectionsViewData(oldData)
-        data.mSelectedSection = section
+        data.selectedSection = section
         return data
     }
 

@@ -17,6 +17,7 @@ import bg.dabulgaria.tibroish.presentation.ui.protocol.add.*
 import bg.dabulgaria.tibroish.presentation.ui.registration.IRegistrationPresenter
 import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationFragment
 import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationPresenter
+import bg.dabulgaria.tibroish.presentation.ui.violation.send.*
 import bg.dabulgaria.tibroish.presentation.ui.rights.IRightsAndObligationsPresenter
 import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsFragment
 import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsPresenter
@@ -38,9 +39,6 @@ interface FragmentModule {
     //region Add Protocol screen
     @ContributesAndroidInjector
     fun bindAddProtocolFragment(): AddProtocolFragment
-
-    @Binds
-    fun bindsAddProtocolView(detailsFragment: AddProtocolFragment): IAddProtocolView
 
     @Binds
     fun bindsIAddProtocolPresenter(detailsPresenter: AddProtocolPresenter): IAddProtocolPresenter
@@ -96,6 +94,17 @@ interface FragmentModule {
     fun bindIProfilePresenter(implementation: ProfilePresenter):
             IProfilePresenter
     //endregion Profile screen
+
+    //region Add Protocol screen
+    @ContributesAndroidInjector
+    fun bindSendViolationFragment(): SendViolationFragment
+
+    @Binds
+    fun bindsISendViolationPresenter(presenter: SendViolationPresenter): ISendViolationPresenter
+
+    @Binds
+    fun bindsISendViolationInteractor(interactor: SendViolationInteractor): ISendViolationInteractor
+    //endregion Add Protocol screen
 
     //region RightsAndObligations screen
     @ContributesAndroidInjector

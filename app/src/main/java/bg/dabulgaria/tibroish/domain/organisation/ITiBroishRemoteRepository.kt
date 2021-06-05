@@ -6,6 +6,8 @@ import bg.dabulgaria.tibroish.domain.locations.*
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.domain.protocol.SendProtocolRequest
 import bg.dabulgaria.tibroish.domain.user.User
+import bg.dabulgaria.tibroish.domain.violation.SendViolationRequest
+import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.persistence.remote.api.ApiHeader
 import bg.dabulgaria.tibroish.persistence.remote.model.*
 import retrofit2.Call
@@ -35,5 +37,7 @@ interface ITiBroishRemoteRepository {
 
     fun uploadImage(image: UploadImageRequest): UploadImageResponse
 
-    fun sendProtocol(request: SendProtocolRequest):ProtocolRemote
+    fun sendProtocol(request: SendProtocolRequest): ProtocolRemote
+
+    fun sendViolation(request: SendViolationRequest): VoteViolationRemote
 }
