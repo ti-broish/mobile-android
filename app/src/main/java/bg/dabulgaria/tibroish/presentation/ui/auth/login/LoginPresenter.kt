@@ -6,7 +6,7 @@ import android.util.Patterns
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.auth.IAuthRepository
-import bg.dabulgaria.tibroish.domain.organisation.ITiBorishRemoteRepository
+import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
 import bg.dabulgaria.tibroish.domain.user.IUserLocalRepository
 import bg.dabulgaria.tibroish.domain.user.IUserTypeAdapter
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
@@ -34,7 +34,7 @@ class LoginPresenter @Inject constructor(private val userLocalRepo : IUserLocalR
                                          private val logger: ILogger,
                                          private val mainRouter: IMainRouter,
                                          private val schedulersProvider: ISchedulersProvider,
-                                         private val tiBorishRemoteRepository :ITiBorishRemoteRepository,
+                                         private val tiBroishRemoteRepository :ITiBroishRemoteRepository,
                                          dispHandler: IDisposableHandler,)
     : BasePresenter<ILoginView>(dispHandler), ILoginPresenter {
 

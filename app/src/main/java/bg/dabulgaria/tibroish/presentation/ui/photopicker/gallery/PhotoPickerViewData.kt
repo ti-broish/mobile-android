@@ -4,22 +4,25 @@ import bg.dabulgaria.tibroish.domain.image.PickedImageSource
 import java.io.Serializable
 import java.util.*
 
-data class PhotoItem(val id:String,
-                     val source: PickedImageSource,
-                     val imageFilePath:String,
-                     val width:Int,
-                     val height:Int,
-                     val dateTaken:Date,
-                     var isSelected: Boolean,
-                     var previouslySelected: Boolean,
-                     val displaySize:Int): Serializable
+open class PhotoId(val id: String,
+                   val source: PickedImageSource) : Serializable
 
-data class PhotoPickerViewData(val protocolId:Long): Serializable {
+class PhotoItem(id: String,
+                source: PickedImageSource,
+                val imageFilePath: String,
+                val width: Int,
+                val height: Int,
+                val dateTaken: Date,
+                var isSelected: Boolean,
+                var previouslySelected: Boolean,
+                val displaySize: Int) : PhotoId(id, source), Serializable
+
+data class PhotoPickerViewData(val prevSelectedPhotos: List<PhotoId>): Serializable {
 
     @Transient
     val photoItems = mutableListOf<PhotoItem>()
 
-    val selectedPhotos = mutableListOf<PhotoItem>()
+    var selectedPhotos =  mutableListOf<PhotoItem>()
     var photosPermissionRequested = false
 }
 

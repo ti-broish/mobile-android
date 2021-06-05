@@ -11,7 +11,6 @@ import android.widget.AdapterView
 import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.presentation.ui.protocol.add.IAddProtocolPresenter
 import kotlinx.android.synthetic.main.layout_sections_view.view.*
 
 class SectionPickerView  :ConstraintLayout{
@@ -21,9 +20,7 @@ class SectionPickerView  :ConstraintLayout{
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-
-    }
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init {
 
@@ -31,11 +28,9 @@ class SectionPickerView  :ConstraintLayout{
     }
     //endregion construction
 
-    fun bindView(sectionsViewData: SectionsViewData?, presenter: IAddProtocolPresenter) {
+    fun bindView(sectionsViewData: SectionsViewData?, presenter: ISectionPickerPresenter) {
 
         val data = sectionsViewData ?: return
-
-        val context = this.context
 
         initHomeAbroad(data, presenter)
 
@@ -55,7 +50,7 @@ class SectionPickerView  :ConstraintLayout{
     }
     //region private methods
 
-    private fun initHomeAbroad(data: SectionsViewData, presenter: IAddProtocolPresenter){
+    private fun initHomeAbroad(data: SectionsViewData, presenter: ISectionPickerPresenter){
 
         sectionInText.text = getSpannableStringRedWarnStar(context, R.string.section_in)
 
@@ -75,7 +70,7 @@ class SectionPickerView  :ConstraintLayout{
         }
     }
 
-    private fun initCountry(data: SectionsViewData, presenter: IAddProtocolPresenter){
+    private fun initCountry(data: SectionsViewData, presenter: ISectionPickerPresenter){
 
         inputCountry.hint = getSpannableStringRedWarnStar(context, R.string.country)
 
@@ -99,7 +94,7 @@ class SectionPickerView  :ConstraintLayout{
         }
     }
 
-    private fun initElectionRegion(data: SectionsViewData, presenter: IAddProtocolPresenter){
+    private fun initElectionRegion(data: SectionsViewData, presenter: ISectionPickerPresenter){
 
         inputMir.hint = getSpannableStringRedWarnStar(context, R.string.mir)
 
@@ -122,7 +117,7 @@ class SectionPickerView  :ConstraintLayout{
         }
     }
 
-    private fun initMunicipalities(data: SectionsViewData, presenter: IAddProtocolPresenter){
+    private fun initMunicipalities(data: SectionsViewData, presenter: ISectionPickerPresenter){
 
         inputMunicipality.hint = getSpannableStringRedWarnStar(context, R.string.municipality)
         inputMunicipality.visibility = if(data.viewType != SectionViewType.Abroad)
@@ -146,7 +141,7 @@ class SectionPickerView  :ConstraintLayout{
         }
     }
 
-    private fun initTowns(data: SectionsViewData, presenter: IAddProtocolPresenter){
+    private fun initTowns(data: SectionsViewData, presenter: ISectionPickerPresenter){
 
         inputTown.hint = getSpannableStringRedWarnStar(context, R.string.town)
         inputTownDropdown.isEnabled = data.mSelectedCountry != null || data.mSelectedMunicipality != null
@@ -165,7 +160,7 @@ class SectionPickerView  :ConstraintLayout{
         }
     }
 
-    private fun initCityRegions(data: SectionsViewData, presenter: IAddProtocolPresenter){
+    private fun initCityRegions(data: SectionsViewData, presenter: ISectionPickerPresenter){
 
         inputCityRegion.hint = getSpannableStringRedWarnStar(context, R.string.region)
         inputCityRegion.visibility = if(data.viewType == SectionViewType.HomeCityRegion)
@@ -189,7 +184,7 @@ class SectionPickerView  :ConstraintLayout{
         }
     }
 
-    private fun initSections(data: SectionsViewData, presenter: IAddProtocolPresenter){
+    private fun initSections(data: SectionsViewData, presenter: ISectionPickerPresenter){
 
         inputSection.hint = getSpannableStringRedWarnStar(context, R.string.section_number)
 
@@ -205,6 +200,7 @@ class SectionPickerView  :ConstraintLayout{
 
                 val section = adapter.getItem(position) ?:return@OnItemClickListener
                 data.mSelectedSection = section
+                presenter.onSectionSelected(section)
                 inputSectionDropdown.setText(section.code, /* filter= */ false)
                 uniqueSectionValueTextView.setText( section.id )
                 adapter.filter.filter("")
@@ -228,7 +224,7 @@ class SectionPickerView  :ConstraintLayout{
             context.resources.getColor(R.color.textRed)
         }
 
-        val spannableString = SpannableString( "${sectionInText} *" )
+        val spannableString = SpannableString( "$sectionInText *" )
         spannableString.setSpan(ForegroundColorSpan(color),
                 sectionInText.length + 1,
                 sectionInText.length + 2,

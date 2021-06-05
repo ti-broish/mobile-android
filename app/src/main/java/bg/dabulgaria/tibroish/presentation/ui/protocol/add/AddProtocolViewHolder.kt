@@ -11,6 +11,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import kotlinx.android.synthetic.main.add_protocol_buttons_item.view.*
 import kotlinx.android.synthetic.main.add_protocol_photo_item.view.*
 import kotlinx.android.synthetic.main.add_protocol_section_item.view.*
+import kotlinx.android.synthetic.main.add_protocol_send_success_item.view.*
 
 sealed class AddProtocolViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     abstract fun bind(position: Int,
@@ -69,5 +70,13 @@ class AddProtocolButtonsViewHolder(itemView: View) : AddProtocolViewHolder(itemV
         itemView.addProtocolGalleryBtn?.setOnClickListener { presenter.onAddFromGalleryClick() }
         itemView.addProtocolCameraBtn?.setOnClickListener { presenter.onAddFromCameraClick() }
         itemView.addProtocolContinueBtn?.setOnClickListener { presenter.onContinue() }
+    }
+}
+
+class AddProtocolSendSuccessViewHolder(itemView: View) : AddProtocolViewHolder(itemView) {
+
+    override fun bind(position: Int, item: AddProtocolListItem, presenter: IAddProtocolPresenter) {
+
+        itemView.addProtocolSendOkBtn?.setOnClickListener { presenter.onSuccessOkClick() }
     }
 }

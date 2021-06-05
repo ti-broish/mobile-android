@@ -1,6 +1,7 @@
 package bg.dabulgaria.tibroish.presentation.main
 
 import bg.dabulgaria.tibroish.presentation.navigation.OnMenuClickListener
+import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoId
 
 interface IMainRouter: OnMenuClickListener {
 
@@ -20,7 +21,7 @@ interface IMainRouter: OnMenuClickListener {
 
     fun openAppSettings()
 
-    fun showPhotoPicker(protocolId:Long)
+    fun showPhotoPicker(selectedImages:List<PhotoId>)
 
     fun showCameraPicker(protocolId:Long)
 

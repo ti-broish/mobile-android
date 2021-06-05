@@ -3,10 +3,12 @@ package bg.dabulgaria.tibroish.persistence.local
 
 import bg.dabulgaria.tibroish.domain.protocol.image.IProtocolImagesRepository
 import bg.dabulgaria.tibroish.domain.protocol.image.ProtocolImage
+import bg.dabulgaria.tibroish.persistence.local.db.BaseTiBroishLocalRepository
+import bg.dabulgaria.tibroish.persistence.local.db.TiBroishDatabase
 import javax.inject.Inject
 
 class ProtocolImagesRepository @Inject
-constructor(private val database:TiBroishDatabase ) :BaseTiBroishLocalRepository(database), IProtocolImagesRepository {
+constructor(private val database: TiBroishDatabase) : BaseTiBroishLocalRepository(database), IProtocolImagesRepository {
 
     companion object {
 

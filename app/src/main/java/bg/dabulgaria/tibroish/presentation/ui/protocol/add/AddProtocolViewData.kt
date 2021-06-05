@@ -6,7 +6,7 @@ import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.SectionsViewD
 import java.io.Serializable
 
 enum class AddProtocolListItemType{
-    Header, Section, Image, Buttons
+    Header, Section, Image, Buttons, SendSuccess
 }
 
 sealed class AddProtocolListItem(val type: AddProtocolListItemType) :Serializable
@@ -23,15 +23,26 @@ class AddProtocolListItemImage(val image: ProtocolImage)
 class AddProtocolListItemButtons
     : AddProtocolListItem(AddProtocolListItemType.Buttons),Serializable
 
+class AddProtocolListItemSendSuccess
+    : AddProtocolListItem(AddProtocolListItemType.SendSuccess),Serializable
+
 
 class AddProtocolViewData() : Serializable {
 
     var protocolId :Long? = null
     var protocol :ProtocolExt? =null
     val items = mutableListOf<AddProtocolListItem>()
-
     var sectionsData: SectionsViewData?=null
     var imageForCameraPath :String = ""
+
+    constructor(source: AddProtocolViewData):this(){
+
+        this.protocolId = source.protocolId
+        this.protocol = source.protocol
+        this.items.addAll(source.items)
+        this.sectionsData = source.sectionsData
+        this.imageForCameraPath = source.imageForCameraPath
+    }
 }
 
 class AddProtocolConstants{

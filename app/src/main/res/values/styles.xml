@@ -16,4 +16,10 @@
         <item name="android:backgroundTint">@color/secondary_button_background</item>
     </style>
 
+    <style name="PrimaryBold20dpTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

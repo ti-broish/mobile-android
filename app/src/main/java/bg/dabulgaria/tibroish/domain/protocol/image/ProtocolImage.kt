@@ -9,7 +9,7 @@ import java.io.Serializable
 import java.util.*
 
 enum class UploadStatus(val code:Int){
-    NotProcessed(0), Copied(1), Uploaded(2);
+    NotProcessed(0), Copied(1), Uploaded(2), Replace(3);
 
     companion object {
 
@@ -73,4 +73,6 @@ class ProtocolImage constructor(
         val source: PickedImageSource   = PickedImageSource.None,
         val width:Int                   = -1,
         val height:Int                  = -1,
-        val dateTaken: Date             = Date(0) ):Serializable
+        val dateTaken: Date             = Date(0),
+        @ColumnInfo(name="serverUrl")
+        var serverUrl:String?             = null):Serializable
