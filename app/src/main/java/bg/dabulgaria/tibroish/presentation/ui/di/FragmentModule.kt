@@ -18,6 +18,9 @@ import bg.dabulgaria.tibroish.presentation.ui.registration.IRegistrationPresente
 import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationFragment
 import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationPresenter
 import bg.dabulgaria.tibroish.presentation.ui.violation.send.*
+import bg.dabulgaria.tibroish.presentation.ui.rights.IRightsAndObligationsPresenter
+import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsFragment
+import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsPresenter
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -102,4 +105,12 @@ interface FragmentModule {
     @Binds
     fun bindsISendViolationInteractor(interactor: SendViolationInteractor): ISendViolationInteractor
     //endregion Add Protocol screen
+
+    //region RightsAndObligations screen
+    @ContributesAndroidInjector
+    fun bindRightsAndObligationsFragment(): RightsAndObligationsFragment
+
+    @Binds
+    fun bindIRightsAndObligationsPresenter(implemenation: RightsAndObligationsPresenter): IRightsAndObligationsPresenter
+    //endregion Login screen
 }
