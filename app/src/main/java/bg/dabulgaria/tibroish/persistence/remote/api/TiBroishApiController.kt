@@ -7,6 +7,8 @@ import bg.dabulgaria.tibroish.domain.organisation.Organization
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.domain.protocol.SendProtocolRequest
 import bg.dabulgaria.tibroish.domain.user.User
+import bg.dabulgaria.tibroish.domain.violation.SendViolationRequest
+import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import retrofit2.Call
 import retrofit2.http.Body
 
@@ -58,4 +60,8 @@ interface TiBroishApiController {
     @POST("/protocols")
     fun sendProtocol(@Header(ApiHeader.Authorization) authorization:String,
                      @Body request: SendProtocolRequest):Call<ProtocolRemote>
+
+    @POST("/violations")
+    fun sendViolation(@Header(ApiHeader.Authorization) authorization:String,
+                     @Body request: SendViolationRequest):Call<VoteViolationRemote>
 }

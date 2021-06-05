@@ -1,16 +1,20 @@
 package bg.dabulgaria.tibroish.persistence.local
 
+import android.content.ContentResolver
 import android.content.Context
+import android.net.Uri
 import android.os.Environment
+import android.util.Base64
+import android.webkit.MimeTypeMap
 import bg.dabulgaria.tibroish.domain.io.IFileRepository
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import java.io.File
 import java.io.FileInputStream
-import android.util.Base64
 import java.util.*
 import javax.inject.Inject
 import kotlin.jvm.Throws
+
 
 class FileRepository @Inject constructor(@AppContext private val context: Context,
                                          val logger: ILogger): IFileRepository {
@@ -91,13 +95,33 @@ class FileRepository @Inject constructor(@AppContext private val context: Contex
 
         val file = File(filePath)
 
-        if( !file.exists())
+        if(!file.exists())
             return null
+
+        val mimeType = getMimeType(file) ?:return null
 
         val fileInputStreamReader = FileInputStream(file)
         val bytes = ByteArray(file.length().toInt())
         fileInputStreamReader.read(bytes)
-        return String(Base64.encode(bytes, Base64.DEFAULT), Charsets.UTF_8 )
+        fileInputStreamReader.close()
+        return "data:$mimeType;base64,${String(Base64.encode(bytes, Base64.DEFAULT), Charsets.UTF_8 )}"
+    }
+
+    private fun getMimeType(file: File):String? {
+
+        val uri = Uri.fromFile(file)
+        var mimeType: String? = null
+
+        mimeType = if (ContentResolver.SCHEME_CONTENT == uri.scheme) {
+
+            context.contentResolver.getType(uri)
+        }
+        else {
+
+            val fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
+            MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase(Locale.ENGLISH))
+        }
+        return mimeType
     }
 
     companion object{

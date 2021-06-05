@@ -20,7 +20,7 @@ constructor(private val database: TiBroishDatabase) : BaseTiBroishLocalRepositor
         return database.daoProtocol().getAll()
     }
 
-    override fun get(id: Long): Protocol {
+    override fun get(id: Long): Protocol? {
 
         return database.daoProtocol().getById( id )
     }

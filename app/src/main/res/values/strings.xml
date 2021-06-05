@@ -88,4 +88,9 @@
     <string name="please_choose_min_images">Добавете още поне %d снимки</string>
     <string name="protocol_send_successfully">Протоколът е изпратен успешно!</string>
     <string name="ok">Добре</string>
+    <string name="violation_send_successfully">Сигналът е изпратен успешно!</string>
+    <string name="violation_description">Описание на нарушението</string>
+    <string name="please_choose_town">Моля изберете населено място</string>
+    <string name="please_choose_city_region">Моля изберете микрорайон</string>
+    <string name="please_type_description_more_than_d_symbols">Моля въведете описание. Описанието трябва да бъде повече от %d симовола</string>
 </resources>
