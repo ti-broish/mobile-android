@@ -107,6 +107,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
 
     implementation 'org.greenrobot:eventbus:3.2.0'
+    implementation 'com.airbnb.android:lottie:3.4.0'
 
     // Dagger core
     api "com.google.dagger:dagger:$daggerVersion"

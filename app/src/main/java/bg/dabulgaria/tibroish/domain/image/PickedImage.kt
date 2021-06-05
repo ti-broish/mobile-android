@@ -1,6 +1,6 @@
 package bg.dabulgaria.tibroish.domain.image
 
-import bg.dabulgaria.tibroish.domain.protocol.image.UploadStatus
+import androidx.room.TypeConverter
 import java.io.Serializable
 import java.util.*
 
@@ -21,6 +21,14 @@ enum class PickedImageSource (val code:Int){
 
         operator fun get(code: Int): PickedImageSource? = lookup[code]
     }
+}
+
+class PickedImageSourceTypeConverter {
+    @TypeConverter
+    fun toPickedImageSource(value: Int): PickedImageSource? = PickedImageSource.get( value )
+
+    @TypeConverter
+    fun fromPickedImageSource(value: PickedImageSource) = value.code
 }
 
 data class PickedImage constructor(val id:String,

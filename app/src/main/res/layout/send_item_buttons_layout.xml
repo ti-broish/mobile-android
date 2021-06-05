@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/addProtocolGalleryBtn"
+        android:id="@+id/sendItemGalleryBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintHorizontal_weight="3"
@@ -25,11 +25,11 @@
         android:drawableStart="@drawable/ic_baseline_image_24_primary"
         android:drawablePadding="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/addProtocolCameraBtn"
+        app:layout_constraintEnd_toStartOf="@+id/sendItemCameraBtn"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/addProtocolCameraBtn"
+        android:id="@+id/sendItemCameraBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintHorizontal_weight="2"
@@ -50,10 +50,10 @@
         android:textColor="@color/colorPrimary"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/addProtocolGalleryBtn"/>
+        app:layout_constraintStart_toEndOf="@id/sendItemGalleryBtn"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/addProtocolContinueBtn"
+        android:id="@+id/sendItemContinueBtn"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -69,7 +69,7 @@
         app:autoSizeMinTextSize="@dimen/action_button_min_text_size"
         android:textAllCaps="true"
         android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/addProtocolCameraBtn"
+        app:layout_constraintTop_toBottomOf="@id/sendItemCameraBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -65,7 +65,6 @@ class ApplicationModule {
     internal fun providesTiBroishDatabase(@AppContext context: Context): TiBroishDatabase {
 
         return Room.databaseBuilder(context, TiBroishDatabase::class.java, "ti_broish_db")
-                .addMigrations(Migration_1_2())
                 .build()
     }
 
