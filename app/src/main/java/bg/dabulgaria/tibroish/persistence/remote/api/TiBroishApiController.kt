@@ -64,4 +64,8 @@ interface TiBroishApiController {
     @POST("/violations")
     fun sendViolation(@Header(ApiHeader.Authorization) authorization:String,
                      @Body request: SendViolationRequest):Call<VoteViolationRemote>
+
+    @GET("/me/protocols/")
+    fun getUserProtocols(@Header(ApiHeader.Authorization) authorization:String):
+            Call<List<ProtocolRemote>>
 }

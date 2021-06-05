@@ -93,4 +93,5 @@
     <string name="please_choose_town">Моля изберете населено място</string>
     <string name="please_choose_city_region">Моля изберете микрорайон</string>
     <string name="please_type_description_more_than_d_symbols">Моля въведете описание. Описанието трябва да бъде повече от %d симовола</string>
+    <string name="protocols_list_section_id_unformatted">%d. Секция: %s</string>
 </resources>

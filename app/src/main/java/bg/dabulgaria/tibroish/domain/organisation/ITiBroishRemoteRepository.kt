@@ -40,4 +40,6 @@ interface ITiBroishRemoteRepository {
     fun sendProtocol(request: SendProtocolRequest): ProtocolRemote
 
     fun sendViolation(request: SendViolationRequest): VoteViolationRemote
+
+    fun getUserProtocols(): List<ProtocolRemote>
 }

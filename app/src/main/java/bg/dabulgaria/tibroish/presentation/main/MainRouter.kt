@@ -22,6 +22,7 @@ import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerCon
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.profile.ProfileFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolFragment
+import bg.dabulgaria.tibroish.presentation.ui.protocol.list.ProtocolsFragment
 import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationFragment
 import bg.dabulgaria.tibroish.presentation.ui.violation.send.SendViolationFragment
 import java.io.File
@@ -68,7 +69,9 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
             NavItemAction.SendSignal -> {
                 showSendViolation()
             }
-            NavItemAction.MyProtocols -> {}
+            NavItemAction.MyProtocols -> {
+                showMyProtocols();
+            }
             NavItemAction.MySignals -> {}
             NavItemAction.RightsAndObligations -> {
                 showRightsAndObligations()
@@ -230,6 +233,17 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
         }
 
         view?.showScreen(content, SendViolationFragment.TAG, addToBackStack = true, transitionContent = true)
+    }
+
+    override fun showMyProtocols() {
+
+        var content = view?.supportFragmentMngr?.findFragmentByTag(ProtocolsFragment.TAG )
+        if (content == null) {
+            clearBackStack()
+            content = ProtocolsFragment.newInstance()
+        }
+
+        view?.showScreen(content, ProtocolsFragment.TAG, addToBackStack = true, transitionContent = true)
     }
 
     override fun showRightsAndObligations() {
