@@ -10,9 +10,6 @@ import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
-import bg.dabulgaria.tibroish.presentation.ui.common.DialogUtil
-import bg.dabulgaria.tibroish.presentation.ui.common.IOrganizationsDropdownUtil
-import bg.dabulgaria.tibroish.presentation.ui.common.IOrganizationsManager
 import bg.dabulgaria.tibroish.presentation.ui.protocol.list.ProtocolsPresenter.State
 import kotlinx.android.synthetic.main.fragment_protocols_list.*
 import javax.inject.Inject
@@ -24,15 +21,6 @@ interface IProtocolsView : IBaseView {
 class ProtocolsFragment : BasePresentableFragment<IProtocolsView,
         IProtocolsPresenter>
     (), IProtocolsView {
-
-    @Inject
-    lateinit var dialogUtil: DialogUtil
-
-    @Inject
-    lateinit var organizationsManager: IOrganizationsManager
-
-    @Inject
-    lateinit var organizationsDropdownUtil: IOrganizationsDropdownUtil
 
     @Inject
     lateinit var adapter: ProtocolsAdapter
