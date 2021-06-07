@@ -35,6 +35,8 @@ class ProtocolPicturesAdapter @Inject constructor(private val statusColorUtil: I
 
     lateinit var protocol: ProtocolRemote
 
+    lateinit var onPictureClickListener: View.OnClickListener
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         when (viewType) {
@@ -44,6 +46,7 @@ class ProtocolPicturesAdapter @Inject constructor(private val statusColorUtil: I
                     parent,
                     /* attachToRoot= */ false
                 )
+                listItem.setOnClickListener(onPictureClickListener)
                 return ProtocolPictureViewHolder(listItem)
             }
             VIEW_TYPE_HEADER -> {
