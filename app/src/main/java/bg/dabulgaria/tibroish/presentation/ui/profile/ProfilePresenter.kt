@@ -79,8 +79,7 @@ class ProfilePresenter @Inject constructor(
     override fun fetchUserDetails() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val userDetails = createFakeUser()//TODO: put this back when APIs work
-                // tiBroishRemoteRepository.getUserDetails()
+                val userDetails = tiBroishRemoteRepository.getUserDetails()
                 withContext(Dispatchers.Main) {
                     viewData?.userDetails = userDetails
                     view?.onProfileFetchSuccess(userDetails)
@@ -92,19 +91,6 @@ class ProfilePresenter @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun createFakeUser(): User {
-        val user = User()
-        user.firstName = "Bruce"
-        user.lastName = "Wayne"
-        user.email = "bruce.wayne@asd.com"
-        user.phone = "+359333234234"
-        user.pin = "1234"
-        user.organization =
-            Organization(BigDecimal(123), "Демократична България", Organization.Type.party)
-        user.hasAgreedToKeepData = true
-        return user
     }
 
     override fun send(user: User, callback: IUpdateProfileCallback) {
