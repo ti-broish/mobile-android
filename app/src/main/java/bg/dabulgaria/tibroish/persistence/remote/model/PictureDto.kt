@@ -11,6 +11,8 @@
 */
 package bg.dabulgaria.tibroish.persistence.remote.model
 
+import java.io.Serializable
+
 
 /**
  * 
@@ -23,4 +25,4 @@ data class PictureDto (
     val id: String,
     val url: String,
     val path: String,
-    val rotation: Int)
+    val rotation: Int): Serializable

@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentManager
+import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.presentation.ui.common.item.send.SendItemViewData
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
@@ -22,6 +23,7 @@ import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerCon
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.profile.ProfileFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolFragment
+import bg.dabulgaria.tibroish.presentation.ui.protocol.details.ProtocolDetailsFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.list.ProtocolsFragment
 import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationFragment
 import bg.dabulgaria.tibroish.presentation.ui.violation.send.SendViolationFragment
@@ -244,6 +246,17 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
         }
 
         view?.showScreen(content, ProtocolsFragment.TAG, addToBackStack = true, transitionContent = true)
+    }
+
+    override fun showProtocolDetails(protocol: ProtocolRemote) {
+        var content = view?.supportFragmentMngr?.findFragmentByTag(ProtocolDetailsFragment.TAG )
+        if (content == null) {
+            clearBackStack()
+            content = ProtocolDetailsFragment.newInstance(protocol)
+        }
+
+        view?.showScreen(content, ProtocolDetailsFragment.TAG, addToBackStack = true,
+            transitionContent = true)
     }
 
     override fun showRightsAndObligations() {

@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
 import bg.dabulgaria.tibroish.presentation.ui.protocol.list.ProtocolsPresenter.State
@@ -24,9 +23,6 @@ class ProtocolsFragment : BasePresentableFragment<IProtocolsView,
 
     @Inject
     lateinit var adapter: ProtocolsAdapter
-
-    @Inject
-    lateinit var logger: ILogger
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -69,9 +65,7 @@ class ProtocolsFragment : BasePresentableFragment<IProtocolsView,
         listRecyclerView.adapter = adapter
         adapter.onItemClickListener = View.OnClickListener {
             val position: Int = listRecyclerView.getChildLayoutPosition(it)
-            val protocolRemote = adapter.list[position]
-            logger.i(TAG, "on protocol clicked = $protocolRemote")
-            // TODO: Launch the protocol details panel here
+            presenter.showProtocolAt(position)
         }
     }
 
