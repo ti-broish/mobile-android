@@ -1,5 +1,7 @@
 package bg.dabulgaria.tibroish.presentation.ui.protocol.details
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +13,7 @@ import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
 import bg.dabulgaria.tibroish.presentation.ui.common.IStatusColorUtil
-import kotlinx.android.synthetic.main.fragment_protocols_details.*
+import kotlinx.android.synthetic.main.fragment_protocols_details.listRecyclerView
 import javax.inject.Inject
 
 interface IProtocolDetailsView : IBaseView {
@@ -42,6 +44,13 @@ class ProtocolDetailsFragment : BasePresentableFragment<IProtocolDetailsView,
         listRecyclerView.layoutManager =
             LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
         adapter.protocol = protocol
+        adapter.onPictureClickListener = View.OnClickListener {
+            val position: Int = listRecyclerView.getChildLayoutPosition(it)
+            val picture = protocol.pictures[position - 1]
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(picture.url))
+            intent.flags.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
         listRecyclerView.adapter = adapter
     }
 
