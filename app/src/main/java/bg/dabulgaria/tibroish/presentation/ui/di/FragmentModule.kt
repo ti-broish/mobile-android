@@ -14,6 +14,9 @@ import bg.dabulgaria.tibroish.presentation.ui.profile.IProfilePresenter
 import bg.dabulgaria.tibroish.presentation.ui.profile.ProfileFragment
 import bg.dabulgaria.tibroish.presentation.ui.profile.ProfilePresenter
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.*
+import bg.dabulgaria.tibroish.presentation.ui.protocol.details.IProtocolDetailsPresenter
+import bg.dabulgaria.tibroish.presentation.ui.protocol.details.ProtocolDetailsFragment
+import bg.dabulgaria.tibroish.presentation.ui.protocol.details.ProtocolDetailsPresenter
 import bg.dabulgaria.tibroish.presentation.ui.protocol.list.IProtocolsPresenter
 import bg.dabulgaria.tibroish.presentation.ui.protocol.list.ProtocolsFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.list.ProtocolsPresenter
@@ -125,4 +128,13 @@ interface FragmentModule {
     fun bindIProtocolsPresenter(implementation: ProtocolsPresenter):
             IProtocolsPresenter
     //endregion My Protocols screen
+
+    //region Protocol Details screen
+    @ContributesAndroidInjector
+    fun bindProtocolDetailsFragment(): ProtocolDetailsFragment
+
+    @Binds
+    fun bindIProtocolDetailsPresenter(implementation: ProtocolDetailsPresenter):
+            IProtocolDetailsPresenter
+    //endregion Protocol Details screen
 }

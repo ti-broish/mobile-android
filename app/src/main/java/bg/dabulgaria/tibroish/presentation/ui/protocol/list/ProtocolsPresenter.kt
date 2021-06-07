@@ -8,6 +8,7 @@ import bg.dabulgaria.tibroish.domain.protocol.ProtocolStatusRemote
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
+import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.ui.profile.ProfileConstants.Companion.VIEW_DATA_KEY
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,11 +22,14 @@ interface IProtocolsPresenter : IBasePresenter<IProtocolsView> {
     fun getState(): ProtocolsPresenter.State
 
     fun getCachedProtocols(): List<ProtocolRemote>?
+
+    fun showProtocolAt(position: Int)
 }
 
 class ProtocolsPresenter @Inject constructor(
     disposableHandler: IDisposableHandler,
-    private val tiBroishRemoteRepository: ITiBroishRemoteRepository
+    private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
+    private val mainRouter: IMainRouter
 ) : BasePresenter<IProtocolsView>(disposableHandler),
     IProtocolsPresenter {
 
@@ -56,8 +60,6 @@ class ProtocolsPresenter @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 var userProtocols = tiBroishRemoteRepository.getUserProtocols()
-                userProtocols = userProtocols.sortedByDescending {
-                        protocolRemote -> protocolRemote.id.toLong() }
                 viewData?.userProtocols = userProtocols
                 viewData?.state = State.STATE_LOADED_SUCCESS
                 withContext(Dispatchers.Main) {
@@ -78,6 +80,10 @@ class ProtocolsPresenter @Inject constructor(
 
     override fun getCachedProtocols(): List<ProtocolRemote>? {
         return viewData?.userProtocols
+    }
+
+    override fun showProtocolAt(position: Int) {
+        viewData?.userProtocols?.get(position)?.let { mainRouter.showProtocolDetails(it) }
     }
 
     override fun onRestoreData(bundle: Bundle?) {
