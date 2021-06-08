@@ -45,4 +45,6 @@ interface IMainRouter: OnMenuClickListener {
     fun showMyProtocols()
 
     fun showProtocolDetails(protocol: ProtocolRemote)
+
+    fun showViolations()
 }

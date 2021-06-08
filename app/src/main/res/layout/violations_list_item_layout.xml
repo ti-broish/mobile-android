@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <TextView
+        android:id="@+id/violationSection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Секция: 03495039"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:visibility="visible"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/violationPlace"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Локация: 10 ОУ Пенчо Славейков ул. Христо Ботев 3"
+        android:maxLines="2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/violationSection"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="6sp"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:visibility="visible"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/violationDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Описание: Описание на нарушението в детайли с всички факти и документи доказващи нарушението на изборния кодекс"
+        android:maxLines="4"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/violationPlace"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="6sp"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/violationStatus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:text="Получен"
+        android:textColor="@color/color_status_received"
+        android:maxLines="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/violationDescription"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="6sp"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
