@@ -116,15 +116,15 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
     }
 
     override fun sendViolation(request: SendViolationRequest): VoteViolationRemote {
-/*
-        return VoteViolationRemote( id = Random.nextLong().toBigDecimal(),
-                section = SectionRemote("","","",""),
-                description = request.description,
-                status = ViolationRemoteStatus.values()[Random.nextInt(0, ViolationRemoteStatus.values().size)])
-*/
         return authenticator.executeCall( { pParams, token ->
             apiController.sendViolation(getAuthorization(token), pParams)}, request)!!
     }
 
-   private fun getAuthorization(idToken: String): String = "Bearer $idToken"
+    override fun getUserProtocols(): List<ProtocolRemote> {
+        return authenticator.executeCall { token ->
+            apiController.getUserProtocols(getAuthorization(token))
+        }!!.sortedByDescending { protocolRemote -> protocolRemote.id }
+    }
+
+    private fun getAuthorization(idToken: String): String = "Bearer $idToken"
 }
