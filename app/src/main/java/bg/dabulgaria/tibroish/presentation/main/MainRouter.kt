@@ -251,7 +251,6 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
     override fun showProtocolDetails(protocol: ProtocolRemote) {
         var content = view?.supportFragmentMngr?.findFragmentByTag(ProtocolDetailsFragment.TAG )
         if (content == null) {
-            clearBackStack()
             content = ProtocolDetailsFragment.newInstance(protocol)
         }
 
