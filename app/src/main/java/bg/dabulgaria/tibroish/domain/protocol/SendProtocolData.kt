@@ -24,7 +24,10 @@ enum class ProtocolStatusRemote constructor(val stringValue:String){
     @SerializedName("publishing")
     Publishing("publishing"),
     @SerializedName("published")
-    Published("published");
+    Published("published"),
+    @SerializedName("processed")
+    Processed("processed"),
+    Undefined("undefined");
 
     companion object {
 
@@ -36,9 +39,8 @@ enum class ProtocolStatusRemote constructor(val stringValue:String){
                 lookup.put(status.stringValue, status)
         }
 
-        operator fun get(strValue: String): ProtocolStatusRemote? {
-
-            return lookup[strValue]
+        operator fun get(strValue: String): ProtocolStatusRemote {
+            return lookup[strValue] ?: Undefined
         }
 
         val deserializer: JsonDeserializer<ProtocolStatusRemote?>
