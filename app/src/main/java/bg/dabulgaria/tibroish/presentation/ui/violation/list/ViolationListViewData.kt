@@ -1,9 +1,18 @@
 package bg.dabulgaria.tibroish.presentation.ui.violation.list
 
+import android.os.Parcelable
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
-import java.io.Serializable
+import kotlinx.android.parcel.Parcelize
 
-class ViolationListViewData: Serializable {
+@Parcelize
+class ViolationsViewData(
+    var userViolations: List<VoteViolationRemote>,
+    var state: ViolationsListPresenter.State
+) : Parcelable {
+}
 
-    val items = mutableListOf<VoteViolationRemote>()
+class ViolationConstants {
+    companion object {
+        const val VIEW_DATA_KEY = "ViolationConstants.ViolationsViewData"
+    }
 }

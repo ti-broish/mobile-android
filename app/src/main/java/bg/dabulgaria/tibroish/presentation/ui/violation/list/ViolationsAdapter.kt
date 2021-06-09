@@ -1,21 +1,26 @@
 package bg.dabulgaria.tibroish.presentation.ui.violation.list
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
-import bg.dabulgaria.tibroish.presentation.ui.protocol.list.IViolationsListPresenter
+import bg.dabulgaria.tibroish.presentation.ui.common.IStatusColorUtil
 import kotlinx.android.synthetic.main.violations_list_item_layout.view.*
+import javax.inject.Inject
 
-class ViolationsAdapter(val items: MutableList<VoteViolationRemote>, val presenter: IViolationsListPresenter)
+class ViolationsAdapter @Inject constructor(private val statusColorUtil: IStatusColorUtil)
     : RecyclerView.Adapter<ViolationsAdapter.ViewHolder>() {
+
+    val items = mutableListOf<VoteViolationRemote>()
+
+    lateinit var onItemClickListener: View.OnClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.violations_list_item_layout, parent, false)
+        view.setOnClickListener(onItemClickListener)
         return ViewHolder(view)
     }
 
@@ -53,9 +58,14 @@ class ViolationsAdapter(val items: MutableList<VoteViolationRemote>, val present
         holder.itemView.violationDescription.text = description
 
         holder.itemView.violationStatus.text = violationSignal.statusLocalized
-        holder.itemView.violationStatus.setTextColor(presenter.getStatusColor(violationSignal.status))
+        holder.itemView.violationStatus.setTextColor(
+            statusColorUtil.getColorForStatus(violationSignal.status.stringValue))
+    }
 
-        holder.itemView.setOnClickListener { presenter.onItemClick(violationSignal) }
+    fun updateList(newList: List<VoteViolationRemote>) {
+        items.clear()
+        items.addAll(newList)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = items.size

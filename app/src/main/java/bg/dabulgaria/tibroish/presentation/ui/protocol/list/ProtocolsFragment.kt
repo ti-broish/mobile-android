@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
+import bg.dabulgaria.tibroish.presentation.ui.common.IDialogUtil
 import bg.dabulgaria.tibroish.presentation.ui.protocol.list.ProtocolsPresenter.State
 import kotlinx.android.synthetic.main.fragment_protocols_list.*
 import javax.inject.Inject
@@ -20,6 +21,9 @@ interface IProtocolsView : IBaseView {
 class ProtocolsFragment : BasePresentableFragment<IProtocolsView,
         IProtocolsPresenter>
     (), IProtocolsView {
+
+    @Inject
+    lateinit var dialogUtil: IDialogUtil
 
     @Inject
     lateinit var adapter: ProtocolsAdapter
@@ -79,6 +83,10 @@ class ProtocolsFragment : BasePresentableFragment<IProtocolsView,
             listSwipeRefreshLayout.isRefreshing = false
             updateState()
         }
+    }
+
+    override fun onError(errorMessage: String) {
+        dialogUtil.showDismissableDialog(activity = requireActivity(), message = errorMessage){}
     }
 
     companion object {

@@ -1,27 +1,28 @@
-package bg.dabulgaria.tibroish.presentation.ui.protocol.list
+package bg.dabulgaria.tibroish.presentation.ui.violation.list
 
 import android.os.Bundle
-import androidx.annotation.ColorInt
-import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
-import bg.dabulgaria.tibroish.domain.violation.ViolationRemoteStatus
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.main.IMainRouter
-import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
-import bg.dabulgaria.tibroish.presentation.ui.violation.list.IViolationsListView
-import bg.dabulgaria.tibroish.presentation.ui.violation.list.ViolationListViewData
-import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 interface IViolationsListPresenter : IBasePresenter<IViolationsListView> {
 
-    fun onItemClick(viewData : VoteViolationRemote)
+    fun getMyViolations(initialLoading: Boolean, successCallback: (List<VoteViolationRemote>) -> Unit)
 
-    fun getStatusColor(violationRemoteStatus: ViolationRemoteStatus): Int
+    fun getState(): ViolationsListPresenter.State
+
+    fun getCachedViolations(): List<VoteViolationRemote>?
+
+    fun showViolationAt(position: Int)
 }
 
 class ViolationsListPresenter @Inject constructor(private val schedulersProvider : ISchedulersProvider,
@@ -30,45 +31,76 @@ class ViolationsListPresenter @Inject constructor(private val schedulersProvider
                                                   private val mainRouter: IMainRouter)
     : BasePresenter<IViolationsListView>(dispHandler), IViolationsListPresenter {
 
-    var viewData = ViolationListViewData()
+    enum class State {
+        STATE_LOADING_INITIAL,
+        STATE_LOADING_SUBSEQUENT,
+        STATE_LOADED_SUCCESS,
+        STATE_LOADED_FAILURE
+    }
 
-    override fun onRestoreData(bundle: Bundle?) {}
+    private var viewData: ViolationsViewData? = null
 
-    override fun onSaveData(outState: Bundle) {}
+    override fun getMyViolations(
+        initialLoading: Boolean,
+        successCallback: (List<VoteViolationRemote>) -> Unit) {
+        if (!initialLoading) {
+            viewData?.state = State.STATE_LOADING_SUBSEQUENT
+        }
+        if (viewData?.state == State.STATE_LOADED_SUCCESS) {
+            successCallback.invoke(viewData?.userViolations!!)
+            return
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val userViolations = tiBroishRemoteRepository.getViolations()
+                viewData?.userViolations = userViolations
+                viewData?.state = State.STATE_LOADED_SUCCESS
+                withContext(Dispatchers.Main) {
+                    successCallback.invoke(userViolations)
+                }
+            } catch (exception: Exception) {
+                viewData?.state = State.STATE_LOADED_FAILURE
+                withContext(Dispatchers.Main) {
+                    onError(exception)
+                }
+            }
+        }
+    }
 
-    override fun onItemClick(viewData: VoteViolationRemote) {
+    override fun getState(): State {
+        return viewData?.state ?: State.STATE_LOADING_INITIAL
+    }
 
-        //mainRouter.showViolationDetails( viewData )
+    override fun getCachedViolations(): List<VoteViolationRemote>? {
+        return viewData?.userViolations
+    }
+
+    override fun showViolationAt(position: Int) {
+        viewData?.userViolations?.get(position)?.let {
+           // mainRouter.showViolationDetails(it)
+        }
+    }
+
+    override fun onRestoreData(bundle: Bundle?) {
+        viewData = bundle?.getParcelable(
+            ViolationConstants.VIEW_DATA_KEY
+        )
+            ?: ViolationsViewData(
+                /* userViolation= */ mutableListOf(),
+                State.STATE_LOADING_INITIAL
+            )
+    }
+
+    override fun onSaveData(outState: Bundle) {
+        outState.putParcelable(ViolationConstants.VIEW_DATA_KEY, viewData)
     }
 
     override fun loadData() {
-
-        if(viewData.items.isNotEmpty())
-            view?.setData(viewData)
-
-        view?.onLoadingStateChange(true)
-
-        add(Single.fromCallable{ tiBroishRemoteRepository.getViolations() }
-                .subscribeOn( schedulersProvider.ioScheduler())
-                .observeOn( schedulersProvider.uiScheduler())
-                .subscribe({ result ->
-
-                    viewData.items.clear()
-                    viewData.items.addAll(result)
-                    view?.setData(viewData)
-                    view?.onLoadingStateChange(false )
-                },
-                        { th:Throwable->
-                            view?.onLoadingStateChange(false)
-                            onError( throwable = th )
-                        }))
+        if (viewData == null) {
+            viewData = ViolationsViewData(
+                /* userViolations= */ mutableListOf(),
+                State.STATE_LOADING_INITIAL
+            )
+        }
     }
-
-    override fun getStatusColor(violationRemoteStatus: ViolationRemoteStatus): Int = resourceProvider.getColor(when (violationRemoteStatus) {
-        ViolationRemoteStatus.Processed -> R.color.color_status_processed
-        ViolationRemoteStatus.Received -> R.color.color_status_received
-        ViolationRemoteStatus.Approved -> R.color.color_status_approved
-        ViolationRemoteStatus.Rejected -> R.color.color_status_rejected
-        else -> R.color.color_status_unknown
-    })
 }

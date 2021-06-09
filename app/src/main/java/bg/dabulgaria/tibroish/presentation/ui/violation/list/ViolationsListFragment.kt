@@ -1,70 +1,91 @@
 package bg.dabulgaria.tibroish.presentation.ui.violation.list
 
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
 import bg.dabulgaria.tibroish.presentation.ui.common.IDialogUtil
-import bg.dabulgaria.tibroish.presentation.ui.protocol.list.IViolationsListPresenter
+import bg.dabulgaria.tibroish.presentation.ui.violation.list.ViolationsListPresenter.State
 import kotlinx.android.synthetic.main.fragment_violations_list.*
 import javax.inject.Inject
 
-
 interface IViolationsListView : IBaseView {
 
-    fun onLoadingStateChange(isLoading: Boolean)
-
-    fun setData(data: ViolationListViewData)
 }
 
 class ViolationsListFragment
     : BasePresentableFragment<IViolationsListView, IViolationsListPresenter>(), IViolationsListView {
 
     @Inject
-    protected lateinit var dialogUtil: IDialogUtil
+    lateinit var dialogUtil: IDialogUtil
 
-    private lateinit var adapter: ViolationsAdapter
+    @Inject
+    lateinit var adapter: ViolationsAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
 
-        return inflater.inflate(R.layout.fragment_violations_list, container, false)
-    }
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? = inflater.inflate(
+        R.layout.fragment_violations_list, container, false
+    )
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = ViolationsAdapter(mutableListOf(), presenter)
-        violationsListRecyclerView.adapter = adapter
-        violationsListRecyclerView.layoutManager = LinearLayoutManager(context)
+        setupRecyclerView()
 
-        violationsListSwipeRefreshLayout?.setOnRefreshListener {
+        updateState()
 
-            presenter.loadData()
-            violationsListSwipeRefreshLayout?.isRefreshing = false
+        listSwipeRefreshLayout.setOnRefreshListener {
+            refreshMyViolations(initialLoading = false)
         }
     }
 
-    override fun onLoadingStateChange(isLoading: Boolean) {
-
-        val visibility = if (isLoading) View.VISIBLE else View.GONE
-        violationsListProcessingOverlay.visibility = visibility
-        violationsListProgressBar.visibility = visibility
+    private fun updateState() {
+        when (presenter.getState()) {
+            State.STATE_LOADING_INITIAL -> refreshMyViolations(initialLoading = true)
+            State.STATE_LOADING_SUBSEQUENT -> {
+                val cachedProtocols = presenter.getCachedViolations()
+                if (cachedProtocols != null) {
+                    adapter.updateList(cachedProtocols)
+                }
+                showList()
+                refreshMyViolations(initialLoading = false)
+            }
+            State.STATE_LOADED_SUCCESS -> showList()
+            State.STATE_LOADED_FAILURE -> showList()
+        }
     }
 
-    override fun setData(data: ViolationListViewData) {
+    private fun showList() {
+        listSwipeRefreshLayout.visibility = View.VISIBLE
+        progressBar.visibility = View.GONE
+    }
 
-        adapter.items.clear()
-        adapter.items.addAll(data.items)
-        adapter.notifyDataSetChanged()
+    private fun setupRecyclerView() {
+        listRecyclerView.layoutManager =
+            LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
+        listRecyclerView.adapter = adapter
+        adapter.onItemClickListener = View.OnClickListener {
+            val position: Int = listRecyclerView.getChildLayoutPosition(it)
+            presenter.showViolationAt(position)
+        }
+    }
+
+    private fun refreshMyViolations(initialLoading: Boolean) {
+        presenter.getMyViolations(initialLoading) {
+            adapter.updateList(it)
+            listSwipeRefreshLayout.isRefreshing = false
+            updateState()
+        }
     }
 
     override fun onError(errorMessage: String) {
-
         dialogUtil.showDismissableDialog(activity = requireActivity(), message = errorMessage){}
     }
 
