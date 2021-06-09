@@ -59,7 +59,7 @@ class ProtocolsPresenter @Inject constructor(
         }
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                var userProtocols = tiBroishRemoteRepository.getUserProtocols()
+                val userProtocols = tiBroishRemoteRepository.getUserProtocols()
                 viewData?.userProtocols = userProtocols
                 viewData?.state = State.STATE_LOADED_SUCCESS
                 withContext(Dispatchers.Main) {
