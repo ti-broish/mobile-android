@@ -3,12 +3,12 @@ package bg.dabulgaria.tibroish.presentation.ui.di
 import bg.dabulgaria.tibroish.presentation.ui.auth.login.ILoginPresenter
 import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginFragment
 import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginPresenter
+import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerInteractor
+import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.SectionPickerInteractor
 import bg.dabulgaria.tibroish.presentation.ui.forgotpassword.ForgotPasswordFragment
 import bg.dabulgaria.tibroish.presentation.ui.forgotpassword.ForgotPasswordPresenter
 import bg.dabulgaria.tibroish.presentation.ui.forgotpassword.IForgotPasswordPresenter
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
-import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerInteractor
-import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.SectionPickerInteractor
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.*
 import bg.dabulgaria.tibroish.presentation.ui.profile.IProfilePresenter
 import bg.dabulgaria.tibroish.presentation.ui.profile.ProfileFragment
@@ -23,10 +23,13 @@ import bg.dabulgaria.tibroish.presentation.ui.protocol.list.ProtocolsPresenter
 import bg.dabulgaria.tibroish.presentation.ui.registration.IRegistrationPresenter
 import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationFragment
 import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationPresenter
-import bg.dabulgaria.tibroish.presentation.ui.violation.send.*
 import bg.dabulgaria.tibroish.presentation.ui.rights.IRightsAndObligationsPresenter
 import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsFragment
 import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsPresenter
+import bg.dabulgaria.tibroish.presentation.ui.violation.list.IViolationsListPresenter
+import bg.dabulgaria.tibroish.presentation.ui.violation.list.ViolationsListFragment
+import bg.dabulgaria.tibroish.presentation.ui.violation.list.ViolationsListPresenter
+import bg.dabulgaria.tibroish.presentation.ui.violation.send.*
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -137,4 +140,12 @@ interface FragmentModule {
     fun bindIProtocolDetailsPresenter(implementation: ProtocolDetailsPresenter):
             IProtocolDetailsPresenter
     //endregion Protocol Details screen
+
+    //region ViolationsList screen
+    @ContributesAndroidInjector
+    fun bindViolationsListFragment(): ViolationsListFragment
+
+    @Binds
+    fun bindIViolationsListPresenter(implemenation: ViolationsListPresenter): IViolationsListPresenter
+    //endregion ViolationsList screen
 }

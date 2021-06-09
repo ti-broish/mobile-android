@@ -11,4 +11,5 @@
     <color name="secondary_button_background">#b8b8b8</color>
     <color name="dirtyWhite">#F0F0F0</color>
     <color name="half_transparent_white">#7FFFFFFF</color>
+
 </resources>

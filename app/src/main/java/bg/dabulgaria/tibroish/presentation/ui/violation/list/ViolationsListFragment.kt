@@ -1,4 +1,4 @@
-package bg.dabulgaria.tibroish.presentation.ui.protocol.list
+package bg.dabulgaria.tibroish.presentation.ui.violation.list
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,28 +10,28 @@ import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
 import bg.dabulgaria.tibroish.presentation.ui.common.IDialogUtil
-import bg.dabulgaria.tibroish.presentation.ui.protocol.list.ProtocolsPresenter.State
-import kotlinx.android.synthetic.main.fragment_protocols_list.*
+import bg.dabulgaria.tibroish.presentation.ui.violation.list.ViolationsListPresenter.State
+import kotlinx.android.synthetic.main.fragment_violations_list.*
 import javax.inject.Inject
 
-interface IProtocolsView : IBaseView {
+interface IViolationsListView : IBaseView {
 
 }
 
-class ProtocolsFragment : BasePresentableFragment<IProtocolsView,
-        IProtocolsPresenter>
-    (), IProtocolsView {
+class ViolationsListFragment
+    : BasePresentableFragment<IViolationsListView, IViolationsListPresenter>(), IViolationsListView {
 
     @Inject
     lateinit var dialogUtil: IDialogUtil
 
     @Inject
-    lateinit var adapter: ProtocolsAdapter
+    lateinit var adapter: ViolationsAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(
-        R.layout.fragment_protocols_list, container, false
+        R.layout.fragment_violations_list, container, false
     )
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -42,20 +42,20 @@ class ProtocolsFragment : BasePresentableFragment<IProtocolsView,
         updateState()
 
         listSwipeRefreshLayout.setOnRefreshListener {
-            refreshMyProtocols(initialLoading = false)
+            refreshMyViolations(initialLoading = false)
         }
     }
 
     private fun updateState() {
         when (presenter.getState()) {
-            State.STATE_LOADING_INITIAL -> refreshMyProtocols(initialLoading = true)
+            State.STATE_LOADING_INITIAL -> refreshMyViolations(initialLoading = true)
             State.STATE_LOADING_SUBSEQUENT -> {
-                val cachedProtocols = presenter.getCachedProtocols()
+                val cachedProtocols = presenter.getCachedViolations()
                 if (cachedProtocols != null) {
                     adapter.updateList(cachedProtocols)
                 }
                 showList()
-                refreshMyProtocols(initialLoading = false)
+                refreshMyViolations(initialLoading = false)
             }
             State.STATE_LOADED_SUCCESS -> showList()
             State.STATE_LOADED_FAILURE -> showList()
@@ -73,12 +73,12 @@ class ProtocolsFragment : BasePresentableFragment<IProtocolsView,
         listRecyclerView.adapter = adapter
         adapter.onItemClickListener = View.OnClickListener {
             val position: Int = listRecyclerView.getChildLayoutPosition(it)
-            presenter.showProtocolAt(position)
+            presenter.showViolationAt(position)
         }
     }
 
-    private fun refreshMyProtocols(initialLoading: Boolean) {
-        presenter.getMyProtocols(initialLoading) {
+    private fun refreshMyViolations(initialLoading: Boolean) {
+        presenter.getMyViolations(initialLoading) {
             adapter.updateList(it)
             listSwipeRefreshLayout.isRefreshing = false
             updateState()
@@ -90,9 +90,11 @@ class ProtocolsFragment : BasePresentableFragment<IProtocolsView,
     }
 
     companion object {
-        val TAG = ProtocolsFragment::class.java.simpleName
+
+        val TAG = ViolationsListFragment::class.java.simpleName
 
         @JvmStatic
-        fun newInstance() = ProtocolsFragment()
+        fun newInstance() = ViolationsListFragment()
+
     }
 }
