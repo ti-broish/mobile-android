@@ -11,6 +11,7 @@ enum class ViolationRemoteStatus(val stringValue:String){
     @SerializedName("received") Received("received"),
     @SerializedName("processing") Processing("processing"),
     @SerializedName("processed") Processed("processed"),
+    @SerializedName("approved") Approved("approved"),
     @SerializedName("rejected") Rejected("rejected");
 
     companion object {

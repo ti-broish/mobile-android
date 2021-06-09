@@ -30,6 +30,7 @@ import bg.dabulgaria.tibroish.presentation.ui.violation.send.SendViolationFragme
 import java.io.File
 import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsFragment
 import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsViewData
+import bg.dabulgaria.tibroish.presentation.ui.violation.list.ViolationsListFragment
 import javax.inject.Inject
 
 class MainRouter @Inject constructor(@AppContext private val appContext: Context )
@@ -72,9 +73,11 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
                 showSendViolation()
             }
             NavItemAction.MyProtocols -> {
-                showMyProtocols();
+                showMyProtocols()
             }
-            NavItemAction.MySignals -> {}
+            NavItemAction.MySignals -> {
+                showViolations()
+            }
             NavItemAction.RightsAndObligations -> {
                 showRightsAndObligations()
             }
@@ -268,6 +271,18 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
         }
 
         view?.showScreen(content, RightsAndObligationsFragment.TAG, addToBackStack = true, transitionContent = true)
+    }
+
+    override fun showViolations(){
+
+        var content = view?.supportFragmentMngr?.findFragmentByTag(ViolationsListFragment.TAG )
+        if (content == null) {
+
+            clearBackStack()
+            content = ViolationsListFragment.newInstance()
+        }
+
+        view?.showScreen(content, ViolationsListFragment.TAG, addToBackStack = true, transitionContent = true)
     }
 
     private fun clearBackStack() {

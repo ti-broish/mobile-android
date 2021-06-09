@@ -7,6 +7,7 @@ import bg.dabulgaria.tibroish.presentation.ui.common.item.send.SendItemFragment
 import bg.dabulgaria.tibroish.presentation.ui.common.item.send.SendItemViewData
 import javax.inject.Inject
 
+
 class SendViolationFragment @Inject constructor() : SendItemFragment<ISendViolationPresenter>() {
 
     companion object {

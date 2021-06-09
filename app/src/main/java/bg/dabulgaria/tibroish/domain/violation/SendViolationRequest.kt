@@ -18,7 +18,7 @@ class SendViolationRequest constructor(
 
 class VoteViolationRemote(
         val id: String,
-        val section: SectionRemote,
+        val section: SectionRemote?,
         val pictures: List<PictureDto>,
         val description: String,
         val status: ViolationRemoteStatus,

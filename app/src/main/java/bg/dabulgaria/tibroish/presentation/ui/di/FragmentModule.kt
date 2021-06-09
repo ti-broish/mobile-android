@@ -14,12 +14,15 @@ import bg.dabulgaria.tibroish.presentation.ui.profile.IProfilePresenter
 import bg.dabulgaria.tibroish.presentation.ui.profile.ProfileFragment
 import bg.dabulgaria.tibroish.presentation.ui.profile.ProfilePresenter
 import bg.dabulgaria.tibroish.presentation.ui.protocol.add.*
+
 import bg.dabulgaria.tibroish.presentation.ui.protocol.details.IProtocolDetailsPresenter
 import bg.dabulgaria.tibroish.presentation.ui.protocol.details.ProtocolDetailsFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.details.ProtocolDetailsPresenter
 import bg.dabulgaria.tibroish.presentation.ui.protocol.list.IProtocolsPresenter
 import bg.dabulgaria.tibroish.presentation.ui.protocol.list.ProtocolsFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.list.ProtocolsPresenter
+import bg.dabulgaria.tibroish.presentation.ui.protocol.list.IViolationsListPresenter
+import bg.dabulgaria.tibroish.presentation.ui.protocol.list.ViolationsListPresenter
 import bg.dabulgaria.tibroish.presentation.ui.registration.IRegistrationPresenter
 import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationFragment
 import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationPresenter
@@ -27,6 +30,7 @@ import bg.dabulgaria.tibroish.presentation.ui.violation.send.*
 import bg.dabulgaria.tibroish.presentation.ui.rights.IRightsAndObligationsPresenter
 import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsFragment
 import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsPresenter
+import bg.dabulgaria.tibroish.presentation.ui.violation.list.ViolationsListFragment
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -137,4 +141,12 @@ interface FragmentModule {
     fun bindIProtocolDetailsPresenter(implementation: ProtocolDetailsPresenter):
             IProtocolDetailsPresenter
     //endregion Protocol Details screen
+
+    //region ViolationsList screen
+    @ContributesAndroidInjector
+    fun bindViolationsListFragment(): ViolationsListFragment
+
+    @Binds
+    fun bindIViolationsListPresenter(implemenation: ViolationsListPresenter): IViolationsListPresenter
+    //endregion ViolationsList screen
 }
