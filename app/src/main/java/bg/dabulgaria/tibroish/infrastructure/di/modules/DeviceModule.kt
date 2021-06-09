@@ -10,20 +10,20 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class DeviceModule( val context : Context ){
+class DeviceModule(val context: Context) {
 
     @Provides
     @Singleton
-    fun providesNetworkInfoProvider() : INetworkInfoProvider{
+    fun providesNetworkInfoProvider(): INetworkInfoProvider {
 
-        return NetworkInfoProvider( context )
+        return NetworkInfoProvider(context)
     }
 
     @Provides
     @Singleton
-    fun providesResourceProvider() :IResourceProvider{
+    fun providesResourceProvider(): IResourceProvider {
 
-        return ResourceProvider( context )
+        return ResourceProvider(context)
     }
 
 }
