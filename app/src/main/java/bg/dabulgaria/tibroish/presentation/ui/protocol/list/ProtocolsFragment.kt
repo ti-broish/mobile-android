@@ -35,6 +35,14 @@ class ProtocolsFragment : BasePresentableFragment<IProtocolsView,
 
         setupRecyclerView()
 
+        updateState()
+
+        listSwipeRefreshLayout.setOnRefreshListener {
+            refreshMyProtocols(initialLoading = false)
+        }
+    }
+
+    private fun updateState() {
         when (presenter.getState()) {
             State.STATE_LOADING_INITIAL -> refreshMyProtocols(initialLoading = true)
             State.STATE_LOADING_SUBSEQUENT -> {
@@ -47,10 +55,6 @@ class ProtocolsFragment : BasePresentableFragment<IProtocolsView,
             }
             State.STATE_LOADED_SUCCESS -> showList()
             State.STATE_LOADED_FAILURE -> showList()
-        }
-
-        listSwipeRefreshLayout.setOnRefreshListener {
-            refreshMyProtocols(initialLoading = false)
         }
     }
 
@@ -73,8 +77,7 @@ class ProtocolsFragment : BasePresentableFragment<IProtocolsView,
         presenter.getMyProtocols(initialLoading) {
             adapter.updateList(it)
             listSwipeRefreshLayout.isRefreshing = false
-            progressBar.visibility = View.GONE
-            listSwipeRefreshLayout.visibility = View.VISIBLE
+            updateState()
         }
     }
 
