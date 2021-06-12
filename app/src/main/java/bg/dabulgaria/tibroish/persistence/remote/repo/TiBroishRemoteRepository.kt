@@ -12,6 +12,8 @@ import bg.dabulgaria.tibroish.domain.organisation.Organization
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolStatusRemote
 import bg.dabulgaria.tibroish.domain.protocol.SendProtocolRequest
+import bg.dabulgaria.tibroish.domain.user.SendCheckInRequest
+import bg.dabulgaria.tibroish.domain.user.SendCheckInResponse
 import bg.dabulgaria.tibroish.domain.user.User
 import bg.dabulgaria.tibroish.domain.violation.SendViolationRequest
 import bg.dabulgaria.tibroish.domain.violation.ViolationRemoteStatus
@@ -132,5 +134,16 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
             apiController.getViolations(getAuthorization(token))} !!
     }
 
-   private fun getAuthorization(idToken: String): String = "Bearer $idToken"
+
+    override fun sendCheckIn(request: SendCheckInRequest): SendCheckInResponse {
+
+        Thread.sleep(2000)
+        return SendCheckInResponse(request.section)
+
+        /* TODO uncomment when check in request is available
+        return authenticator.executeCall( { pParams, token ->
+            apiController.sendCheckIn(getAuthorization(token), pParams)}, request)!!*/
+    }
+
+    private fun getAuthorization(idToken: String): String = "Bearer $idToken"
 }

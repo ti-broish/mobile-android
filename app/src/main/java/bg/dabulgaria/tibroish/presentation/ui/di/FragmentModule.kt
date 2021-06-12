@@ -5,6 +5,7 @@ import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginFragment
 import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginPresenter
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerInteractor
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.SectionPickerInteractor
+import bg.dabulgaria.tibroish.presentation.ui.checkin.*
 import bg.dabulgaria.tibroish.presentation.ui.forgotpassword.ForgotPasswordFragment
 import bg.dabulgaria.tibroish.presentation.ui.forgotpassword.ForgotPasswordPresenter
 import bg.dabulgaria.tibroish.presentation.ui.forgotpassword.IForgotPasswordPresenter
@@ -148,4 +149,15 @@ interface FragmentModule {
     @Binds
     fun bindIViolationsListPresenter(implemenation: ViolationsListPresenter): IViolationsListPresenter
     //endregion ViolationsList screen
+
+    //region Send CheckIn screen
+    @ContributesAndroidInjector
+    fun bindSendCheckInFragment(): SendCheckInFragment
+
+    @Binds
+    fun bindsISendCheckInPresenter(presenter: SendCheckInPresenter): ISendCheckInPresenter
+
+    @Binds
+    fun bindsISendCheckInInteractor(interactor: SendCheckInInteractor): ISendCheckInInteractor
+    //endregion Send CheckIn screen
 }

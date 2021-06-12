@@ -100,4 +100,6 @@
     <string name="section_label">Секция:</string>
     <string name="protocol_picture_content_description">Снимка на протокол</string>
     <string name="description">Описание</string>
+    <string name="check_in">Отбелязване</string>
+    <string name="check_in_send_successfully">Отбелязването е изпратено успешно!</string>
 </resources>

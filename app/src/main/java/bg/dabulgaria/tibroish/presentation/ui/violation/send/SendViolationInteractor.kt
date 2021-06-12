@@ -4,6 +4,7 @@ package bg.dabulgaria.tibroish.presentation.ui.violation.send
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.image.PickedImageSource
 import bg.dabulgaria.tibroish.domain.io.IFileRepository
+import bg.dabulgaria.tibroish.domain.locations.ISelectedSectionLocalRepository
 import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
 import bg.dabulgaria.tibroish.domain.protocol.image.IImageCopier
 import bg.dabulgaria.tibroish.domain.providers.ILogger
@@ -39,7 +40,8 @@ class SendViolationInteractor @Inject constructor(sectionPickerInteractor: ISect
                                                   private val violationImageUploader: IViolationImageUploader,
                                                   private val selectedImagesProvider: IGallerySelectedImagesProvider,
                                                   private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
-                                                  private val resourceProvider: IResourceProvider)
+                                                  private val resourceProvider: IResourceProvider,
+                                                  private val selectedSectionLocalRepo: ISelectedSectionLocalRepository)
     : SendItemInteractor(sectionPickerInteractor,
         disposableHandler,
         schedulersProvider,
@@ -127,6 +129,8 @@ class SendViolationInteractor @Inject constructor(sectionPickerInteractor: ISect
 
         if(viewData.entityItem == null)
             viewData.entityItem = addNew()
+
+        selectedSectionLocalRepo.selectedSectionData = viewData.sectionsData
 
         val entity = viewData.entityItem?: return
         val violationId = entity.id

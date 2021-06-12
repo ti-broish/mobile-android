@@ -1,8 +1,7 @@
 package bg.dabulgaria.tibroish.presentation.ui.common.item.send
 
-import android.text.SpannableString
 import bg.dabulgaria.tibroish.domain.send.ImageSendStatus
-import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.SectionsViewData
+import bg.dabulgaria.tibroish.domain.locations.SectionsViewData
 import java.io.Serializable
 
 enum class SendItemListItemType {
@@ -30,7 +29,7 @@ class SendItemListItemSection(var sectionsViewData: SectionsViewData?)
 class SendItemListItemImage(val image: EntityItemImage)
     : SendItemListItem(SendItemListItemType.Image), Serializable
 
-class SendItemListItemButtons
+class SendItemListItemButtons(val supportsImages: Boolean)
     : SendItemListItem(SendItemListItemType.Buttons), Serializable
 
 class SendItemListItemSendSuccess(val messageText: String)

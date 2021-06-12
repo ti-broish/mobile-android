@@ -7,8 +7,8 @@ import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerInteractor
-import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.SectionViewType
-import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.SectionsViewData
+import bg.dabulgaria.tibroish.domain.locations.SectionViewType
+import bg.dabulgaria.tibroish.domain.locations.SectionsViewData
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoId
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
@@ -53,12 +53,11 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
 
     abstract fun addImageToRepo(itemId: Long, imageFilePath: String, width: Int, height: Int)
 
-    open val supportsMessage:Boolean = false
-
+    open val supportsMessage: Boolean = false
     open val messageLabel:String = ""
-
     open val hideUniqueUntilSectionGetsSelected = false
     open val sectionIsRequired = true
+    open val supportsImages: Boolean = true
     
     var imageUploadDisposable :Disposable?=null
 
@@ -70,13 +69,9 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
         newViewData.entityItem = viewData.entityItem
         newViewData.message = viewData.message
 
-        if(viewData.sectionsData == null)
-            viewData.sectionsData = SectionsViewData(SectionViewType.Home).apply{
-                this.hideUniqueUntilSectionIsSelected = hideUniqueUntilSectionGetsSelected
-                this.isSectionRequired = sectionIsRequired
-            }
-
-        newViewData.sectionsData = loadSectionsData(viewData.sectionsData)
+        newViewData.sectionsData = loadSectionsData(null)
+        newViewData.sectionsData?.hideUniqueUntilSectionIsSelected = hideUniqueUntilSectionGetsSelected
+        newViewData.sectionsData?.isSectionRequired = sectionIsRequired
 
         addSelectedGalleryImages(newViewData)
 
@@ -94,7 +89,7 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
         for( photo in newViewData.entityItem?.images.orEmpty())
             newViewData.items.add(SendItemListItemImage(photo))
 
-        newViewData.items.add(SendItemListItemButtons())
+        newViewData.items.add(SendItemListItemButtons(supportsImages))
 
         newViewData.entityItem?.id?.let { startImageUpload(it) }
 
