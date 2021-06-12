@@ -5,6 +5,7 @@ import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.protocol.image.IProtocolImageUploader
 import bg.dabulgaria.tibroish.domain.image.PickedImageSource
 import bg.dabulgaria.tibroish.domain.io.IFileRepository
+import bg.dabulgaria.tibroish.domain.locations.ISelectedSectionLocalRepository
 import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
 import bg.dabulgaria.tibroish.domain.protocol.*
 import bg.dabulgaria.tibroish.domain.protocol.image.IImageCopier
@@ -37,7 +38,8 @@ class AddProtocolInteractor @Inject constructor(sectionPickerInteractor: ISectio
                                                 private val selectedImagesProvider: IGallerySelectedImagesProvider,
                                                 private val protocolImagesRepo: IProtocolImagesRepository,
                                                 private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
-                                                private val resourceProvider: IResourceProvider)
+                                                private val resourceProvider: IResourceProvider,
+                                                private val selectedSectionLocalRepo: ISelectedSectionLocalRepository)
     : SendItemInteractor(sectionPickerInteractor,
         disposableHandler,
         schedulersProvider,
@@ -110,6 +112,8 @@ class AddProtocolInteractor @Inject constructor(sectionPickerInteractor: ISectio
     }
 
     override fun sendItemConcrete(viewData: SendItemViewData) {
+
+        selectedSectionLocalRepo.selectedSectionData = viewData.sectionsData
 
         val protocolId = viewData.entityItem!!.id
         protocolImageUploader.uploadImages(protocolId)

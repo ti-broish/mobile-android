@@ -21,9 +21,9 @@ import javax.inject.Inject
 class HomeFragment : BaseFragment() {
 
     @Inject
-    protected lateinit var mMainRouter: IMainRouter
+    protected lateinit var mainRouter: IMainRouter
     @Inject
-    lateinit var mTiBroishRemoteRepository: ITiBroishRemoteRepository
+    lateinit var tiBroishRemoteRepository: ITiBroishRemoteRepository
     @Inject
     lateinit var logger: ILogger
     @Inject
@@ -43,9 +43,10 @@ class HomeFragment : BaseFragment() {
     override fun onStart() {
         super.onStart()
 
-        sendProtocol?.setOnClickListener {  mMainRouter.onNavigateToItem( NavItemAction.SendProtocol) }
-        sendSignal?.setOnClickListener {  mMainRouter.onNavigateToItem( NavItemAction.SendSignal) }
-        rightsAndObligations?.setOnClickListener {  mMainRouter.onNavigateToItem( NavItemAction.RightsAndObligations) }
+        sendProtocol?.setOnClickListener { mainRouter.onNavigateToItem(NavItemAction.SendProtocol) }
+        sendSignal?.setOnClickListener { mainRouter.onNavigateToItem(NavItemAction.SendSignal) }
+        rightsAndObligations?.setOnClickListener { mainRouter.onNavigateToItem(NavItemAction.RightsAndObligations) }
+        homeCheckIn?.setOnClickListener { mainRouter.onNavigateToItem(NavItemAction.CheckIn) }
 
         initLiveButton()
     }
@@ -69,7 +70,7 @@ class HomeFragment : BaseFragment() {
 
         tiBroishLive?.text = spannableString
 
-        tiBroishLive?.setOnClickListener {  mMainRouter.onNavigateToItem( NavItemAction.YouCountLive ) }
+        tiBroishLive?.setOnClickListener {  mainRouter.onNavigateToItem( NavItemAction.YouCountLive ) }
     }
 
     companion object {

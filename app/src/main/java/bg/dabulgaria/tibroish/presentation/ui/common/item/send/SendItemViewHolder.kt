@@ -76,8 +76,23 @@ class SendItemButtonsViewHolder(itemView: View) : SendItemViewHolder(itemView) {
 
     override fun bind(position: Int, item: SendItemListItem, presenter: ISendItemPresenter) {
 
-        itemView.sendItemGalleryBtn?.setOnClickListener { presenter.onAddFromGalleryClick() }
-        itemView.sendItemCameraBtn?.setOnClickListener { presenter.onAddFromCameraClick() }
+        if (item.type != SendItemListItemType.Buttons)
+            return
+
+        val sendButtons = item as SendItemListItemButtons
+        val imagesVisibility = if(sendButtons.supportsImages) View.VISIBLE else View.GONE
+        itemView.sendItemGalleryBtn.visibility = imagesVisibility
+        itemView.sendItemCameraBtn.visibility = imagesVisibility
+
+        if(sendButtons.supportsImages) {
+            itemView.sendItemGalleryBtn?.setOnClickListener { presenter.onAddFromGalleryClick() }
+            itemView.sendItemCameraBtn?.setOnClickListener { presenter.onAddFromCameraClick() }
+        }
+        else {
+            itemView.sendItemGalleryBtn?.setOnClickListener(null)
+            itemView.sendItemCameraBtn?.setOnClickListener(null)
+        }
+
         itemView.sendItemContinueBtn?.setOnClickListener { presenter.onContinue() }
     }
 }
