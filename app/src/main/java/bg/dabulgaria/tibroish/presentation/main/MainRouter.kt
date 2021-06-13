@@ -16,6 +16,7 @@ import bg.dabulgaria.tibroish.presentation.ui.common.item.send.SendItemViewData
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
 import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginFragment
+import bg.dabulgaria.tibroish.presentation.ui.checkin.SendCheckInFragment
 import bg.dabulgaria.tibroish.presentation.ui.forgotpassword.ForgotPasswordFragment
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.camera.CameraPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoId
@@ -65,6 +66,9 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
             }
             NavItemAction.Profile ->{
                 showProfile()
+            }
+            NavItemAction.CheckIn -> {
+                showCheckIn()
             }
             NavItemAction.SendProtocol -> {
                 showAddProtocol()
@@ -273,9 +277,9 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
         view?.showScreen(content, RightsAndObligationsFragment.TAG, addToBackStack = true, transitionContent = true)
     }
 
-    override fun showViolations(){
+    override fun showViolations() {
 
-        var content = view?.supportFragmentMngr?.findFragmentByTag(ViolationsListFragment.TAG )
+        var content = view?.supportFragmentMngr?.findFragmentByTag(ViolationsListFragment.TAG)
         if (content == null) {
 
             clearBackStack()
@@ -283,6 +287,18 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
         }
 
         view?.showScreen(content, ViolationsListFragment.TAG, addToBackStack = true, transitionContent = true)
+    }
+
+    private fun showCheckIn() {
+
+        var content = view?.supportFragmentMngr?.findFragmentByTag(SendCheckInFragment.TAG )
+        if (content == null) {
+
+            clearBackStack()
+            content = SendCheckInFragment.newInstance(SendItemViewData())
+        }
+
+        view?.showScreen(content, SendCheckInFragment.TAG, addToBackStack = true, transitionContent = true)
     }
 
     private fun clearBackStack() {

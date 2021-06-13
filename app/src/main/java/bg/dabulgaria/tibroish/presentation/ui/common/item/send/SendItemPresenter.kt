@@ -13,8 +13,8 @@ import bg.dabulgaria.tibroish.persistence.local.Folders
 import bg.dabulgaria.tibroish.presentation.event.CameraPhotoTakenEvent
 import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerPresenter
-import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.SectionViewType
-import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.SectionsViewData
+import bg.dabulgaria.tibroish.domain.locations.SectionViewType
+import bg.dabulgaria.tibroish.domain.locations.SectionsViewData
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import org.greenrobot.eventbus.Subscribe
@@ -201,7 +201,7 @@ constructor(private val schedulersProvider: ISchedulersProvider,
         view?.onLoadingStateChange(true)
 
         add( Single.fromCallable{ interactor.loadSectionsData(
-                SectionsViewData(if(abroad)
+                SectionsViewData(if (abroad)
                     SectionViewType.Abroad
                 else
                     SectionViewType.Home).apply {
@@ -263,7 +263,7 @@ constructor(private val schedulersProvider: ISchedulersProvider,
     }
     //endregion ISectionPickerPresenter implementation
 
-    private fun <ItemType> onSectionFieldSelected(item:ItemType, loadMethod:(data:SectionsViewData, item:ItemType )->SectionsViewData){
+    private fun <ItemType> onSectionFieldSelected(item:ItemType, loadMethod:(data: SectionsViewData, item:ItemType )-> SectionsViewData){
 
         val sectionsData = data?.sectionsData ?:return
 
@@ -290,7 +290,7 @@ constructor(private val schedulersProvider: ISchedulersProvider,
         view?.setData(currentData)
     }
 
-    private fun onSectionDataLoaded(sectionsData:SectionsViewData){
+    private fun onSectionDataLoaded(sectionsData: SectionsViewData){
 
         val currentData = data?:
         return

@@ -5,6 +5,8 @@ import bg.dabulgaria.tibroish.domain.image.UploadImageResponse
 import bg.dabulgaria.tibroish.domain.locations.*
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.domain.protocol.SendProtocolRequest
+import bg.dabulgaria.tibroish.domain.user.SendCheckInRequest
+import bg.dabulgaria.tibroish.domain.user.SendCheckInResponse
 import bg.dabulgaria.tibroish.domain.user.User
 import bg.dabulgaria.tibroish.domain.violation.SendViolationRequest
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
@@ -44,4 +46,6 @@ interface ITiBroishRemoteRepository {
     fun getUserProtocols(): List<ProtocolRemote>
 
     fun getViolations():List<VoteViolationRemote>
+
+    fun sendCheckIn(request: SendCheckInRequest): SendCheckInResponse
 }
