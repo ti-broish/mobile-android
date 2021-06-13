@@ -8,33 +8,36 @@ import javax.inject.Inject
 
 interface ISectionPickerInteractor {
 
-    fun loadSectionsData(oldData:SectionsViewData?):SectionsViewData
+    fun loadSectionsData(oldData: SectionsViewData?): SectionsViewData
 
-    fun onCountrySelected(oldData:SectionsViewData, country:CountryRemote):SectionsViewData
+    fun onCountrySelected(oldData: SectionsViewData, country:CountryRemote): SectionsViewData
 
-    fun onElectionRegionSelected(oldData:SectionsViewData, electionRegion:ElectionRegionRemote): SectionsViewData
+    fun onElectionRegionSelected(oldData: SectionsViewData, electionRegion:ElectionRegionRemote): SectionsViewData
 
-    fun onMunicipalitySelected(oldData:SectionsViewData, municipality: MunicipalityRemote): SectionsViewData
+    fun onMunicipalitySelected(oldData: SectionsViewData, municipality: MunicipalityRemote): SectionsViewData
 
-    fun onTownSelected(oldData:SectionsViewData, town: TownRemote): SectionsViewData
+    fun onTownSelected(oldData: SectionsViewData, town: TownRemote): SectionsViewData
 
-    fun onCityRegionSelected(oldData:SectionsViewData, cityRegion: CityRegionRemote): SectionsViewData
+    fun onCityRegionSelected(oldData: SectionsViewData, cityRegion: CityRegionRemote): SectionsViewData
 
-    fun onSectionSelected(oldData:SectionsViewData, section: SectionRemote): SectionsViewData
+    fun onSectionSelected(oldData: SectionsViewData, section: SectionRemote): SectionsViewData
 
     var autoFillSection: Boolean
 }
 
-class SectionPickerInteractor @Inject constructor(private val apiRepo: ITiBroishRemoteRepository) :ISectionPickerInteractor{
+class SectionPickerInteractor
+@Inject constructor(private val apiRepo: ITiBroishRemoteRepository,
+                    private val selectedSectionLocalRepo: ISelectedSectionLocalRepository)
+    :ISectionPickerInteractor{
 
     override var autoFillSection:Boolean = true
 
-    override fun loadSectionsData(oldData:SectionsViewData?):SectionsViewData{
+    override fun loadSectionsData(oldData: SectionsViewData?): SectionsViewData {
 
         val data = if(oldData!= null)
             SectionsViewData(oldData)
-        else
-            SectionsViewData(SectionViewType.Home)
+        else selectedSectionLocalRepo.selectedSectionData
+                ?: SectionsViewData(SectionViewType.Home)
 
         if(data.countries.isEmpty() || data.electionRegions.isEmpty()) {
 
@@ -98,7 +101,7 @@ class SectionPickerInteractor @Inject constructor(private val apiRepo: ITiBroish
         return data
     }
 
-    override fun onCountrySelected(oldData:SectionsViewData, country:CountryRemote):SectionsViewData{
+    override fun onCountrySelected(oldData: SectionsViewData, country:CountryRemote): SectionsViewData {
 
         val data = SectionsViewData(oldData)
         data.selectedElectionRegion = null

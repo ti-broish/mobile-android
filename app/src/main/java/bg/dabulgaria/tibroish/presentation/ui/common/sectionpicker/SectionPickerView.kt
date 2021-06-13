@@ -1,16 +1,14 @@
 package bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker
 
 import android.content.Context
-import android.os.Build
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.View
 import android.widget.AdapterView
 import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.domain.locations.SectionViewType
+import bg.dabulgaria.tibroish.domain.locations.SectionsViewData
 import bg.dabulgaria.tibroish.presentation.providers.getSpannableStringRedWarnStar
 import kotlinx.android.synthetic.main.layout_sections_view.view.*
 

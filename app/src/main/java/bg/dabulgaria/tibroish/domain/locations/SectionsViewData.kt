@@ -1,9 +1,8 @@
-package bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker
+package bg.dabulgaria.tibroish.domain.locations
 
-import bg.dabulgaria.tibroish.domain.locations.*
 import java.io.Serializable
 
-enum class SectionViewType {
+enum class SectionViewType: Serializable {
     Home, HomeCityRegion, Abroad
 }
 
