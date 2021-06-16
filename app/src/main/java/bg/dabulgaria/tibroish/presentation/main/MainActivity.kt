@@ -41,7 +41,6 @@ class MainActivity : BaseActivity(),
 
     private lateinit var navController: NavController
 
-    private val events = mutableListOf<Any>()
     private var isStarted = false
 
     //region AppCompatActivity overrides
@@ -93,11 +92,6 @@ class MainActivity : BaseActivity(),
 
         if (requestCode == PhotoPickerConstants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 
-            val event = CameraPhotoTakenEvent()
-            if( isStarted )
-                EventBus.getDefault().post(event)
-            else
-                events.add(event)
         }
     }
 
@@ -105,8 +99,6 @@ class MainActivity : BaseActivity(),
 
         super.onStart()
         isStarted = true
-        events.map {  event -> EventBus.getDefault().post(event) }
-        events.clear()
     }
 
     override fun onStop() {

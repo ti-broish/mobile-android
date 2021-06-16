@@ -2,6 +2,7 @@ package bg.dabulgaria.tibroish.presentation.ui.common.item.send
 
 import android.graphics.BitmapFactory
 import bg.dabulgaria.tibroish.domain.image.IEntityImageUploader
+import bg.dabulgaria.tibroish.domain.io.IFileRepository
 import bg.dabulgaria.tibroish.domain.protocol.image.IImageCopier
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
@@ -9,6 +10,7 @@ import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerInteractor
 import bg.dabulgaria.tibroish.domain.locations.SectionViewType
 import bg.dabulgaria.tibroish.domain.locations.SectionsViewData
+import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoId
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
@@ -32,11 +34,13 @@ interface ISendItemInteractor :ISectionPickerInteractor, IDisposableHandler {
 }
 
 abstract class SendItemInteractor constructor(protected val sectionPickerInteractor: ISectionPickerInteractor,
-                                                      disposableHandler: IDisposableHandler,
-                                                      protected val schedulersProvider: ISchedulersProvider,
-                                                      protected val logger: ILogger,
-                                                      protected val entityImageUploader: IEntityImageUploader,
-                                                      protected val imageCopier:IImageCopier)
+                                              disposableHandler: IDisposableHandler,
+                                              protected val schedulersProvider: ISchedulersProvider,
+                                              protected val logger: ILogger,
+                                              protected val entityImageUploader: IEntityImageUploader,
+                                              protected val imageCopier:IImageCopier,
+                                              protected val fileRepo: IFileRepository,
+                                              protected  val cameraTakenImageProvider: ICameraTakenImageProvider)
     : ISendItemInteractor,
         ISectionPickerInteractor by sectionPickerInteractor,
         IDisposableHandler by disposableHandler{
@@ -69,11 +73,13 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
         newViewData.entityItem = viewData.entityItem
         newViewData.message = viewData.message
 
-        newViewData.sectionsData = loadSectionsData(null)
+        newViewData.sectionsData = loadSectionsData(viewData.sectionsData)
         newViewData.sectionsData?.hideUniqueUntilSectionIsSelected = hideUniqueUntilSectionGetsSelected
         newViewData.sectionsData?.isSectionRequired = sectionIsRequired
 
         addSelectedGalleryImages(newViewData)
+
+        addCameraImage(newViewData)
 
         val entityItemId = newViewData.entityItem?.id ?:0
         if(entityItemId > 0)
@@ -91,26 +97,27 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
 
         newViewData.items.add(SendItemListItemButtons(supportsImages))
 
-        newViewData.entityItem?.id?.let { startImageUpload(it) }
-
         return newViewData
     }
 
     override fun deleteImage(image: EntityItemImage) {
 
-        stopUpload()
-
         deleteImageConcrete(image)
-
-        startImageUpload(image.entityId)
     }
 
     override fun addCameraImage(viewData: SendItemViewData) {
 
+        val path = cameraTakenImageProvider.cameraImagePath
+        if(path.isEmpty())
+            return
+
+        if(fileRepo.getFileSizeKb(path) < MIN_FILE_SIZE_KB)
+            return
+
         val itemId = viewData.entityItem?.id
                 ?:return
 
-        val imageFilePath = imageCopier.copyToLocalUploadsFolder(viewData.imageForCameraPath)
+        val imageFilePath = imageCopier.copyToLocalUploadsFolder(path)
                 ?: return
 
         val options = BitmapFactory.Options()
@@ -121,32 +128,16 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
 
         addImageToRepo(itemId, imageFilePath, width, height)
 
-        startImageUpload(itemId)
+        cameraTakenImageProvider.cameraImagePath = ""
     }
 
     override fun sendItem(viewData: SendItemViewData) {
-
-        stopUpload()
 
         sendItemConcrete(viewData)
     }
     //endregion ISendItemInteractor implementation
 
     //region private methods
-    private fun startImageUpload(itemId: Long){
-
-        stopUpload()
-
-        imageUploadDisposable = Single.fromCallable { retryUploadImages(itemId) }
-                .subscribeOn(schedulersProvider.ioScheduler())
-                .observeOn(schedulersProvider.ioScheduler())
-                .subscribe({  },
-                        { e: Throwable? ->
-                            logger.e(TAG, e)
-                        })
-
-        imageUploadDisposable?.let { add(it) }
-    }
 
     private fun retryUploadImages(itemId: Long){
 
@@ -171,5 +162,6 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
     companion object {
 
         private val TAG = SendItemInteractor::class.simpleName
+        private val MIN_FILE_SIZE_KB = 1024
     }
 }

@@ -18,6 +18,7 @@ import bg.dabulgaria.tibroish.domain.violation.image.IViolationImagesRepository
 import bg.dabulgaria.tibroish.domain.violation.image.ViolationImage
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
+import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
 import bg.dabulgaria.tibroish.presentation.providers.IGallerySelectedImagesProvider
 import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
 import bg.dabulgaria.tibroish.presentation.ui.common.item.send.*
@@ -35,8 +36,9 @@ class SendViolationInteractor @Inject constructor(sectionPickerInteractor: ISect
                                                   logger: ILogger,
                                                   private val violationsRepo: IViolationRepository,
                                                   private val violationImagesRepo: IViolationImagesRepository,
-                                                  private val fileRepo: IFileRepository,
+                                                  fileRepo: IFileRepository,
                                                   imageCopier: IImageCopier,
+                                                  cameraTakenImageProvider: ICameraTakenImageProvider,
                                                   private val violationImageUploader: IViolationImageUploader,
                                                   private val selectedImagesProvider: IGallerySelectedImagesProvider,
                                                   private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
@@ -47,7 +49,9 @@ class SendViolationInteractor @Inject constructor(sectionPickerInteractor: ISect
         schedulersProvider,
         logger,
         violationImageUploader,
-        imageCopier),
+        imageCopier,
+        fileRepo,
+        cameraTakenImageProvider),
         ISendViolationInteractor {
 
     init {

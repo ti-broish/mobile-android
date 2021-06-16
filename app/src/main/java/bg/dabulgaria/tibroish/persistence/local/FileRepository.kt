@@ -107,6 +107,12 @@ class FileRepository @Inject constructor(@AppContext private val context: Contex
         return "data:$mimeType;base64,${String(Base64.encode(bytes, Base64.DEFAULT), Charsets.UTF_8 )}"
     }
 
+    override fun getFileSizeKb(filePath: String): Int {
+
+        val file = File(filePath)
+        return (file.length() / KB).toInt()
+    }
+
     private fun getMimeType(file: File):String? {
 
         val uri = Uri.fromFile(file)
@@ -126,5 +132,6 @@ class FileRepository @Inject constructor(@AppContext private val context: Contex
 
     companion object{
         val LOG_TAG = FileRepository::class.java.simpleName
+        val KB = 1024
     }
 }

@@ -44,7 +44,6 @@ class SendItemViewData() : Serializable {
     var entityItem: EntityItem? = null
     val items = mutableListOf<SendItemListItem>()
     var sectionsData: SectionsViewData? = null
-    var imageForCameraPath: String = ""
     var message: String = ""
 
     constructor(source: SendItemViewData) : this() {
@@ -52,7 +51,6 @@ class SendItemViewData() : Serializable {
         this.entityItem = source.entityItem
         this.items.addAll(source.items)
         this.sectionsData = source.sectionsData
-        this.imageForCameraPath = source.imageForCameraPath
     }
 }
 

@@ -10,15 +10,12 @@ import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.persistence.local.Folders
-import bg.dabulgaria.tibroish.presentation.event.CameraPhotoTakenEvent
 import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerPresenter
 import bg.dabulgaria.tibroish.domain.locations.SectionViewType
 import bg.dabulgaria.tibroish.domain.locations.SectionsViewData
-import io.reactivex.rxjava3.core.Completable
+import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
 import io.reactivex.rxjava3.core.Single
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 
 interface ISendItemPresenter : IBasePresenter<ISendItemView>, ISectionPickerPresenter {
@@ -42,10 +39,13 @@ constructor(private val schedulersProvider: ISchedulersProvider,
             private val interactor: ISendItemInteractor,
             private val fileRepository: IFileRepository,
             private val logger: ILogger,
-            disposableHandler: IDisposableHandler)
+            disposableHandler: IDisposableHandler,
+            private val cameraTakenImageProvider: ICameraTakenImageProvider)
     : BasePresenter<ISendItemView>(disposableHandler), ISendItemPresenter {
 
-    override val registerEventBus = true
+    init {
+        logger.i(TAG, "SendItemPresenter constructor")
+    }
 
     var data: SendItemViewData? = null
 
@@ -55,7 +55,9 @@ constructor(private val schedulersProvider: ISchedulersProvider,
 
     //region ISendItemPresenter implementation
     override fun onRestoreData(bundle: Bundle?) {
+
         bundle?.let {
+
             data = bundle.getSerializable(SendItemConstants.VIEW_DATA_KEY) as SendItemViewData?
         }
     }
@@ -66,6 +68,7 @@ constructor(private val schedulersProvider: ISchedulersProvider,
 
     override fun loadData() {
 
+        logger.i(TAG, "loadData()" )
         val currentData = data?:return
 
         view?.onLoadingStateChange(true)
@@ -122,8 +125,9 @@ constructor(private val schedulersProvider: ISchedulersProvider,
 
                     view?.onLoadingStateChange(false)
                     currentData.entityItem = pair.first
-                    currentData.imageForCameraPath = pair.second
-                    mainRouter.openCamera(currentData.imageForCameraPath)
+                    val path = pair.second
+                    cameraTakenImageProvider.cameraImagePath = path
+                    mainRouter.openCamera(path)
                 },{
 
                     view?.onLoadingStateChange(false)
@@ -303,29 +307,6 @@ constructor(private val schedulersProvider: ISchedulersProvider,
             view?.hideSoftKeyboard()
 
         view?.setSectionsData(currentData)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onCameraPhotoTakenEvent(event: CameraPhotoTakenEvent){
-
-        val viewData = data
-                ?:return
-
-        if( viewData.imageForCameraPath.isEmpty())
-            return
-
-        view?.onLoadingStateChange(true)
-
-        add( Completable.fromCallable { interactor.addCameraImage(viewData = viewData) }
-                .subscribeOn(schedulersProvider.ioScheduler())
-                .observeOn(schedulersProvider.uiScheduler())
-                .subscribe({
-                    loadData()
-                }, {th->
-
-                    logger.e(TAG, th)
-                    view?.onLoadingStateChange(false)
-                }))
     }
 
     companion object {

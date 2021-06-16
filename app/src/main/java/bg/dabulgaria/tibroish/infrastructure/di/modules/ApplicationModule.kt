@@ -20,8 +20,10 @@ import bg.dabulgaria.tibroish.presentation.main.IMainPresenter
 import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.main.MainPresenter
 import bg.dabulgaria.tibroish.presentation.main.MainRouter
+import bg.dabulgaria.tibroish.presentation.providers.CameraTakenImageProvider
 import bg.dabulgaria.tibroish.presentation.ui.common.*
 import bg.dabulgaria.tibroish.presentation.providers.GallerySelectedImagesProvider
+import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
 import bg.dabulgaria.tibroish.presentation.providers.IGallerySelectedImagesProvider
 import bg.dabulgaria.tibroish.presentation.ui.common.DialogUtil
 import bg.dabulgaria.tibroish.presentation.ui.common.FormValidator
@@ -133,4 +135,9 @@ class ApplicationModule {
     fun providesStatusColorUtil(): IStatusColorUtil {
         return StatusColorUtil()
     }
+
+    @Provides
+    @Singleton
+    internal fun providesICameraTakenImageProvider(implementation: CameraTakenImageProvider): ICameraTakenImageProvider
+            = implementation
 }

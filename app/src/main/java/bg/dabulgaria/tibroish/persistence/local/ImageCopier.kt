@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 class ImageCopier @Inject constructor(@AppContext private val context: Context,
                                       private val logger: ILogger,
-                                      private val fileReposotiry: IFileRepository,
+                                      private val fileRepository: IFileRepository,
                                       private val stremCopier:IStreamCopier) :IImageCopier {
 
     override fun copyToLocalUploadsFolder(localFileUrlPath: String): String? {
@@ -32,7 +32,7 @@ class ImageCopier @Inject constructor(@AppContext private val context: Context,
         if (localFileUrlPath.isEmpty())
             throw Exception("Empty file path.")
 
-        val folderPath = fileReposotiry.getFolder(folderName)!!.absolutePath
+        val folderPath = fileRepository.getFolder(folderName)!!.absolutePath
         val newFileName = UUID.randomUUID().toString()+".jpg"
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
@@ -57,7 +57,7 @@ class ImageCopier @Inject constructor(@AppContext private val context: Context,
             if (fileName.isEmpty())
                 fileName = localFile.name
 
-            val newFile = fileReposotiry.createNewFile(folderPath, fileName)
+            val newFile = fileRepository.createNewFile(folderPath, fileName)
                     ?:return null
 
             stremCopier.copy(FileInputStream(localFile), FileOutputStream(newFile))
@@ -70,7 +70,7 @@ class ImageCopier @Inject constructor(@AppContext private val context: Context,
 
     override fun saveBitmapToLocalFolderFile(bitmap: Bitmap, folderName: String):String?{
 
-        val folderPath = fileReposotiry.getFolder(folderName)!!.absolutePath
+        val folderPath = fileRepository.getFolder(folderName)!!.absolutePath
 
         val mutableBitmap =  if(!bitmap.isMutable)
             bitmap.copy(Bitmap.Config.ARGB_8888, true)
@@ -81,7 +81,7 @@ class ImageCopier @Inject constructor(@AppContext private val context: Context,
         if ( mutableBitmap.width <= 0 || mutableBitmap.height <= 0)
             throw Exception("Unable to load the bitmap for image from bitmap")
 
-        val newFile = fileReposotiry.createNewFile(folderPath, newFileName)
+        val newFile = fileRepository.createNewFile(folderPath, newFileName)
                 ?:return null
 
         val fileStreamPhoto: OutputStream = FileOutputStream(newFile.path)
