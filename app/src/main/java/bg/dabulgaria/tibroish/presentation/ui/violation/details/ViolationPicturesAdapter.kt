@@ -19,8 +19,7 @@ class ViolationPictureViewHolder(itemView: View) : RecyclerView.ViewHolder(itemV
 class ViolationHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val status: TextView = itemView.findViewById(R.id.status)
     val violationId: TextView = itemView.findViewById(R.id.violation_id)
-    val sectionId: TextView = itemView.findViewById(R.id.section_id)
-    val location: TextView = itemView.findViewById(R.id.location)
+    val description: TextView = itemView.findViewById(R.id.description)
 }
 
 class ViolationPicturesAdapter @Inject constructor(private val statusColorUtil: IStatusColorUtil) :
@@ -36,8 +35,7 @@ class ViolationPicturesAdapter @Inject constructor(private val statusColorUtil: 
             statusColorUtil.getColorForStatus(item.status.stringValue)
         )
         viewHolder.violationId.text = item.id
-        viewHolder.sectionId.text = item.section?.id
-        viewHolder.location.text = item.section?.place
+        viewHolder.description.text = item.description
     }
 
     override fun onBindItem(holder: ViolationPictureViewHolder, itemIndex: Int) {
