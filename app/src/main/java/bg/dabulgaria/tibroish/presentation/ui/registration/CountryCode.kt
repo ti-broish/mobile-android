@@ -2,13 +2,14 @@ package bg.dabulgaria.tibroish.presentation.ui.registration
 
 import android.os.Parcel
 import android.os.Parcelable
+import java.io.Serializable
 
 data class Countries (
-        var countries: List<CountryCode>? = null)
+        var countries: List<CountryCode>? = null): Serializable
 
 data class CountryCode (
         var name: String? = null,
-        var code: String? = null) : Parcelable {
+        var code: String? = null) : Parcelable, Serializable {
 
     constructor(parcel: Parcel) : this(
             parcel.readString(),
