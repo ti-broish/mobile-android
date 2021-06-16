@@ -43,8 +43,8 @@ class ViolationDetailsFragment : BasePresentableFragment<IViolationDetailsView,
             arguments?.getSerializable(ViolationDetailsConstants.VIEW_DATA_KEY) as VoteViolationRemote
         listRecyclerView.layoutManager =
             LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
-        adapter.violation = violation
-        adapter.onPictureClickListener = View.OnClickListener {
+        adapter.item = violation
+        adapter.onItemClickListener = View.OnClickListener {
             val position: Int = listRecyclerView.getChildLayoutPosition(it)
             val picture = violation.pictures[position - 1]
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(picture.url))
