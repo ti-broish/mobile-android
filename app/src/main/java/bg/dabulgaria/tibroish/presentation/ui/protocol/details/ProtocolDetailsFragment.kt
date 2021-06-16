@@ -44,8 +44,8 @@ class ProtocolDetailsFragment : BasePresentableFragment<IProtocolDetailsView,
             arguments?.getSerializable(ViolationDetailsConstants.VIEW_DATA_KEY) as ProtocolRemote
         listRecyclerView.layoutManager =
             LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
-        adapter.protocol = protocol
-        adapter.onPictureClickListener = View.OnClickListener {
+        adapter.item = protocol
+        adapter.onItemClickListener = View.OnClickListener {
             val position: Int = listRecyclerView.getChildLayoutPosition(it)
             val picture = protocol.pictures[position - 1]
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(picture.url))

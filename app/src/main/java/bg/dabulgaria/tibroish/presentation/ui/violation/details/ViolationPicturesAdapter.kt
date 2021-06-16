@@ -1,18 +1,15 @@
 package bg.dabulgaria.tibroish.presentation.ui.violation.details
 
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.presentation.ui.common.IStatusColorUtil
+import bg.dabulgaria.tibroish.presentation.ui.common.ItemsWithHeaderAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 class ViolationPictureViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -26,70 +23,44 @@ class ViolationHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVi
     val location: TextView = itemView.findViewById(R.id.location)
 }
 
-class ViolationPicturesAdapter @Inject constructor(private val statusColorUtil: IStatusColorUtil)
-    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ViolationPicturesAdapter @Inject constructor(private val statusColorUtil: IStatusColorUtil) :
+    ItemsWithHeaderAdapter<ViolationHeaderViewHolder, ViolationPictureViewHolder, VoteViolationRemote>() {
 
-    companion object {
-        const val VIEW_TYPE_HEADER = 1
-        const val VIEW_TYPE_IMAGE = 2
+    override fun getItemsCount(item: VoteViolationRemote): Int {
+        return item.pictures.size
     }
 
-    lateinit var violation: VoteViolationRemote
-
-    lateinit var onPictureClickListener: View.OnClickListener
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        when (viewType) {
-            VIEW_TYPE_IMAGE -> {
-                val listItem = inflater.inflate(
-                    R.layout.violation_picture_list_item_picture,
-                    parent,
-                    /* attachToRoot= */ false
-                )
-                listItem.setOnClickListener(onPictureClickListener)
-                return ViolationPictureViewHolder(listItem)
-            }
-            VIEW_TYPE_HEADER -> {
-                val listItem = inflater.inflate(
-                    R.layout.violation_picture_list_item_header,
-                    parent,
-                    /* attachToRoot= */ false
-                )
-                return ViolationHeaderViewHolder(listItem)
-            }
-            else -> throw IllegalStateException("No view holder found")
-        }
+    override fun onBindHeader(viewHolder: ViolationHeaderViewHolder) {
+        viewHolder.status.text = item.statusLocalized
+        viewHolder.status.setTextColor(
+            statusColorUtil.getColorForStatus(item.status.stringValue)
+        )
+        viewHolder.violationId.text = item.id
+        viewHolder.sectionId.text = item.section?.id
+        viewHolder.location.text = item.section?.place
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (getItemViewType(position) == VIEW_TYPE_IMAGE) {
-            val picture = violation.pictures[position - 1]
-            val localHolder = holder as ViolationPictureViewHolder
-            Glide.with(holder.itemView)
-                .load(picture.url)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(localHolder.image)
-        } else if (getItemViewType(position) == VIEW_TYPE_HEADER) {
-            val localHolder = holder as ViolationHeaderViewHolder
-            localHolder.status.text = violation.statusLocalized
-            localHolder.status.setTextColor(
-                statusColorUtil.getColorForStatus(violation.status.stringValue))
-            localHolder.violationId.text = violation.id
-            localHolder.sectionId.text = violation.section?.id
-            localHolder.location.text = violation.section?.place
-        }
+    override fun onBindItem(holder: ViolationPictureViewHolder, itemIndex: Int) {
+        val picture = item.pictures[itemIndex]
+        Glide.with(holder.itemView)
+            .load(picture.url)
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .into(holder.image)
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return if (position == 0) {
-            VIEW_TYPE_HEADER
-        } else {
-            VIEW_TYPE_IMAGE
-        }
+    override fun createHeaderViewHolder(listItem: View): ViolationHeaderViewHolder {
+        return ViolationHeaderViewHolder(listItem)
     }
 
-    override fun getItemCount(): Int {
-        return /* headerCount= */ 1 + violation.pictures.size
+    override fun createItemViewHolder(listItem: View): ViolationPictureViewHolder {
+        return ViolationPictureViewHolder(listItem)
+    }
+
+    override fun getHeaderListItemLayoutRes(): Int {
+        return R.layout.violation_picture_list_item_header
+    }
+
+    override fun getItemListItemLayoutRes(): Int {
+        return R.layout.violation_picture_list_item_picture
     }
 }
