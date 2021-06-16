@@ -16,6 +16,7 @@ import bg.dabulgaria.tibroish.domain.send.ImageSendStatus
 import bg.dabulgaria.tibroish.domain.send.SendStatus
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
+import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
 import bg.dabulgaria.tibroish.presentation.providers.IGallerySelectedImagesProvider
 import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
 import bg.dabulgaria.tibroish.presentation.ui.common.item.send.*
@@ -32,8 +33,9 @@ class AddProtocolInteractor @Inject constructor(sectionPickerInteractor: ISectio
                                                 schedulersProvider: ISchedulersProvider,
                                                 logger: ILogger,
                                                 private val protocolsRepo: IProtocolsRepository,
-                                                private val fileRepo: IFileRepository,
+                                                fileRepo: IFileRepository,
                                                 imageCopier: IImageCopier,
+                                                cameraTakenImageProvider: ICameraTakenImageProvider,
                                                 private val protocolImageUploader: IProtocolImageUploader,
                                                 private val selectedImagesProvider: IGallerySelectedImagesProvider,
                                                 private val protocolImagesRepo: IProtocolImagesRepository,
@@ -45,7 +47,9 @@ class AddProtocolInteractor @Inject constructor(sectionPickerInteractor: ISectio
         schedulersProvider,
         logger,
         protocolImageUploader,
-        imageCopier),
+        imageCopier,
+        fileRepo,
+        cameraTakenImageProvider),
         IAddProtocolInteractor {
 
     override val titleString: String

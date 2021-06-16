@@ -17,4 +17,6 @@ interface IFileRepository {
     fun getFileName(filePath:String) :String?
 
     fun getFileContentBase64Encoded(filePath: String):String?
+
+    fun getFileSizeKb(filePath:String) :Int
 }

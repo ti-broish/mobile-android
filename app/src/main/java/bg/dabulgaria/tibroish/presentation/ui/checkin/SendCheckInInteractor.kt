@@ -2,6 +2,7 @@ package bg.dabulgaria.tibroish.presentation.ui.checkin
 
 
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.domain.io.IFileRepository
 import bg.dabulgaria.tibroish.domain.locations.ISelectedSectionLocalRepository
 import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
 import bg.dabulgaria.tibroish.domain.providers.ILogger
@@ -9,6 +10,7 @@ import bg.dabulgaria.tibroish.domain.user.SendCheckInRequest
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.persistence.local.ImageCopier
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
+import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
 import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
 import bg.dabulgaria.tibroish.presentation.ui.common.item.send.*
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerInteractor
@@ -23,6 +25,8 @@ class SendCheckInInteractor @Inject constructor(sectionPickerInteractor: ISectio
                                                 schedulersProvider: ISchedulersProvider,
                                                 logger: ILogger,
                                                 imageCopier: ImageCopier,
+                                                fileRepo: IFileRepository,
+                                                cameraTakenImageProvider: ICameraTakenImageProvider,
                                                 private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
                                                 private val resourceProvider: IResourceProvider,
                                                 private val selectedSectionLocalRepo: ISelectedSectionLocalRepository)
@@ -31,7 +35,9 @@ class SendCheckInInteractor @Inject constructor(sectionPickerInteractor: ISectio
         schedulersProvider,
         logger,
         EmptyImageUploader(),
-        imageCopier),
+        imageCopier,
+        fileRepo,
+        cameraTakenImageProvider),
         ISendCheckInInteractor {
 
     init {

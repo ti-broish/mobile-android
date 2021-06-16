@@ -8,6 +8,7 @@ import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.ui.common.item.send.ISendItemPresenter
 import bg.dabulgaria.tibroish.presentation.ui.common.item.send.SendItemPresenter
 import bg.dabulgaria.tibroish.presentation.main.IMainRouter
+import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
 import bg.dabulgaria.tibroish.presentation.ui.common.item.send.SendItemViewData
 
 
@@ -20,13 +21,15 @@ class SendCheckInPresenter @Inject constructor(schedulersProvider: ISchedulersPr
                                                interactor: ISendCheckInInteractor,
                                                fileRepository: IFileRepository,
                                                logger: ILogger,
-                                               dispHandler: IDisposableHandler)
+                                               dispHandler: IDisposableHandler,
+                                               cameraTakenImageProvider: ICameraTakenImageProvider)
     : SendItemPresenter(schedulersProvider,
         mainRouter,
         interactor,
         fileRepository,
         logger,
-        dispHandler),
+        dispHandler,
+        cameraTakenImageProvider),
         ISendCheckInPresenter{
 
     override val MinSelectedImages: Int = 0
