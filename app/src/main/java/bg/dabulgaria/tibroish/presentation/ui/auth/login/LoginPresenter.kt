@@ -112,7 +112,7 @@ class LoginPresenter @Inject constructor(private val userLocalRepo : IUserLocalR
             return
         }
 
-        val mailVerified = true //TODO uncomment when email verification is fixed// firebaseUser.isEmailVerified
+        val mailVerified = firebaseUser.isEmailVerified
         if(mailVerified) {
 
             val userA = userTypeAdapter.toUser(firebaseUser)
