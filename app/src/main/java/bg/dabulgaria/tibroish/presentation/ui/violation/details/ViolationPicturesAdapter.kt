@@ -1,4 +1,4 @@
-package bg.dabulgaria.tibroish.presentation.ui.protocol.details
+package bg.dabulgaria.tibroish.presentation.ui.violation.details
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,24 +8,25 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
+import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.presentation.ui.common.IStatusColorUtil
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import java.lang.IllegalStateException
 import javax.inject.Inject
 
-class ProtocolPictureViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class ViolationPictureViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val image: ImageView = itemView.findViewById(R.id.image)
 }
 
-class ProtocolHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class ViolationHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val status: TextView = itemView.findViewById(R.id.status)
-    val protocolId: TextView = itemView.findViewById(R.id.violation_id)
+    val violationId: TextView = itemView.findViewById(R.id.violation_id)
     val sectionId: TextView = itemView.findViewById(R.id.section_id)
     val location: TextView = itemView.findViewById(R.id.location)
 }
 
-class ProtocolPicturesAdapter @Inject constructor(private val statusColorUtil: IStatusColorUtil)
+class ViolationPicturesAdapter @Inject constructor(private val statusColorUtil: IStatusColorUtil)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -33,7 +34,7 @@ class ProtocolPicturesAdapter @Inject constructor(private val statusColorUtil: I
         const val VIEW_TYPE_IMAGE = 2
     }
 
-    lateinit var protocol: ProtocolRemote
+    lateinit var violation: VoteViolationRemote
 
     lateinit var onPictureClickListener: View.OnClickListener
 
@@ -42,20 +43,20 @@ class ProtocolPicturesAdapter @Inject constructor(private val statusColorUtil: I
         when (viewType) {
             VIEW_TYPE_IMAGE -> {
                 val listItem = inflater.inflate(
-                    R.layout.protocol_picture_list_item_picture,
+                    R.layout.violation_picture_list_item_picture,
                     parent,
                     /* attachToRoot= */ false
                 )
                 listItem.setOnClickListener(onPictureClickListener)
-                return ProtocolPictureViewHolder(listItem)
+                return ViolationPictureViewHolder(listItem)
             }
             VIEW_TYPE_HEADER -> {
                 val listItem = inflater.inflate(
-                    R.layout.protocol_picture_list_item_header,
+                    R.layout.violation_picture_list_item_header,
                     parent,
                     /* attachToRoot= */ false
                 )
-                return ProtocolHeaderViewHolder(listItem)
+                return ViolationHeaderViewHolder(listItem)
             }
             else -> throw IllegalStateException("No view holder found")
         }
@@ -63,20 +64,20 @@ class ProtocolPicturesAdapter @Inject constructor(private val statusColorUtil: I
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (getItemViewType(position) == VIEW_TYPE_IMAGE) {
-            val picture = protocol.pictures[position - 1]
-            val localHolder = holder as ProtocolPictureViewHolder
+            val picture = violation.pictures[position - 1]
+            val localHolder = holder as ViolationPictureViewHolder
             Glide.with(holder.itemView)
                 .load(picture.url)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(localHolder.image)
         } else if (getItemViewType(position) == VIEW_TYPE_HEADER) {
-            val localHolder = holder as ProtocolHeaderViewHolder
-            localHolder.status.text = protocol.statusLocalized
+            val localHolder = holder as ViolationHeaderViewHolder
+            localHolder.status.text = violation.statusLocalized
             localHolder.status.setTextColor(
-                statusColorUtil.getColorForStatus(protocol.status.stringValue))
-            localHolder.protocolId.text = protocol.id
-            localHolder.sectionId.text = protocol.section.id
-            localHolder.location.text = protocol.section.place
+                statusColorUtil.getColorForStatus(violation.status.stringValue))
+            localHolder.violationId.text = violation.id
+            localHolder.sectionId.text = violation.section?.id
+            localHolder.location.text = violation.section?.place
         }
     }
 
@@ -89,6 +90,6 @@ class ProtocolPicturesAdapter @Inject constructor(private val statusColorUtil: I
     }
 
     override fun getItemCount(): Int {
-        return /* headerCount= */ 1 + protocol.pictures.size
+        return /* headerCount= */ 1 + violation.pictures.size
     }
 }

@@ -96,9 +96,11 @@
     <string name="protocols_list_section_id_unformatted">%d. Секция: %s</string>
     <string name="status_label">Статус:</string>
     <string name="protocol_label">Протокол:</string>
+    <string name="violation_label">Сигнал:</string>
     <string name="location_label">Локация:</string>
     <string name="section_label">Секция:</string>
     <string name="protocol_picture_content_description">Снимка на протокол</string>
+    <string name="violation_picture_content_description">Снимка на сигнал</string>
     <string name="description">Описание</string>
     <string name="check_in">Отбелязване</string>
     <string name="check_in_send_successfully">Отбелязването е изпратено успешно!</string>
