@@ -1,12 +1,10 @@
-package bg.dabulgaria.tibroish.presentation.ui.auth.login
+package bg.dabulgaria.tibroish.presentation.ui.login
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView.OnEditorActionListener
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
@@ -16,7 +14,7 @@ import kotlinx.android.synthetic.main.fragment_user_login.*
 
 interface ILoginView :IBaseView{
 
-    fun onDataLoaded(data:LoginViewData)
+    fun onDataLoaded(data: LoginViewData)
 
     fun onLoading(loading:Boolean)
 }
@@ -55,7 +53,7 @@ class LoginFragment : BasePresentableFragment<ILoginView, ILoginPresenter>(), IL
         })
     }
 
-    override fun onDataLoaded(data:LoginViewData){
+    override fun onDataLoaded(data: LoginViewData){
 
         input_password?.error = if(data.passValid) null else getString(R.string.invalid_password)
 

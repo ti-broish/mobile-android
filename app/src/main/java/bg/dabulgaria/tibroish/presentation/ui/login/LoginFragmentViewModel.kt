@@ -1,4 +1,4 @@
-package bg.dabulgaria.tibroish.presentation.ui.auth.login
+package bg.dabulgaria.tibroish.presentation.ui.login
 
 import android.util.Log
 import android.util.Patterns

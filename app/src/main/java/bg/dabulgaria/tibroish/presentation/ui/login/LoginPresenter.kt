@@ -1,4 +1,4 @@
-package bg.dabulgaria.tibroish.presentation.ui.auth.login//package bg.dabulgaria.tibroish.presentation.ui.protocol.list
+package bg.dabulgaria.tibroish.presentation.ui.login//package bg.dabulgaria.tibroish.presentation.ui.protocol.list
 
 
 import android.os.Bundle
@@ -38,12 +38,12 @@ class LoginPresenter @Inject constructor(private val userLocalRepo : IUserLocalR
                                          dispHandler: IDisposableHandler,)
     : BasePresenter<ILoginView>(dispHandler), ILoginPresenter {
 
-    var data :LoginViewData? = null
+    var data : LoginViewData? = null
 
     override fun onRestoreData(bundle: Bundle?) {
         bundle?.let {
             data = (bundle.getSerializable(LoginConstants.VIEW_DATA_KEY) as LoginViewData?)
-                    ?:LoginViewData()
+                    ?: LoginViewData()
         }
     }
 
