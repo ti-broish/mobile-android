@@ -13,7 +13,6 @@ import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
 import bg.dabulgaria.tibroish.presentation.ui.common.IStatusColorUtil
-import bg.dabulgaria.tibroish.presentation.ui.violation.details.ViolationDetailsConstants
 import kotlinx.android.synthetic.main.fragment_protocols_details.*
 import javax.inject.Inject
 
@@ -41,7 +40,7 @@ class ProtocolDetailsFragment : BasePresentableFragment<IProtocolDetailsView,
         super.onActivityCreated(savedInstanceState)
 
         val protocol =
-            arguments?.getSerializable(ViolationDetailsConstants.VIEW_DATA_KEY) as ProtocolRemote
+            arguments?.getSerializable(ProtocolDetailsConstants.VIEW_DATA_KEY) as ProtocolRemote
         listRecyclerView.layoutManager =
             LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
         adapter.item = protocol
@@ -62,7 +61,7 @@ class ProtocolDetailsFragment : BasePresentableFragment<IProtocolDetailsView,
         fun newInstance(protocol: ProtocolRemote): ProtocolDetailsFragment {
             return ProtocolDetailsFragment().apply {
                 arguments = Bundle().apply {
-                    putSerializable(ViolationDetailsConstants.VIEW_DATA_KEY, protocol)
+                    putSerializable(ProtocolDetailsConstants.VIEW_DATA_KEY, protocol)
                 }
             }
         }
