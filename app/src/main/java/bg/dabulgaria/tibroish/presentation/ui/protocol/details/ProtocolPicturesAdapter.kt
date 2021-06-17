@@ -1,17 +1,15 @@
 package bg.dabulgaria.tibroish.presentation.ui.protocol.details
 
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.presentation.ui.common.IStatusColorUtil
+import bg.dabulgaria.tibroish.presentation.ui.common.ItemsWithHeaderAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 class ProtocolPictureViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -26,69 +24,42 @@ class ProtocolHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
 }
 
 class ProtocolPicturesAdapter @Inject constructor(private val statusColorUtil: IStatusColorUtil)
-    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    : ItemsWithHeaderAdapter<ProtocolHeaderViewHolder, ProtocolPictureViewHolder, ProtocolRemote>() {
 
-    companion object {
-        const val VIEW_TYPE_HEADER = 1
-        const val VIEW_TYPE_IMAGE = 2
+    override fun onBindHeader(viewHolder: ProtocolHeaderViewHolder) {
+        viewHolder.status.text = item.statusLocalized
+        viewHolder.status.setTextColor(
+            statusColorUtil.getColorForStatus(item.status.stringValue))
+        viewHolder.protocolId.text = item.id
+        viewHolder.sectionId.text = item.section.id
+        viewHolder.location.text = item.section.place
     }
 
-    lateinit var protocol: ProtocolRemote
-
-    lateinit var onPictureClickListener: View.OnClickListener
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        when (viewType) {
-            VIEW_TYPE_IMAGE -> {
-                val listItem = inflater.inflate(
-                    R.layout.protocol_picture_list_item_picture,
-                    parent,
-                    /* attachToRoot= */ false
-                )
-                listItem.setOnClickListener(onPictureClickListener)
-                return ProtocolPictureViewHolder(listItem)
-            }
-            VIEW_TYPE_HEADER -> {
-                val listItem = inflater.inflate(
-                    R.layout.protocol_picture_list_item_header,
-                    parent,
-                    /* attachToRoot= */ false
-                )
-                return ProtocolHeaderViewHolder(listItem)
-            }
-            else -> throw IllegalStateException("No view holder found")
-        }
+    override fun onBindItem(holder: ProtocolPictureViewHolder, itemIndex: Int) {
+        val picture = item.pictures[itemIndex]
+        Glide.with(holder.itemView)
+            .load(picture.url)
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .into(holder.image)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (getItemViewType(position) == VIEW_TYPE_IMAGE) {
-            val picture = protocol.pictures[position - 1]
-            val localHolder = holder as ProtocolPictureViewHolder
-            Glide.with(holder.itemView)
-                .load(picture.url)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(localHolder.image)
-        } else if (getItemViewType(position) == VIEW_TYPE_HEADER) {
-            val localHolder = holder as ProtocolHeaderViewHolder
-            localHolder.status.text = protocol.statusLocalized
-            localHolder.status.setTextColor(
-                statusColorUtil.getColorForStatus(protocol.status.stringValue))
-            localHolder.protocolId.text = protocol.id
-            localHolder.sectionId.text = protocol.section.id
-            localHolder.location.text = protocol.section.place
-        }
+    override fun createHeaderViewHolder(listItem: View): ProtocolHeaderViewHolder {
+        return ProtocolHeaderViewHolder(listItem)
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return if (position == 0) {
-            VIEW_TYPE_HEADER
-        } else {
-            VIEW_TYPE_IMAGE
-        }
+    override fun createItemViewHolder(listItem: View): ProtocolPictureViewHolder {
+        return ProtocolPictureViewHolder(listItem)
     }
 
-    override fun getItemCount(): Int {
-        return /* headerCount= */ 1 + protocol.pictures.size
+    override fun getHeaderListItemLayoutRes(): Int {
+        return R.layout.protocol_picture_list_item_header
+    }
+
+    override fun getItemListItemLayoutRes(): Int {
+        return R.layout.protocol_picture_list_item_picture;
+    }
+
+    override fun getItemsCount(item: ProtocolRemote): Int {
+        return item.pictures.size
     }
 }
