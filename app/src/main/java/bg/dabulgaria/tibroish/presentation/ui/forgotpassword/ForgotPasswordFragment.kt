@@ -22,9 +22,6 @@ class ForgotPasswordFragment : BasePresentableFragment<IForgotPasswordView,
         IForgotPasswordPresenter>
     (), IForgotPasswordView {
 
-    @Inject
-    lateinit var dialogUtil: DialogUtil
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(
