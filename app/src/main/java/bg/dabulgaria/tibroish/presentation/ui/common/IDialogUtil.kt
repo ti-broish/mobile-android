@@ -19,6 +19,13 @@ interface IDialogUtil {
             dismissCallback: () -> Unit
     )
 
+    fun showDismissableDialog(
+        activity: Activity,
+        @StringRes titleResId: Int,
+        message: String,
+        dismissCallback: () -> Unit
+    )
+
     fun showPromptDialog(
         context: Context,
         @StringRes titleResId: Int,

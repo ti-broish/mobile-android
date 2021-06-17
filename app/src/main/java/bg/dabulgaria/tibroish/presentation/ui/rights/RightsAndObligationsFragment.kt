@@ -24,9 +24,6 @@ class RightsAndObligationsFragment constructor()
 
     private fun getRightsAndObligationsTextView() = view?.findViewById<TextView>(R.id.rightsAndObligationsText)
 
-    @Inject
-    lateinit var dialogUtil: DialogUtil
-
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?,
                               savedInstanceState : Bundle?) : View? {
         return inflater.inflate(R.layout.fragment_rights, container, false)
