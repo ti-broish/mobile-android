@@ -1,4 +1,4 @@
-package bg.dabulgaria.tibroish.presentation.ui.auth.login//package bg.dabulgaria.tibroish.presentation.ui.protocol.list
+package bg.dabulgaria.tibroish.presentation.ui.login//package bg.dabulgaria.tibroish.presentation.ui.protocol.list
 
 import java.io.Serializable
 

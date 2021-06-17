@@ -1,8 +1,8 @@
-package bg.dabulgaria.tibroish.presentation.ui.di
+package bg.dabulgaria.tibroish.infrastructure.di.modules
 
-import bg.dabulgaria.tibroish.presentation.ui.auth.login.ILoginPresenter
-import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginFragment
-import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginPresenter
+import bg.dabulgaria.tibroish.presentation.ui.login.ILoginPresenter
+import bg.dabulgaria.tibroish.presentation.ui.login.LoginFragment
+import bg.dabulgaria.tibroish.presentation.ui.login.LoginPresenter
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerInteractor
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.SectionPickerInteractor
 import bg.dabulgaria.tibroish.presentation.ui.checkin.*
