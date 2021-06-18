@@ -11,6 +11,7 @@ import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentManager
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
+import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.presentation.ui.common.item.send.SendItemViewData
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
@@ -31,6 +32,7 @@ import bg.dabulgaria.tibroish.presentation.ui.violation.send.SendViolationFragme
 import java.io.File
 import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsFragment
 import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsViewData
+import bg.dabulgaria.tibroish.presentation.ui.violation.details.ViolationDetailsFragment
 import bg.dabulgaria.tibroish.presentation.ui.violation.list.ViolationsListFragment
 import javax.inject.Inject
 
@@ -287,6 +289,16 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
         }
 
         view?.showScreen(content, ViolationsListFragment.TAG, addToBackStack = true, transitionContent = true)
+    }
+
+    override fun showViolationDetails(violation: VoteViolationRemote) {
+        var content = view?.supportFragmentMngr?.findFragmentByTag(ViolationDetailsFragment.TAG )
+        if (content == null) {
+            content = ViolationDetailsFragment.newInstance(violation)
+        }
+
+        view?.showScreen(content, ViolationDetailsFragment.TAG, addToBackStack = true,
+            transitionContent = true)
     }
 
     private fun showCheckIn() {
