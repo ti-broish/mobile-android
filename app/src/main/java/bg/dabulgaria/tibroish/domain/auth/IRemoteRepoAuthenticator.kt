@@ -3,11 +3,9 @@ package bg.dabulgaria.tibroish.domain.auth
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.persistence.remote.AuthException
 import bg.dabulgaria.tibroish.presentation.main.IMainRouter
-import bg.dabulgaria.tibroish.presentation.ui.auth.login.LoginPresenter
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Call
-import retrofit2.awaitResponse
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import kotlin.jvm.Throws

@@ -4,14 +4,9 @@
     <dimen name="list_empty_text_size">16sp</dimen>
     <dimen name="min_title_text_size">10sp</dimen>
     <dimen name="max_title_text_size">18sp</dimen>
-    <dimen name="min_detail_title_text_size">14sp</dimen>
-    <dimen name="max_detail_title_text_size">38sp</dimen>
-    <dimen name="min_description_text_size">16sp</dimen>
-    <dimen name="max_description_text_size">24sp</dimen>
     <dimen name="picker_images_margin">4dp</dimen>
     <dimen name="text_input_max_width">300dp</dimen>
     <dimen name="sections_text_size">18sp</dimen>
-    <dimen name="unique_section_text_size">20sp</dimen>
     <dimen name="form_vertical_field_distance">8dp</dimen>
     <dimen name="action_button_text_size">14sp</dimen>
     <dimen name="action_button_min_text_size">6sp</dimen>

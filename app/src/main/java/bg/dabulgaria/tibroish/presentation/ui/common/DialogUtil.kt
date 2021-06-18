@@ -29,6 +29,19 @@ class DialogUtil @Inject constructor() : IDialogUtil{
                 .show()
     }
 
+    override fun showDismissableDialog(
+        activity: Activity,
+        @StringRes titleResId: Int,
+        message: String,
+        dismissCallback: () -> Unit
+    ) {
+        AlertDialog.Builder(activity)
+            .setTitle(titleResId)
+            .setMessage(message)
+            .setPositiveButton(android.R.string.ok) { _, _ -> dismissCallback.invoke() }
+            .show()
+    }
+
     override fun showPromptDialog(
         context: Context,
         @StringRes titleResId: Int,

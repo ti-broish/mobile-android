@@ -31,9 +31,6 @@ open class SendItemFragment<SendPresenter : ISendItemPresenter> constructor()
 
     lateinit var adapter: SendItemAdapter
 
-    @Inject
-    protected lateinit var dialogUtil: IDialogUtil
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_send_item, container, false)
