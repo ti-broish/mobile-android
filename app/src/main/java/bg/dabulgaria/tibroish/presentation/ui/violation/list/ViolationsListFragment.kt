@@ -22,11 +22,7 @@ class ViolationsListFragment
     : BasePresentableFragment<IViolationsListView, IViolationsListPresenter>(), IViolationsListView {
 
     @Inject
-    lateinit var dialogUtil: IDialogUtil
-
-    @Inject
     lateinit var adapter: ViolationsAdapter
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
