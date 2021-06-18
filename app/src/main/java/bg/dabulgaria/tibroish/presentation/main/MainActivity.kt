@@ -16,6 +16,7 @@ import bg.dabulgaria.tibroish.presentation.base.BaseActivity
 import bg.dabulgaria.tibroish.presentation.event.CameraPhotoTakenEvent
 import bg.dabulgaria.tibroish.presentation.navigation.NavigationDrawerFragment
 import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
+import bg.dabulgaria.tibroish.presentation.push.IPushActionRouter
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerConstants
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -35,6 +36,8 @@ class MainActivity : BaseActivity(),
     lateinit var mainPresenter: IMainPresenter
     @Inject
     lateinit var permissionsResponseHandler: IPermissionResponseHandler
+    @Inject
+    protected lateinit var pushActionRouter: IPushActionRouter
 
     private var drawerLayout :DrawerLayout? = null
     private var navigationDrawerFragment :NavigationDrawerFragment ? = null
@@ -42,6 +45,7 @@ class MainActivity : BaseActivity(),
     private lateinit var navController: NavController
 
     private var isStarted = false
+    private var lastIntent :Intent? = null
 
     //region AppCompatActivity overrides
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,10 +99,21 @@ class MainActivity : BaseActivity(),
         }
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        lastIntent = intent
+    }
+
     override fun onStart() {
 
         super.onStart()
         isStarted = true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        lastIntent?.let { pushActionRouter.onIntent(it) }
+        lastIntent = null
     }
 
     override fun onStop() {

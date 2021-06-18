@@ -15,18 +15,21 @@ import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.infrastructure.schedulers.SchedulersProvider
 import bg.dabulgaria.tibroish.persistence.local.Logger
 import bg.dabulgaria.tibroish.persistence.local.db.TiBroishDatabase
-import bg.dabulgaria.tibroish.persistence.local.db.migrations.Migration_1_2
 import bg.dabulgaria.tibroish.presentation.main.IMainPresenter
 import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.main.MainPresenter
 import bg.dabulgaria.tibroish.presentation.main.MainRouter
+import bg.dabulgaria.tibroish.presentation.notification.ChannelInitializer
+import bg.dabulgaria.tibroish.presentation.notification.IChannelInitializer
 import bg.dabulgaria.tibroish.presentation.providers.CameraTakenImageProvider
-import bg.dabulgaria.tibroish.presentation.ui.common.*
 import bg.dabulgaria.tibroish.presentation.providers.GallerySelectedImagesProvider
 import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
 import bg.dabulgaria.tibroish.presentation.providers.IGallerySelectedImagesProvider
-import bg.dabulgaria.tibroish.presentation.ui.common.DialogUtil
-import bg.dabulgaria.tibroish.presentation.ui.common.FormValidator
+import bg.dabulgaria.tibroish.presentation.push.IPushActionRouter
+import bg.dabulgaria.tibroish.presentation.push.IPushTokenSender
+import bg.dabulgaria.tibroish.presentation.push.PushActionRouter
+import bg.dabulgaria.tibroish.presentation.push.PushTokenSender
+import bg.dabulgaria.tibroish.presentation.ui.common.*
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -132,7 +135,7 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    fun providesStatusColorUtil(): IStatusColorUtil {
+    internal fun providesStatusColorUtil(): IStatusColorUtil {
         return StatusColorUtil()
     }
 
@@ -140,4 +143,17 @@ class ApplicationModule {
     @Singleton
     internal fun providesICameraTakenImageProvider(implementation: CameraTakenImageProvider): ICameraTakenImageProvider
             = implementation
+
+    @Provides
+    @Singleton
+    internal fun providesIPushTokenSender(implemenation: PushTokenSender): IPushTokenSender
+            = implemenation
+
+    @Provides
+    internal fun providesIPushActionRouter(implemenation: PushActionRouter): IPushActionRouter
+            = implemenation
+
+    @Provides
+    internal fun providesIChannelInitializer(iml: ChannelInitializer): IChannelInitializer
+            = iml
 }

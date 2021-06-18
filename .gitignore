@@ -18,3 +18,4 @@ app/keystores/
 app/staging/
 app/prodsigning.properties
 app/production/
+app/google-services.json
