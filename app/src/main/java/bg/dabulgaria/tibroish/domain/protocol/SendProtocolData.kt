@@ -1,8 +1,7 @@
 package bg.dabulgaria.tibroish.domain.protocol
 
-import android.util.SparseArray
 import bg.dabulgaria.tibroish.domain.locations.SectionRemote
-import bg.dabulgaria.tibroish.persistence.remote.model.PictureDto
+import bg.dabulgaria.tibroish.domain.image.PictureDto
 import com.google.gson.JsonDeserializer
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
@@ -63,4 +62,5 @@ class ProtocolRemote(
         val section: SectionRemote,
         val pictures: List<PictureDto>,
         val status: ProtocolStatusRemote,
-        val statusLocalized: String):Serializable
+        val statusLocalized: String,
+        var errorMessage: String?) : Serializable

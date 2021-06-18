@@ -145,5 +145,5 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
             apiController.sendFCMToken(getAuthorization(token), param)}, request) !!
     }
 
-   private fun getAuthorization(idToken: String): String = "Bearer $idToken"
+    private fun getAuthorization(idToken: String): String = "Bearer $idToken"
 }

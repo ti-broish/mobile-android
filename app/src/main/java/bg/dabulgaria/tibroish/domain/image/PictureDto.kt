@@ -9,23 +9,20 @@
 * https://github.com/swagger-api/swagger-codegen.git
 * Do not edit the class manually.
 */
-package bg.dabulgaria.tibroish.persistence.remote.model
+package bg.dabulgaria.tibroish.domain.image
 
-import bg.dabulgaria.tibroish.persistence.remote.model.UserDto
+import java.io.Serializable
+
 
 /**
  * 
  * @param id 
- * @param author 
- * @param text 
- * @param createdAt 
+ * @param url 
+ * @param path 
+ * @param rotation 
  */
-data class ViolationCommentDto (
-    val id: kotlin.String,
-    val author: UserDto,
-    val text: kotlin.String,
-    val createdAt: java.time.OffsetDateTime
-) {
-
-}
-
+data class PictureDto (
+    val id: String,
+    val url: String,
+    val path: String,
+    val rotation: Int): Serializable
