@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Specify your application's package name followed by .fileprovider to guarantee unique file provider authority-->
+    <string name="file_provider_authority" translatable="false">@string/provider_authority</string>
+</resources>
