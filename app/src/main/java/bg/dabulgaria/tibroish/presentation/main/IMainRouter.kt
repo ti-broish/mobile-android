@@ -1,6 +1,7 @@
 package bg.dabulgaria.tibroish.presentation.main
 
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
+import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.presentation.navigation.OnMenuClickListener
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoId
 
@@ -47,4 +48,6 @@ interface IMainRouter: OnMenuClickListener {
     fun showProtocolDetails(protocol: ProtocolRemote)
 
     fun showViolations()
+
+    fun showViolationDetails(violation: VoteViolationRemote)
 }

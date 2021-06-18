@@ -27,6 +27,9 @@ import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationPresenter
 import bg.dabulgaria.tibroish.presentation.ui.rights.IRightsAndObligationsPresenter
 import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsFragment
 import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsPresenter
+import bg.dabulgaria.tibroish.presentation.ui.violation.details.IViolationDetailsPresenter
+import bg.dabulgaria.tibroish.presentation.ui.violation.details.ViolationDetailsFragment
+import bg.dabulgaria.tibroish.presentation.ui.violation.details.ViolationDetailsPresenter
 import bg.dabulgaria.tibroish.presentation.ui.violation.list.IViolationsListPresenter
 import bg.dabulgaria.tibroish.presentation.ui.violation.list.ViolationsListFragment
 import bg.dabulgaria.tibroish.presentation.ui.violation.list.ViolationsListPresenter
@@ -160,4 +163,13 @@ interface FragmentModule {
     @Binds
     fun bindsISendCheckInInteractor(interactor: SendCheckInInteractor): ISendCheckInInteractor
     //endregion Send CheckIn screen
+
+    //region Violation Details screen
+    @ContributesAndroidInjector
+    fun bindViolationDetailsFragment(): ViolationDetailsFragment
+
+    @Binds
+    fun bindIViolationDetailsPresenter(implementation: ViolationDetailsPresenter):
+            IViolationDetailsPresenter
+    //endregion Violation Details screen
 }

@@ -77,7 +77,7 @@ class ViolationsListPresenter @Inject constructor(private val schedulersProvider
 
     override fun showViolationAt(position: Int) {
         viewData?.userViolations?.get(position)?.let {
-           // mainRouter.showViolationDetails(it)
+            mainRouter.showViolationDetails(it)
         }
     }
 
