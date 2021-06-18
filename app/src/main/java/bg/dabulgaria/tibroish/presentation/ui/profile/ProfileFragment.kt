@@ -41,9 +41,6 @@ class ProfileFragment : BasePresentableFragment<IProfileView,
     (), IProfileView {
 
     @Inject
-    lateinit var dialogUtil: DialogUtil
-
-    @Inject
     lateinit var organizationsManager: IOrganizationsManager
 
     @Inject
