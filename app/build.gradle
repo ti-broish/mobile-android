@@ -20,11 +20,22 @@ android {
             v1SigningEnabled true
             v2SigningEnabled true
         }
+
+        ProdAppSigning {
+            def Properties signingProps = new Properties()
+            signingProps.load(new FileInputStream(file('../app/prodsigning.properties')))
+            storeFile file(signingProps["store"])
+            storePassword signingProps["storePass"]
+            keyAlias signingProps["alias"]
+            keyPassword signingProps["keypass"]
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
     }
 
     compileSdkVersion 30
     defaultConfig {
-        applicationId "bg.dabulgaria.android"
+        applicationId "bg.dabulgaria.tibroish"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 3
@@ -38,13 +49,10 @@ android {
             debuggable false
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.AppSigning
         }
         debug{
             debuggable true
             minifyEnabled false
-            signingConfig signingConfigs.AppSigning
-
         }
     }
     buildToolsVersion '29.0.3'
@@ -59,13 +67,15 @@ android {
         production{
 
             applicationId = "bg.dabulgaria.tibroish"
+            resValue "string", "provider_authority", "${applicationId}.file_provider_camera"
             def APP_NAME = "Ти Броиш"
             resValue "string", "app_name", APP_NAME
-            signingConfig signingConfigs.AppSigning
+            signingConfig signingConfigs.ProdAppSigning
         }
         staging{
 
             applicationId = "bg.dabulgaria.tibroish.apn"
+            resValue "string", "provider_authority", "${applicationId}.file_provider_camera"
             def APP_NAME = "Ти Броиш Stage"
             resValue "string", "app_name", APP_NAME
             signingConfig signingConfigs.AppSigning

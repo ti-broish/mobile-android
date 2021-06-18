@@ -220,7 +220,7 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
 
         val imageFile = File(imageFilePath)
         val photoURI: Uri = FileProvider.getUriForFile(
-                    context, "bg.dabulgaria.tibroish.file_provider_camera", imageFile)
+                    context, "${appContext.packageName}.file_provider_camera", imageFile)
 
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
         try {

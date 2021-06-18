@@ -16,3 +16,5 @@ app/docs-json.json
 app/signing.properties
 app/keystores/
 app/staging/
+app/prodsigning.properties
+app/production/
