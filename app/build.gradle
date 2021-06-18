@@ -64,13 +64,16 @@ android {
     flavorDimensions "free"
     productFlavors {
 
+        def productionSigning = signingConfigs.ProdAppSigning
+        def stagingSigning = signingConfigs.AppSigning
+
         production{
 
             applicationId = "bg.dabulgaria.tibroish"
             resValue "string", "provider_authority", "${applicationId}.file_provider_camera"
             def APP_NAME = "Ти Броиш"
             resValue "string", "app_name", APP_NAME
-            signingConfig signingConfigs.ProdAppSigning
+            signingConfig productionSigning
         }
         staging{
 
@@ -78,7 +81,7 @@ android {
             resValue "string", "provider_authority", "${applicationId}.file_provider_camera"
             def APP_NAME = "Ти Броиш Stage"
             resValue "string", "app_name", APP_NAME
-            signingConfig signingConfigs.AppSigning
+            signingConfig stagingSigning
         }
     }
 }

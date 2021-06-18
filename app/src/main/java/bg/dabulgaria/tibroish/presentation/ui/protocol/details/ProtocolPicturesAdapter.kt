@@ -21,6 +21,8 @@ class ProtocolHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
     val protocolId: TextView = itemView.findViewById(R.id.protocol_id)
     val sectionId: TextView = itemView.findViewById(R.id.section_id)
     val location: TextView = itemView.findViewById(R.id.location)
+    val messageContainer:View = itemView.findViewById(R.id.message_container)
+    val message: TextView = itemView.findViewById(R.id.message)
 }
 
 class ProtocolPicturesAdapter @Inject constructor(private val statusColorUtil: IStatusColorUtil)
@@ -33,6 +35,12 @@ class ProtocolPicturesAdapter @Inject constructor(private val statusColorUtil: I
         viewHolder.protocolId.text = item.id
         viewHolder.sectionId.text = item.section.id
         viewHolder.location.text = item.section.place
+
+        viewHolder.message.text = item.errorMessage?:""
+        viewHolder.messageContainer.visibility = if(item.errorMessage.isNullOrEmpty())
+            View.GONE
+        else
+            View.VISIBLE
     }
 
     override fun onBindItem(holder: ProtocolPictureViewHolder, itemIndex: Int) {
@@ -56,7 +64,7 @@ class ProtocolPicturesAdapter @Inject constructor(private val statusColorUtil: I
     }
 
     override fun getItemListItemLayoutRes(): Int {
-        return R.layout.protocol_picture_list_item_picture;
+        return R.layout.protocol_picture_list_item_picture
     }
 
     override fun getItemsCount(item: ProtocolRemote): Int {

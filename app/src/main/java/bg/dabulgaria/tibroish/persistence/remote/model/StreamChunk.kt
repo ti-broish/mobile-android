@@ -29,7 +29,7 @@ data class StreamChunk (
         val id: kotlin.String,
         val stream: Stream,
         val section: SectionRemote,
-        val author: User,
+        //val author: User,
         val isActive: kotlin.Boolean,
         val startTime: java.time.OffsetDateTime,
         val url: kotlin.String? = null,

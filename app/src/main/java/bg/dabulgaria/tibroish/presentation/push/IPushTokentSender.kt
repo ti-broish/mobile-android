@@ -34,6 +34,8 @@ class PushTokenSender @Inject constructor(private val schedulersProvider: ISched
             }
 
             val fcmToken = it.result?:""
+            //TODO Remove for production
+            logger.i(TAG, "FCM push token: $fcmToken")
 
             Single.fromCallable {
 

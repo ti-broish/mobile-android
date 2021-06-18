@@ -22,4 +22,8 @@ interface IMainScreenView{
     fun showNavigation(show:Boolean)
 
     fun closeDrawer()
+
+    fun showProcessing(processing: Boolean)
+
+    fun showDismissableDialog(message: String, dismissCallback: () -> Unit)
 }

@@ -296,6 +296,7 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
         if (content == null) {
             content = ViolationDetailsFragment.newInstance(violation)
         }
+        Log.i(TAG, "ViolationID: ${violation.id}")
 
         view?.showScreen(content, ViolationDetailsFragment.TAG, addToBackStack = true,
             transitionContent = true)
@@ -311,6 +312,11 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
         }
 
         view?.showScreen(content, SendCheckInFragment.TAG, addToBackStack = true, transitionContent = true)
+    }
+
+    override fun showDismissableDialog(message: String, dismissCallback: () -> Unit) {
+
+        view?.showDismissableDialog(message, dismissCallback)
     }
 
     private fun clearBackStack() {
