@@ -23,9 +23,6 @@ class ProtocolsFragment : BasePresentableFragment<IProtocolsView,
     (), IProtocolsView {
 
     @Inject
-    lateinit var dialogUtil: IDialogUtil
-
-    @Inject
     lateinit var adapter: ProtocolsAdapter
 
     override fun onCreateView(
