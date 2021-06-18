@@ -9,12 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.base.BaseFragment
 import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
+import bg.dabulgaria.tibroish.presentation.push.IPushTokenSender
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 
@@ -23,11 +23,11 @@ class HomeFragment : BaseFragment() {
     @Inject
     protected lateinit var mainRouter: IMainRouter
     @Inject
-    lateinit var tiBroishRemoteRepository: ITiBroishRemoteRepository
-    @Inject
     lateinit var logger: ILogger
     @Inject
     lateinit var schedulersProvider: ISchedulersProvider
+    @Inject
+    lateinit var pushTokenSender: IPushTokenSender
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +42,8 @@ class HomeFragment : BaseFragment() {
 
     override fun onStart() {
         super.onStart()
+
+        pushTokenSender.sendPushToken()
 
         sendProtocol?.setOnClickListener { mainRouter.onNavigateToItem(NavItemAction.SendProtocol) }
         sendSignal?.setOnClickListener { mainRouter.onNavigateToItem(NavItemAction.SendSignal) }
