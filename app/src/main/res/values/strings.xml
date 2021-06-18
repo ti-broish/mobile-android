@@ -1,5 +1,10 @@
 <resources>
 
+    <string name="primary_notification_channel" translatable="false">default</string>
+    <string name="primary_notification_channel_name">Default</string>
+    <string name="important_notification_channel" translatable="false">important</string>
+    <string name="important_notification_channel_name">Важни</string>
+
     <string name="internet_connection_offline">Няма връзка с интернет</string>
     <string name="oops_went_wrong_try">Опа, нещо се обърка. Понякога тези неща се случват, опитайте отново</string>
     <string name="list_is_empty">Не бе намерено нищо</string>
@@ -104,4 +109,5 @@
     <string name="check_in">Отбелязване</string>
     <string name="check_in_send_successfully">Отбелязването е изпратено успешно!</string>
     <string name="description_label">Описание:</string>
+    <string name="message_label">Съобщение:</string>
 </resources>

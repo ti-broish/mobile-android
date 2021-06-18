@@ -10,22 +10,19 @@ import bg.dabulgaria.tibroish.domain.locations.TownRemote
 import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
 import bg.dabulgaria.tibroish.domain.organisation.Organization
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
-import bg.dabulgaria.tibroish.domain.protocol.ProtocolStatusRemote
 import bg.dabulgaria.tibroish.domain.protocol.SendProtocolRequest
+import bg.dabulgaria.tibroish.domain.push.SendTokenRequest
+import bg.dabulgaria.tibroish.domain.push.SendTokenResponse
 import bg.dabulgaria.tibroish.domain.user.SendCheckInRequest
 import bg.dabulgaria.tibroish.domain.user.SendCheckInResponse
 import bg.dabulgaria.tibroish.domain.user.User
 import bg.dabulgaria.tibroish.domain.violation.SendViolationRequest
-import bg.dabulgaria.tibroish.domain.violation.ViolationRemoteStatus
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.persistence.remote.api.AcceptValues
 import bg.dabulgaria.tibroish.persistence.remote.api.TiBroishApiController
 import bg.dabulgaria.tibroish.persistence.remote.model.SectionsRequestParams
 import bg.dabulgaria.tibroish.persistence.remote.model.TownsRequestParams
-import retrofit2.Call
-import java.util.*
 import javax.inject.Inject
-import kotlin.random.Random
 
 class TiBroishRemoteRepository @Inject constructor(private val apiController: TiBroishApiController,
                                                    private val authenticator: IRemoteRepoAuthenticator)
@@ -36,12 +33,10 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
                 .execute().body()!!
     }
 
-
     override fun createUser(firebaseJwt: String, userData: User) {
         // TODO: add error handling
         apiController.createUser(getAuthorization(firebaseJwt), userData).execute()
     }
-
 
     override fun getCountries(): List<CountryRemote> {
 
@@ -134,7 +129,6 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
             apiController.getViolations(getAuthorization(token))} !!
     }
 
-
     override fun sendCheckIn(request: SendCheckInRequest): SendCheckInResponse {
 
         Thread.sleep(2000)
@@ -143,6 +137,12 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
         /* TODO uncomment when check in request is available
         return authenticator.executeCall( { pParams, token ->
             apiController.sendCheckIn(getAuthorization(token), pParams)}, request)!!*/
+    }
+
+    override fun sendFCMToken(request: SendTokenRequest): SendTokenResponse {
+
+        return authenticator.executeCall( { param, token ->
+            apiController.sendFCMToken(getAuthorization(token), param)}, request) !!
     }
 
     private fun getAuthorization(idToken: String): String = "Bearer $idToken"

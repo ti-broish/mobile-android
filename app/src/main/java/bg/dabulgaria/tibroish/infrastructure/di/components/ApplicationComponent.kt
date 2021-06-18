@@ -24,6 +24,7 @@ import dagger.android.AndroidInjector
                 RemotePersistenceModule::class,
                 LocalPersistenceModule::class,
                 DomainModule::class,
+                ServiceModule::class,
                 BuildModule::class)
 )
 interface ApplicationComponent :AndroidInjector<DaApplication> {

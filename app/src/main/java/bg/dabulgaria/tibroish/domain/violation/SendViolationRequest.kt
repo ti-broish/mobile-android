@@ -1,8 +1,7 @@
 package bg.dabulgaria.tibroish.domain.violation
 
+import bg.dabulgaria.tibroish.domain.image.PictureDto
 import bg.dabulgaria.tibroish.domain.locations.SectionRemote
-import bg.dabulgaria.tibroish.domain.protocol.ProtocolStatusRemote
-import bg.dabulgaria.tibroish.persistence.remote.model.PictureDto
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
@@ -22,4 +21,5 @@ class VoteViolationRemote(
         val pictures: List<PictureDto>,
         val description: String,
         val status: ViolationRemoteStatus,
-        val statusLocalized: String) : Serializable
+        val statusLocalized: String,
+        var errorMessage: String?) : Serializable
