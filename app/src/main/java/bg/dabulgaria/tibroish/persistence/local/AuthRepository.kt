@@ -24,8 +24,24 @@ class AuthRepository @Inject constructor(@AppContext context: Context, private v
             }
         }
 
+    override var fcmPushToken: String?
+        get() = preferences.getString(FCM_PUSH_TOKEN_KEY, null)
+        set(value) {
+            try{
+
+                val editor = preferences.edit()
+                editor.putString(FCM_PUSH_TOKEN_KEY, value?:"")
+                editor.commit()
+            }
+            catch (exception: Exception){
+                logger.e(UserRepository.TAG, exception)
+            }
+        }
+
     companion object{
+
         val TOKEN_KEY = "bg.dabulgaria.tibroish.persistence.authrepository.token"
+        val FCM_PUSH_TOKEN_KEY = "bg.dabulgaria.tibroish.persistence.authrepository.fcm.push.token"
         val TAG = AuthRepository::class.java.simpleName
     }
 }

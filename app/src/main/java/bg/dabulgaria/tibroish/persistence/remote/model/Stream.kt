@@ -29,7 +29,7 @@ import bg.dabulgaria.tibroish.domain.locations.SectionRemote
 data class Stream (
         val id: kotlin.String,
         val chunks: kotlin.collections.List<StreamChunk>,
-        val user: User,
+        //val user: User,
         val streamUrl: kotlin.String,
         val broadcastUrl: kotlin.String,
         val isStreaming: kotlin.Boolean,

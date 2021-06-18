@@ -8,6 +8,8 @@ import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.domain.protocol.SendProtocolRequest
 import bg.dabulgaria.tibroish.domain.user.SendCheckInRequest
 import bg.dabulgaria.tibroish.domain.user.SendCheckInResponse
+import bg.dabulgaria.tibroish.domain.push.SendTokenRequest
+import bg.dabulgaria.tibroish.domain.push.SendTokenResponse
 import bg.dabulgaria.tibroish.domain.user.User
 import bg.dabulgaria.tibroish.domain.violation.SendViolationRequest
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
@@ -77,4 +79,9 @@ interface TiBroishApiController {
     @POST("/checkin")
     fun sendCheckIn(@Header(ApiHeader.Authorization) authorization:String,
                       @Body request: SendCheckInRequest):Call<SendCheckInResponse>
+
+    @POST("/me/clients")
+    fun sendFCMToken(@Header(ApiHeader.Authorization) authorization: String,
+                     @Body tokenRequest: SendTokenRequest): Call<SendTokenResponse>
+
 }

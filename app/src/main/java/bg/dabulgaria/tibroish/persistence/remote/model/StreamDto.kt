@@ -11,8 +11,6 @@
 */
 package bg.dabulgaria.tibroish.persistence.remote.model
 
-import bg.dabulgaria.tibroish.persistence.remote.model.SectionDto
-
 /**
  * 
  * @param section 
@@ -24,7 +22,7 @@ import bg.dabulgaria.tibroish.persistence.remote.model.SectionDto
  * @param viewUrl 
  */
 data class StreamDto (
-    val section: SectionDto,
+    //val section: SectionDto,
     val id: kotlin.String,
     val isStreaming: kotlin.Boolean,
     val isAssigned: kotlin.Boolean,
