@@ -1,7 +1,9 @@
 package bg.dabulgaria.tibroish.presentation.ui.violation.send
 
 
+import android.content.Context
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.domain.image.ImageUploaderService
 import bg.dabulgaria.tibroish.domain.image.PickedImageSource
 import bg.dabulgaria.tibroish.domain.io.IFileRepository
 import bg.dabulgaria.tibroish.domain.locations.ISelectedSectionLocalRepository
@@ -12,10 +14,12 @@ import bg.dabulgaria.tibroish.domain.send.ImageSendStatus
 import bg.dabulgaria.tibroish.domain.send.SendStatus
 import bg.dabulgaria.tibroish.domain.violation.IViolationRepository
 import bg.dabulgaria.tibroish.domain.violation.SendViolationRequest
+import bg.dabulgaria.tibroish.domain.violation.ViolationMetadata
 import bg.dabulgaria.tibroish.domain.violation.VoteViolation
 import bg.dabulgaria.tibroish.domain.violation.image.IViolationImageUploader
 import bg.dabulgaria.tibroish.domain.violation.image.IViolationImagesRepository
 import bg.dabulgaria.tibroish.domain.violation.image.ViolationImage
+import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
@@ -43,7 +47,9 @@ class SendViolationInteractor @Inject constructor(sectionPickerInteractor: ISect
                                                   private val selectedImagesProvider: IGallerySelectedImagesProvider,
                                                   private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
                                                   private val resourceProvider: IResourceProvider,
-                                                  private val selectedSectionLocalRepo: ISelectedSectionLocalRepository)
+                                                  private val selectedSectionLocalRepo:
+                                                  ISelectedSectionLocalRepository,
+                                                  @AppContext val context: Context)
     : SendItemInteractor(sectionPickerInteractor,
         disposableHandler,
         schedulersProvider,
@@ -137,24 +143,12 @@ class SendViolationInteractor @Inject constructor(sectionPickerInteractor: ISect
         selectedSectionLocalRepo.selectedSectionData = viewData.sectionsData
 
         val entity = viewData.entityItem?: return
-        val violationId = entity.id
-        violationImageUploader.uploadImages(violationId)
-
-        val images = violationImagesRepo.getByViolationId(violationId)
-
-        val request = SendViolationRequest( viewData.sectionsData?.selectedSection?.id ?:"",
-                viewData.sectionsData?.selectedTown?.id,
-                images.map { it.serverId },
-                viewData.message)
-
-        val response = tiBroishRemoteRepository.sendViolation(request)
-
-        val violation = violationsRepo.get(violationId)!!
-        violation.remoteStatus = response.status
-        violation.serverId = response.id.toString()
-        violation.message = viewData.message
-        violation.status = SendStatus.Send
-        violationsRepo.update(violation)
+        val metadata = ViolationMetadata(
+            violationId = entity.id,
+            sectionId = viewData.sectionsData?.selectedSection?.id ?:"",
+            townId = viewData.sectionsData?.selectedTown?.id,
+            description = viewData.message)
+        ImageUploaderService.enqueueViolation(context, metadata)
     }
 
     override fun addSelectedGalleryImages(currentData: SendItemViewData){
