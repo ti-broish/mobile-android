@@ -3,7 +3,7 @@ package bg.dabulgaria.tibroish.presentation.ui.protocol.add
 
 import android.content.Context
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.image.ImageUploaderService
+import bg.dabulgaria.tibroish.domain.image.UploaderService
 import bg.dabulgaria.tibroish.domain.protocol.image.IProtocolImageUploader
 import bg.dabulgaria.tibroish.domain.image.PickedImageSource
 import bg.dabulgaria.tibroish.domain.io.IFileRepository
@@ -127,7 +127,7 @@ class AddProtocolInteractor @Inject constructor(sectionPickerInteractor: ISectio
         val metadata = ProtocolMetadata(
             protocolId = viewData.entityItem!!.id,
             sectionId = viewData.sectionsData!!.selectedSection!!.id)
-        ImageUploaderService.enqueueProtocol(context, metadata)
+        UploaderService.uploadProtocol(context, metadata)
     }
 
     override fun addSelectedGalleryImages(currentData: SendItemViewData) {

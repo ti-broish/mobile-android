@@ -3,7 +3,7 @@ package bg.dabulgaria.tibroish.presentation.ui.violation.send
 
 import android.content.Context
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.image.ImageUploaderService
+import bg.dabulgaria.tibroish.domain.image.UploaderService
 import bg.dabulgaria.tibroish.domain.image.PickedImageSource
 import bg.dabulgaria.tibroish.domain.io.IFileRepository
 import bg.dabulgaria.tibroish.domain.locations.ISelectedSectionLocalRepository
@@ -13,7 +13,6 @@ import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.send.ImageSendStatus
 import bg.dabulgaria.tibroish.domain.send.SendStatus
 import bg.dabulgaria.tibroish.domain.violation.IViolationRepository
-import bg.dabulgaria.tibroish.domain.violation.SendViolationRequest
 import bg.dabulgaria.tibroish.domain.violation.ViolationMetadata
 import bg.dabulgaria.tibroish.domain.violation.VoteViolation
 import bg.dabulgaria.tibroish.domain.violation.image.IViolationImageUploader
@@ -148,7 +147,7 @@ class SendViolationInteractor @Inject constructor(sectionPickerInteractor: ISect
             sectionId = viewData.sectionsData?.selectedSection?.id ?:"",
             townId = viewData.sectionsData?.selectedTown?.id,
             description = viewData.message)
-        ImageUploaderService.enqueueViolation(context, metadata)
+        UploaderService.uploadViolation(context, metadata)
     }
 
     override fun addSelectedGalleryImages(currentData: SendItemViewData){
