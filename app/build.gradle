@@ -53,6 +53,7 @@ android {
         debug{
             debuggable true
             minifyEnabled false
+            signingConfig = signingConfigs.AppSigning
         }
     }
     buildToolsVersion '29.0.3'
