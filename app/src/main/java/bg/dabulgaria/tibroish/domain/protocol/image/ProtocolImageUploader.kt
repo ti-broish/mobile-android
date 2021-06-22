@@ -1,7 +1,6 @@
 package bg.dabulgaria.tibroish.domain.protocol.image
 
 import bg.dabulgaria.tibroish.domain.image.IEntityImageUploader
-import bg.dabulgaria.tibroish.domain.image.UploadImage
 import bg.dabulgaria.tibroish.domain.image.UploadImageRequest
 import bg.dabulgaria.tibroish.domain.image.UploadImageResponse
 import bg.dabulgaria.tibroish.domain.io.IFileRepository
@@ -29,10 +28,10 @@ class ProtocolImageUploader @Inject constructor(private val tiBroishRemoteRepo: 
 
         val images = protocolImagesLocalRepo.getByProtocolId(entityId)
 
-        images.mapIndexed { index, protocolImage -> uploadImage(index, protocolImage) }
+        images.map { protocolImage -> uploadImage(protocolImage) }
     }
 
-    private fun uploadImage(index: Int, protocolImage: ProtocolImage) {
+    private fun uploadImage(protocolImage: ProtocolImage) {
 
         if (protocolImage.imageSendStatus == ImageSendStatus.Uploaded)
             return

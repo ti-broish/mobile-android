@@ -2,6 +2,7 @@ package bg.dabulgaria.tibroish.domain.protocol.image
 
 import androidx.room.*
 import bg.dabulgaria.tibroish.domain.date.DateTypeConverter
+import bg.dabulgaria.tibroish.domain.image.ImageBase
 import bg.dabulgaria.tibroish.domain.image.PickedImageSource
 import bg.dabulgaria.tibroish.domain.image.PickedImageSourceTypeConverter
 import bg.dabulgaria.tibroish.domain.protocol.Protocol
@@ -25,10 +26,14 @@ class ProtocolImage constructor(
         @ColumnInfo(name = "protocolId", index = true)
         var protocolId: Long = 0,
         var uuid: String = "",
+        @set:JvmName("setServerIdFake")
         var serverId: String = "",
         var originalFilePath: String = "",
+        @get:JvmName("localFilePathFake")
         var localFilePath: String = "",
         var localFileThumbPath: String = "",
+        @get:JvmName("getImageSendStatusFake")
+        @set:JvmName("setImageSendStatusFake")
         var imageSendStatus: ImageSendStatus = ImageSendStatus.NotProcessed,
         var providerId: String = "",
         val source: PickedImageSource = PickedImageSource.None,
@@ -36,4 +41,25 @@ class ProtocolImage constructor(
         val height: Int = -1,
         val dateTaken: Date = Date(0),
         @ColumnInfo(name = "serverUrl")
-        var serverUrl: String? = null) : Serializable
+        @set:JvmName("setServerUrlFake")
+        var serverUrl: String? = null) : Serializable, ImageBase {
+        override fun getImageSendStatus(): ImageSendStatus {
+                return imageSendStatus
+        }
+
+        override fun setImageSendStatus(status: ImageSendStatus) {
+                imageSendStatus = status
+        }
+
+        override fun getLocalFilePath(): String {
+                return localFilePath
+        }
+
+        override fun setServerId(serverId: String) {
+                this.serverId = serverId
+        }
+
+        override fun setServerUrl(serverUrl: String) {
+                this.serverUrl = serverUrl
+        }
+}

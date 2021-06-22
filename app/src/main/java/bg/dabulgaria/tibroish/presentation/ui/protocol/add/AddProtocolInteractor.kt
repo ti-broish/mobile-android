@@ -1,7 +1,9 @@
 package bg.dabulgaria.tibroish.presentation.ui.protocol.add
 
 
+import android.content.Context
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.domain.image.UploaderService
 import bg.dabulgaria.tibroish.domain.protocol.image.IProtocolImageUploader
 import bg.dabulgaria.tibroish.domain.image.PickedImageSource
 import bg.dabulgaria.tibroish.domain.io.IFileRepository
@@ -14,6 +16,7 @@ import bg.dabulgaria.tibroish.domain.protocol.image.ProtocolImage
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.send.ImageSendStatus
 import bg.dabulgaria.tibroish.domain.send.SendStatus
+import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
@@ -41,7 +44,9 @@ class AddProtocolInteractor @Inject constructor(sectionPickerInteractor: ISectio
                                                 private val protocolImagesRepo: IProtocolImagesRepository,
                                                 private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
                                                 private val resourceProvider: IResourceProvider,
-                                                private val selectedSectionLocalRepo: ISelectedSectionLocalRepository)
+                                                private val selectedSectionLocalRepo:
+                                                ISelectedSectionLocalRepository,
+                                                @AppContext val context: Context)
     : SendItemInteractor(sectionPickerInteractor,
         disposableHandler,
         schedulersProvider,
@@ -119,21 +124,10 @@ class AddProtocolInteractor @Inject constructor(sectionPickerInteractor: ISectio
 
         selectedSectionLocalRepo.selectedSectionData = viewData.sectionsData
 
-        val protocolId = viewData.entityItem!!.id
-        protocolImageUploader.uploadImages(protocolId)
-
-        val images = protocolImagesRepo.getByProtocolId(protocolId)
-
-        val request = SendProtocolRequest(viewData.sectionsData!!.selectedSection!!.id,
-                images.map { it.serverId })
-
-        val response = tiBroishRemoteRepository.sendProtocol(request)
-
-        val protocol = protocolsRepo.get(protocolId)!!
-        protocol.remoteStatus = response.status
-        protocol.serverId = response.id.toString()
-        protocol.status = SendStatus.Send
-        protocolsRepo.update(protocol)
+        val metadata = ProtocolMetadata(
+            protocolId = viewData.entityItem!!.id,
+            sectionId = viewData.sectionsData!!.selectedSection!!.id)
+        UploaderService.uploadProtocol(context, metadata)
     }
 
     override fun addSelectedGalleryImages(currentData: SendItemViewData) {
