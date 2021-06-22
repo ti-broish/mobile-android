@@ -1,7 +1,6 @@
 package bg.dabulgaria.tibroish.domain.violation.image
 
 import bg.dabulgaria.tibroish.domain.image.IEntityImageUploader
-import bg.dabulgaria.tibroish.domain.image.UploadImage
 import bg.dabulgaria.tibroish.domain.image.UploadImageRequest
 import bg.dabulgaria.tibroish.domain.image.UploadImageResponse
 import bg.dabulgaria.tibroish.domain.io.IFileRepository
@@ -29,10 +28,10 @@ class ViolationImageUploader @Inject constructor(private val tiBroishRemoteRepo:
 
         val images = violationImagesLocalRepo.getByViolationId(entityId)
 
-        images.mapIndexed { index, violationImage -> uploadImage(index, violationImage) }
+        images.map { violationImage -> uploadImage(violationImage) }
     }
 
-    private fun uploadImage(index: Int, violationImage: ViolationImage) {
+    private fun uploadImage(violationImage: ViolationImage) {
 
         if (violationImage.imageSendStatus == ImageSendStatus.Uploaded)
             return

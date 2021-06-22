@@ -6,10 +6,20 @@ import bg.dabulgaria.tibroish.DaApplication
 import bg.dabulgaria.tibroish.domain.calculators.HashCalculator
 import bg.dabulgaria.tibroish.domain.calculators.IHashCalculator
 import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
+import bg.dabulgaria.tibroish.domain.protocol.IProtocolSenderController
+import bg.dabulgaria.tibroish.domain.protocol.IProtocolsRepository
+import bg.dabulgaria.tibroish.domain.protocol.ProtocolSenderController
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolStatusRemote
+import bg.dabulgaria.tibroish.domain.protocol.image.IProtocolImageUploader
+import bg.dabulgaria.tibroish.domain.protocol.image.IProtocolImagesRepository
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.providers.ITimestampProvider
 import bg.dabulgaria.tibroish.domain.providers.TimestampProvider
+import bg.dabulgaria.tibroish.domain.violation.IViolationRepository
+import bg.dabulgaria.tibroish.domain.violation.IViolationSenderController
+import bg.dabulgaria.tibroish.domain.violation.ViolationSenderController
+import bg.dabulgaria.tibroish.domain.violation.image.IViolationImageUploader
+import bg.dabulgaria.tibroish.domain.violation.image.IViolationImagesRepository
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.infrastructure.schedulers.SchedulersProvider
@@ -156,4 +166,36 @@ class ApplicationModule {
     @Provides
     internal fun providesIChannelInitializer(iml: ChannelInitializer): IChannelInitializer
             = iml
+
+    @Provides
+    @Singleton
+    fun providesProtocolSenderController(
+        protocolImageUploader: IProtocolImageUploader,
+        protocolsRepository: IProtocolsRepository,
+        protocolImagesRepository: IProtocolImagesRepository,
+        tiBroishRemoteRepository: ITiBroishRemoteRepository
+    ): IProtocolSenderController {
+        return ProtocolSenderController(
+            protocolImageUploader,
+            protocolImagesRepository,
+            protocolsRepository,
+            tiBroishRemoteRepository
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesViolationSenderController(
+        violationImageUploader: IViolationImageUploader,
+        violationsRepository: IViolationRepository,
+        violationImagesRepository: IViolationImagesRepository,
+        tiBroishRemoteRepository: ITiBroishRemoteRepository
+    ): IViolationSenderController {
+        return ViolationSenderController(
+            violationImageUploader,
+            violationsRepository,
+            violationImagesRepository,
+            tiBroishRemoteRepository
+        )
+    }
 }
