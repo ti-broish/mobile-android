@@ -10,9 +10,11 @@ import bg.dabulgaria.tibroish.domain.protocol.ProtocolStatusRemote
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.providers.ITimestampProvider
 import bg.dabulgaria.tibroish.domain.providers.TimestampProvider
+import bg.dabulgaria.tibroish.domain.user.IUserAuthenticator
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.infrastructure.schedulers.SchedulersProvider
+import bg.dabulgaria.tibroish.live.utils.LoginActivityLoader
 import bg.dabulgaria.tibroish.persistence.local.Logger
 import bg.dabulgaria.tibroish.persistence.local.db.TiBroishDatabase
 import bg.dabulgaria.tibroish.presentation.main.IMainPresenter
@@ -43,14 +45,14 @@ class ApplicationModule {
     @Provides
     @Singleton
     @AppContext
-    internal fun providesAppContext(DaApplication : DaApplication) : Context {
+    internal fun providesAppContext(DaApplication: DaApplication): Context {
 
         return DaApplication
     }
 
     @Provides
     @Singleton
-    internal fun providesGson() : Gson {
+    internal fun providesGson(): Gson {
         return GsonBuilder()
                 .registerTypeAdapter(ProtocolStatusRemote::class.java, ProtocolStatusRemote.deserializer)
                 .setDateFormat("dd/mm/yyyy HH:mm")
@@ -81,21 +83,21 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    internal fun providesIHashCalculator() :IHashCalculator{
+    internal fun providesIHashCalculator(): IHashCalculator {
 
         return HashCalculator()
     }
 
     @Provides
     @Singleton
-    internal fun providesITimestampProvider() :ITimestampProvider{
+    internal fun providesITimestampProvider(): ITimestampProvider {
 
         return TimestampProvider()
     }
 
     @Provides
     @Singleton
-    fun providesLogger():ILogger{
+    fun providesLogger(): ILogger {
 
         return Logger()
     }
@@ -103,8 +105,8 @@ class ApplicationModule {
     @Provides
     @Singleton
     fun providesFormValidator(
-        logger: ILogger,
-        organizationsManager: OrganizationsManager): FormValidator {
+            logger: ILogger,
+            organizationsManager: OrganizationsManager): FormValidator {
         return FormValidator(logger, organizationsManager)
     }
 
@@ -141,19 +143,21 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    internal fun providesICameraTakenImageProvider(implementation: CameraTakenImageProvider): ICameraTakenImageProvider
-            = implementation
+    internal fun providesICameraTakenImageProvider(implementation: CameraTakenImageProvider): ICameraTakenImageProvider = implementation
 
     @Provides
     @Singleton
-    internal fun providesIPushTokenSender(implemenation: PushTokenSender): IPushTokenSender
-            = implemenation
+    internal fun providesIPushTokenSender(implemenation: PushTokenSender): IPushTokenSender = implemenation
 
     @Provides
-    internal fun providesIPushActionRouter(implemenation: PushActionRouter): IPushActionRouter
-            = implemenation
+    internal fun providesIPushActionRouter(implemenation: PushActionRouter): IPushActionRouter = implemenation
 
     @Provides
-    internal fun providesIChannelInitializer(iml: ChannelInitializer): IChannelInitializer
-            = iml
+    internal fun providesIChannelInitializer(iml: ChannelInitializer): IChannelInitializer = iml
+
+    @Provides
+    @Singleton
+    fun provideLoginScreenLoader(context: Context, userAuthenticator: IUserAuthenticator): LoginActivityLoader {
+        return LoginActivityLoader(context, userAuthenticator)
+    }
 }
