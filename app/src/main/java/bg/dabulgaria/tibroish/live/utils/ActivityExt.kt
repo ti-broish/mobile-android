@@ -1,4 +1,3 @@
-/* qf:core */
 package bg.dabulgaria.tibroish.live.utils
 
 import android.app.Activity
@@ -11,6 +10,8 @@ import android.view.Window
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 
 @Suppress("DEPRECATION")
 fun Activity.makeFullScreen() {
@@ -62,4 +63,5 @@ fun Activity.isCallActive(): Boolean {
     val manager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
     return manager.mode == AudioManager.MODE_IN_CALL || manager.mode == AudioManager.MODE_IN_COMMUNICATION
 }
-/* ^qf:core */
+
+fun LifecycleOwner.isActive(): Boolean = lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)

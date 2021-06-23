@@ -6,9 +6,9 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.live.model.UserStreamModel
 import bg.dabulgaria.tibroish.live.utils.LoginActivityLoader
 import bg.dabulgaria.tibroish.live.utils.makeFullScreen
 import bg.dabulgaria.tibroish.presentation.base.BaseActivity
@@ -18,6 +18,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import kotlinx.android.synthetic.main.activity_fetch_stream.*
 import javax.inject.Inject
+import kotlin.concurrent.thread
 
 private const val BUTTON_COOLDOWN = 1000L
 
@@ -64,7 +65,7 @@ class FetchStreamActivity : BaseActivity(), HasAndroidInjector {
         super.onResume()
 
         tryFetchingStream()
-        loginActivityLoader.logout()
+
     }
 
     override fun showNavigation(show: Boolean) {
@@ -81,6 +82,15 @@ class FetchStreamActivity : BaseActivity(), HasAndroidInjector {
 
     private fun tryFetchingStream() {
         showProgressBar()
+
+        // TODO implement get user stream
+        thread {
+            Thread.sleep(5000)
+            val userStream = UserStreamModel("rtmp://strm.ludost.net/st/streamtest1", "https://strm.ludost.net/hls/streamtest1.m3u8", true)
+            PrepareToStreamActivity.startWithParameters(this@FetchStreamActivity, userStream)
+            finish()
+        }
+
 //        streamService.getUserStream(this, { result: UserStreamModel ->
 //            if (result.streamUrl != null) {
 //                val userStream = UserStream(result.streamUrl, result.audioDisabled
