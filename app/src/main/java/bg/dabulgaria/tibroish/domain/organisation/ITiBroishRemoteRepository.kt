@@ -15,6 +15,7 @@ import bg.dabulgaria.tibroish.domain.user.SendCheckInResponse
 import bg.dabulgaria.tibroish.domain.user.User
 import bg.dabulgaria.tibroish.domain.violation.SendViolationRequest
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
+import bg.dabulgaria.tibroish.live.model.UserStreamModel
 import bg.dabulgaria.tibroish.persistence.remote.model.SectionsRequestParams
 import bg.dabulgaria.tibroish.persistence.remote.model.TownsRequestParams
 
@@ -52,4 +53,6 @@ interface ITiBroishRemoteRepository {
     fun sendCheckIn(request: SendCheckInRequest): SendCheckInResponse
 
     fun sendFCMToken(request: SendTokenRequest): SendTokenResponse
+
+    fun getUserStream(): UserStreamModel
 }

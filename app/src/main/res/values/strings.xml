@@ -148,4 +148,10 @@
     <string name="permission_rationale">За да започнете живо предаване е необходимо да дадете разрешения за достъп до камерата и микрофона на устройството</string>
     <string name="allow">Разреши</string>
 
+    <string name="share">Сподели</string>
+    <string name="share_url">Сподели връзка</string>
+    <string name="exit_message">Сигурни ли сте че искате да излезете?</string>
+    <string name="yes">Да</string>
+    <string name="no">Не</string>
+
 </resources>
