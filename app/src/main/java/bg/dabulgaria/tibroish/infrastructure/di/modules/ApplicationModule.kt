@@ -192,9 +192,9 @@ class ApplicationModule {
         tiBroishRemoteRepository: ITiBroishRemoteRepository
     ): IViolationSenderController {
         return ViolationSenderController(
-            violationImageUploader,
             violationsRepository,
             violationImagesRepository,
+            violationImageUploader,
             tiBroishRemoteRepository
         )
     }
