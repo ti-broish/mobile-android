@@ -83,7 +83,7 @@ class FetchStreamActivity : BaseActivity(), HasAndroidInjector {
     private fun tryFetchingStream() {
         showProgressBar()
 
-        // TODO implement get user stream
+        // TODO implement get user stream. Don't forget the STREAMING_NOT_ALLOWED_HTTP_CODE = 409 case
         thread {
             Thread.sleep(5000)
             val userStream = UserStreamModel("rtmp://strm.ludost.net/st/streamtest1", "https://strm.ludost.net/hls/streamtest1.m3u8", true)
