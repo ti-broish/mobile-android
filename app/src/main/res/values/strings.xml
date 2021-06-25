@@ -110,7 +110,11 @@
     <string name="check_in_send_successfully">Отбелязването е изпратено успешно!</string>
     <string name="description_label">Описание:</string>
     <string name="message_label">Съобщение:</string>
-
+    <string name="protocol_upload_publishing">Публикуване на протокол</string>
+    <string name="protocol_upload_published">Протоколът беше публикуван успешно</string>
+    <string name="violation_upload_publishing">Публикуване на сигнал</string>
+    <string name="violation_upload_published">Сигналът беше публикуван успешно</string>
+    <string name="upload_notification_channel_name">Публикуване</string>
 
     <!-- Common Buttons -->
     <string name="button_close">Затвори</string>
