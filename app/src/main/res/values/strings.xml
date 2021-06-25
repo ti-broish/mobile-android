@@ -115,4 +115,47 @@
     <string name="violation_upload_publishing">Публикуване на сигнал</string>
     <string name="violation_upload_published">Сигналът беше публикуван успешно</string>
     <string name="upload_notification_channel_name">Публикуване</string>
+
+    <!-- Common Buttons -->
+    <string name="button_close">Затвори</string>
+
+    <!-- Login activity -->
+    <string name="username">Имейл</string>
+    <string name="password">Парола</string>
+    <string name="login">Вход</string>
+    <string name="username_helper_text">Имейлът от основното приложение Ти Броиш</string>
+    <string name="invalid_credentials">Грешен имейл или парола</string>
+
+    <!-- Home activity -->
+    <string name="name_format">Здравейте,\n%1$s</string>
+
+    <!-- Disabled streaming activity -->
+    <string name="streaming_disabled_no_internet_message">Нямате свързаност с интернет!\nМоля, свържете се и опитайте отново.</string>
+    <string name="streaming_disabled_other_error_message">Възникна грешка, моля, опитайте отново.\nАко проблемът продължи, излезте и опитайте отново.</string>
+    <string name="streaming_not_yet_possible_message">Предаването на живо е възможно само след края на изборния ден и след като сте избрали секция от основното приложение.</string>
+    <string name="try_again">Опитай отново</string>
+
+    <!-- Prepare activity -->
+    <string name="prepare_streaming_title">Малко инструкции</string>
+    <string name="instruction_horizontal_text">Предпочитайте хоризонтална ориентация на телефона</string>
+    <string name="instruction_centered_text">Уверете се, че важното действие се намира в центъра на екрана</string>
+    <string name="instruction_battery_text">Следете нивото на батерията</string>
+    <string name="instruction_interrupts_text">Живото предаване ще прекъсне ако напуснете приложението, получите обаждане или екрана се заключи.</string>
+    <string name="forward_label">Напред</string>
+
+
+    <string name="live_label">На живо</string>
+    <string name="retry">Опитай отново</string>
+    <string name="stream_unrecoverable_error">Опитахме да излъчваме, но срещнахме непреодолим проблем. Изглежда не поддържаме устройството ви.</string>
+    <string name="connection_lost">Връзката е прекъсната</string>
+    <string name="connecting_attempt_in_progress">Свързване…</string>
+    <string name="permission_rationale">За да започнете живо предаване е необходимо да дадете разрешения за достъп до камерата и микрофона на устройството</string>
+    <string name="allow">Разреши</string>
+
+    <string name="share">Сподели</string>
+    <string name="share_url">Сподели връзка</string>
+    <string name="exit_message">Сигурни ли сте че искате да излезете?</string>
+    <string name="yes">Да</string>
+    <string name="no">Не</string>
+
 </resources>
