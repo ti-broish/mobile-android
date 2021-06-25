@@ -61,7 +61,7 @@
         android:background="@drawable/action_button_primary_selector"
         android:paddingLeft="6dp"
         android:paddingRight="6dp"
-        android:text="@string/continueText"
+        android:text="@string/send"
         android:textSize="@dimen/action_button_text_size"
         android:maxLines="1"
         app:autoSizeTextType="uniform"

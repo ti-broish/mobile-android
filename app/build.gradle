@@ -72,7 +72,7 @@ android {
 
             applicationId = "bg.dabulgaria.tibroish"
             resValue "string", "provider_authority", "${applicationId}.file_provider_camera"
-            def APP_NAME = "Ти Броиш"
+            def APP_NAME = "Ти броиш"
             resValue "string", "app_name", APP_NAME
             signingConfig productionSigning
         }
@@ -80,7 +80,7 @@ android {
 
             applicationId = "bg.dabulgaria.tibroish.apn"
             resValue "string", "provider_authority", "${applicationId}.file_provider_camera"
-            def APP_NAME = "Ти Броиш Stage"
+            def APP_NAME = "Ти броиш Stage"
             resValue "string", "app_name", APP_NAME
             signingConfig stagingSigning
         }

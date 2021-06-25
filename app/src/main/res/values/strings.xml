@@ -9,14 +9,14 @@
     <string name="oops_went_wrong_try">Опа, нещо се обърка. Понякога тези неща се случват, опитайте отново</string>
     <string name="list_is_empty">Не бе намерено нищо</string>
     <string name="profile">Профил</string>
-    <string name="send_protocol">Изпрати Протокол</string>
+    <string name="send_protocol">Изпрати протокол</string>
     <string name="my_protocols">Моите протоколи</string>
-    <string name="send_signal">Изпрати Сигнал</string>
+    <string name="send_signal">Изпрати сигнал</string>
     <string name="my_signals">Моите сигнали</string>
     <string name="live">LIVE</string>
     <string name="exit">Изход</string>
     <string name="rights_and_obligations">Права и Задължения</string>
-    <string name="ti_broish">Ти Броиш</string>
+    <string name="ti_broish">Ти броиш</string>
     <string name="start">Начало</string>
     <string name="navigation_drawer_open">Отваряне на навигационното чекмедже</string>
     <string name="navigation_drawer_close">Затваряне на навигационното чекмедже</string>
@@ -69,7 +69,6 @@
     <string name="region">Район</string>
     <string name="section_number">Номер на секция</string>
     <string name="unique_section_number">Единен номер на секция</string>
-    <string name="forgot_password_send">Изпрати</string>
     <string name="forgot_password">Забравена парола</string>
     <string name="logo_content_description">Лого на ТиБроиш</string>
     <string name="password_reset_success_title">Проверете Вашият имейл</string>
@@ -79,7 +78,7 @@
     <string name="password_reset_generic_error_message">Проблем при промяната на парола.</string>
     <string name="dialog_title_error">Грешка</string>
     <string name="country">Държава</string>
-    <string name="continueText">Продължи</string>
+    <string name="send">Изпрати</string>
     <string name="profile_generic_error">Грешка при достъпване на профила</string>
     <string name="profile_screen_title">Профил</string>
     <string name="dialog_generic_title">Съобщение</string>
