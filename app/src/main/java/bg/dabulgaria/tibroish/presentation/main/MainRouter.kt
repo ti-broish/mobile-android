@@ -13,12 +13,13 @@ import androidx.fragment.app.FragmentManager
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
-import bg.dabulgaria.tibroish.presentation.ui.common.item.send.SendItemViewData
+import bg.dabulgaria.tibroish.live.FetchStreamActivity
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
+import bg.dabulgaria.tibroish.presentation.ui.checkin.SendCheckInFragment
+import bg.dabulgaria.tibroish.presentation.ui.common.item.send.SendItemViewData
+import bg.dabulgaria.tibroish.presentation.ui.forgotpassword.ForgotPasswordFragment
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
 import bg.dabulgaria.tibroish.presentation.ui.login.LoginFragment
-import bg.dabulgaria.tibroish.presentation.ui.checkin.SendCheckInFragment
-import bg.dabulgaria.tibroish.presentation.ui.forgotpassword.ForgotPasswordFragment
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.camera.CameraPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoId
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerConstants
@@ -28,16 +29,16 @@ import bg.dabulgaria.tibroish.presentation.ui.protocol.add.AddProtocolFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.details.ProtocolDetailsFragment
 import bg.dabulgaria.tibroish.presentation.ui.protocol.list.ProtocolsFragment
 import bg.dabulgaria.tibroish.presentation.ui.registration.RegistrationFragment
-import bg.dabulgaria.tibroish.presentation.ui.violation.send.SendViolationFragment
-import java.io.File
 import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsFragment
 import bg.dabulgaria.tibroish.presentation.ui.rights.RightsAndObligationsViewData
 import bg.dabulgaria.tibroish.presentation.ui.violation.details.ViolationDetailsFragment
 import bg.dabulgaria.tibroish.presentation.ui.violation.list.ViolationsListFragment
+import bg.dabulgaria.tibroish.presentation.ui.violation.send.SendViolationFragment
+import java.io.File
 import javax.inject.Inject
 
-class MainRouter @Inject constructor(@AppContext private val appContext: Context )
-    :IMainRouter{
+class MainRouter @Inject constructor(@AppContext private val appContext: Context)
+    : IMainRouter {
 
     private var view: IMainScreenView? = null
     private var presenter: IMainPresenter? = null
@@ -59,14 +60,14 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
 
     override fun onNavigateToItem(action: NavItemAction) {
 
-        Log.i( TAG, action.name )
+        Log.i(TAG, action.name)
 
-        when(action){
+        when (action) {
             NavItemAction.Home -> {
                 clearBackStack()
                 showHomeScreen()
             }
-            NavItemAction.Profile ->{
+            NavItemAction.Profile -> {
                 showProfile()
             }
             NavItemAction.CheckIn -> {
@@ -87,10 +88,16 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
             NavItemAction.RightsAndObligations -> {
                 showRightsAndObligations()
             }
-            NavItemAction.YouCountLive -> {}
-            NavItemAction.Exit -> {}
+            NavItemAction.YouCountLive -> {
+                val intent = Intent(appContext, FetchStreamActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                appContext.startActivity(intent)
+            }
+            NavItemAction.Exit -> {
+            }
         }
     }
+
     //region IMainNavigator implementation
     override fun showHomeScreen() {
 
@@ -98,7 +105,7 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
 
         clearBackStack()
 
-        var homeFragment = view?.supportFragmentMngr?.findFragmentByTag(HomeFragment.TAG )
+        var homeFragment = view?.supportFragmentMngr?.findFragmentByTag(HomeFragment.TAG)
         if (homeFragment == null) {
 
             homeFragment = HomeFragment.newInstance()
@@ -121,7 +128,7 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
 
     override fun showAddProtocol() {
 
-        var content = view?.supportFragmentMngr?.findFragmentByTag(AddProtocolFragment.TAG )
+        var content = view?.supportFragmentMngr?.findFragmentByTag(AddProtocolFragment.TAG)
         if (content == null) {
 
             clearBackStack()
@@ -155,23 +162,23 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
     }
 
     override fun showProfile() {
-        var content = view?.supportFragmentMngr?.findFragmentByTag(ProfileFragment.TAG )
+        var content = view?.supportFragmentMngr?.findFragmentByTag(ProfileFragment.TAG)
         if (content == null) {
             clearBackStack()
             content = ProfileFragment.newInstance()
         }
         view?.showScreen(
-            content,
-            ProfileFragment.TAG,
-            addToBackStack = true,
-            transitionContent = true)
+                content,
+                ProfileFragment.TAG,
+                addToBackStack = true,
+                transitionContent = true)
     }
 
     override fun navigateBack() {
         view?.navigateBack()
     }
 
-    override fun onPermissionResult(permissionCode:Int, granted:Boolean){
+    override fun onPermissionResult(permissionCode: Int, granted: Boolean) {
 
         permissionResponseListener?.onPermissionResult(permissionCode, granted)
     }
@@ -182,7 +189,7 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
 
         clearBackStack()
 
-        var content = view?.supportFragmentMngr?.findFragmentByTag(LoginFragment.TAG )
+        var content = view?.supportFragmentMngr?.findFragmentByTag(LoginFragment.TAG)
         if (content == null) {
 
             content = LoginFragment.newInstance()
@@ -203,40 +210,39 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
 
     override fun showForgotPasswordScreen(email: String) {
         val content =
-            view?.supportFragmentMngr?.findFragmentByTag(ForgotPasswordFragment.TAG)
-                ?: ForgotPasswordFragment.newInstance()
+                view?.supportFragmentMngr?.findFragmentByTag(ForgotPasswordFragment.TAG)
+                        ?: ForgotPasswordFragment.newInstance()
         val arguments = Bundle()
         arguments.putString(ForgotPasswordFragment.KEY_EMAIL, email)
         content.arguments = arguments
         view?.showScreen(content,
-            ForgotPasswordFragment.TAG,
-            /* addToBackstack= */ true,
-            /* transitionContent= */ false)
+                ForgotPasswordFragment.TAG,
+                /* addToBackstack= */ true,
+                /* transitionContent= */ false)
     }
 
-    override fun openCamera(imageFilePath: String){
+    override fun openCamera(imageFilePath: String) {
 
-        val context = view?.appCompatActivity?:return
+        val context = view?.appCompatActivity ?: return
 
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
         val imageFile = File(imageFilePath)
         val photoURI: Uri = FileProvider.getUriForFile(
-                    context, "${appContext.packageName}.file_provider_camera", imageFile)
+                context, "${appContext.packageName}.file_provider_camera", imageFile)
 
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
         try {
 
             view?.appCompatActivity?.startActivityForResult(takePictureIntent,
                     PhotoPickerConstants.REQUEST_IMAGE_CAPTURE)
-        }
-        catch (e: ActivityNotFoundException) {
+        } catch (e: ActivityNotFoundException) {
         }
     }
 
     override fun showSendViolation() {
 
-        var content = view?.supportFragmentMngr?.findFragmentByTag(SendViolationFragment.TAG )
+        var content = view?.supportFragmentMngr?.findFragmentByTag(SendViolationFragment.TAG)
         if (content == null) {
 
             clearBackStack()
@@ -248,7 +254,7 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
 
     override fun showMyProtocols() {
 
-        var content = view?.supportFragmentMngr?.findFragmentByTag(ProtocolsFragment.TAG )
+        var content = view?.supportFragmentMngr?.findFragmentByTag(ProtocolsFragment.TAG)
         if (content == null) {
             clearBackStack()
             content = ProtocolsFragment.newInstance()
@@ -258,18 +264,18 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
     }
 
     override fun showProtocolDetails(protocol: ProtocolRemote) {
-        var content = view?.supportFragmentMngr?.findFragmentByTag(ProtocolDetailsFragment.TAG )
+        var content = view?.supportFragmentMngr?.findFragmentByTag(ProtocolDetailsFragment.TAG)
         if (content == null) {
             content = ProtocolDetailsFragment.newInstance(protocol)
         }
 
         view?.showScreen(content, ProtocolDetailsFragment.TAG, addToBackStack = true,
-            transitionContent = true)
+                transitionContent = true)
     }
 
     override fun showRightsAndObligations() {
 
-        var content = view?.supportFragmentMngr?.findFragmentByTag(RightsAndObligationsFragment.TAG )
+        var content = view?.supportFragmentMngr?.findFragmentByTag(RightsAndObligationsFragment.TAG)
         if (content == null) {
 
             clearBackStack()
@@ -292,19 +298,19 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
     }
 
     override fun showViolationDetails(violation: VoteViolationRemote) {
-        var content = view?.supportFragmentMngr?.findFragmentByTag(ViolationDetailsFragment.TAG )
+        var content = view?.supportFragmentMngr?.findFragmentByTag(ViolationDetailsFragment.TAG)
         if (content == null) {
             content = ViolationDetailsFragment.newInstance(violation)
         }
         Log.i(TAG, "ViolationID: ${violation.id}")
 
         view?.showScreen(content, ViolationDetailsFragment.TAG, addToBackStack = true,
-            transitionContent = true)
+                transitionContent = true)
     }
 
     private fun showCheckIn() {
 
-        var content = view?.supportFragmentMngr?.findFragmentByTag(SendCheckInFragment.TAG )
+        var content = view?.supportFragmentMngr?.findFragmentByTag(SendCheckInFragment.TAG)
         if (content == null) {
 
             clearBackStack()

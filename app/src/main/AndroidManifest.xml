@@ -2,20 +2,27 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="bg.dabulgaria.tibroish">
+
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Allows applications to access information about networks -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature android:name="android.hardware.camera.flash" />
+
     <application
         android:name=".DaApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:networkSecurityConfig="@xml/network_security_config">
+        android:theme="@style/AppTheme">
         <activity
             android:name=".presentation.main.MainActivity"
             android:configChanges="orientation|screenSize"
@@ -26,6 +33,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".live.FetchStreamActivity"
+            android:theme="@style/LiveAppTheme.NoActionBar" />
+        <activity
+            android:name=".live.PrepareToStreamActivity"
+            android:theme="@style/LiveAppTheme.NoActionBar" />
+        <activity
+            android:name=".live.BroadcastActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/BroadcastActivityTheme" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -36,13 +53,14 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_file_paths"
-                tools:replace="android:resource"/>
+                tools:replace="android:resource" />
         </provider>
 
-        <service android:name="bg.dabulgaria.tibroish.infrastructure.services.TiBroishMessagingService"
+        <service
+            android:name="bg.dabulgaria.tibroish.infrastructure.services.TiBroishMessagingService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
