@@ -18,6 +18,7 @@ import bg.dabulgaria.tibroish.domain.user.SendCheckInResponse
 import bg.dabulgaria.tibroish.domain.user.User
 import bg.dabulgaria.tibroish.domain.violation.SendViolationRequest
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
+import bg.dabulgaria.tibroish.live.model.UserStreamModel
 import bg.dabulgaria.tibroish.persistence.remote.api.AcceptValues
 import bg.dabulgaria.tibroish.persistence.remote.api.TiBroishApiController
 import bg.dabulgaria.tibroish.persistence.remote.model.SectionsRequestParams
@@ -102,19 +103,22 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
 
     override fun uploadImage(imageRequest: UploadImageRequest): UploadImageResponse {
 
-        return authenticator.executeCall( { pParams, token ->
-            apiController.uploadImage(getAuthorization(token), pParams )}, imageRequest)!!
+        return authenticator.executeCall({ pParams, token ->
+            apiController.uploadImage(getAuthorization(token), pParams)
+        }, imageRequest)!!
     }
 
     override fun sendProtocol(request: SendProtocolRequest): ProtocolRemote {
 
-        return authenticator.executeCall( { pParams, token ->
-            apiController.sendProtocol(getAuthorization(token), pParams )}, request)!!
+        return authenticator.executeCall({ pParams, token ->
+            apiController.sendProtocol(getAuthorization(token), pParams)
+        }, request)!!
     }
 
     override fun sendViolation(request: SendViolationRequest): VoteViolationRemote {
-        return authenticator.executeCall( { pParams, token ->
-            apiController.sendViolation(getAuthorization(token), pParams)}, request)!!
+        return authenticator.executeCall({ pParams, token ->
+            apiController.sendViolation(getAuthorization(token), pParams)
+        }, request)!!
     }
 
     override fun getUserProtocols(): List<ProtocolRemote> {
@@ -126,7 +130,8 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
     override fun getViolations(): List<VoteViolationRemote> {
 
         return authenticator.executeCall { token ->
-            apiController.getViolations(getAuthorization(token))} !!
+            apiController.getViolations(getAuthorization(token))
+        }!!
     }
 
     override fun sendCheckIn(request: SendCheckInRequest): SendCheckInResponse {
@@ -141,8 +146,15 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
 
     override fun sendFCMToken(request: SendTokenRequest): SendTokenResponse {
 
-        return authenticator.executeCall( { param, token ->
-            apiController.sendFCMToken(getAuthorization(token), param)}, request) !!
+        return authenticator.executeCall({ param, token ->
+            apiController.sendFCMToken(getAuthorization(token), param)
+        }, request)!!
+    }
+
+    override fun getUserStream(): UserStreamModel {
+        return authenticator.executeCall { token ->
+            apiController.getUserStream(getAuthorization(token))
+        } ?: throw  Exception()
     }
 
     private fun getAuthorization(idToken: String): String = "Bearer $idToken"
