@@ -7,6 +7,7 @@ import bg.dabulgaria.tibroish.domain.organisation.Organization
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.user.IUserAuthenticator
 import bg.dabulgaria.tibroish.domain.user.User
+import bg.dabulgaria.tibroish.persistence.remote.ApiException
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
@@ -14,12 +15,10 @@ import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.ui.common.FormValidator
 import bg.dabulgaria.tibroish.presentation.ui.common.IOrganizationsManager
 import bg.dabulgaria.tibroish.presentation.ui.profile.ProfileConstants.Companion.VIEW_DATA_KEY
-import bg.dabulgaria.tibroish.presentation.ui.protocol.list.ProtocolsConstants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.math.BigDecimal
 import javax.inject.Inject
 
 interface IProfilePresenter : IBasePresenter<IProfileView> {
@@ -56,6 +55,8 @@ interface IUpdateProfileCallback {
 
 interface IDeleteUserCallback {
     fun onSuccess()
+
+    fun onError(error: String)
 }
 
 class ProfilePresenter @Inject constructor(
@@ -160,7 +161,11 @@ class ProfilePresenter @Inject constructor(
                 }
             } catch (exception: Exception) {
                 withContext(Dispatchers.Main) {
-                    onError(exception)
+                    if (exception is ApiException && exception.message != null) {
+                        callback.onError(exception.message!!)
+                    } else {
+                        onError(exception)
+                    }
                 }
             }
         }

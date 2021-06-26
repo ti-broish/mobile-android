@@ -40,7 +40,8 @@
     <string name="invalid_password">Невалидна парола</string>
     <string name="register_repeat_password">Повтори парола*</string>
     <string name="register_password">Парола*</string>
-    <string name="register_data_consent">Съгласен съм да съхранявате данните ми и за целите на застъпнически кампании за следващите избори (след 04.04.2021).</string>
+    <string name="register_data_consent">Съгласен съм да съхранявате данните ми и за целите на
+        застъпнически кампании за следващите избори (след 11.07.2021).</string>
     <string name="register_data_disclaimer">Данните ви се съхраняват по подразбиране до 30 дни след изборния ден на база на легитимния интерес на администратора и изискванията на Изборния кодекс.</string>
     <string name="register_confirm_over_18">Имам навършени 18 години.*</string>
     <string name="register_organization">Организация*</string>
@@ -83,6 +84,7 @@
     <string name="profile_generic_error">Грешка при достъпване на профила</string>
     <string name="profile_screen_title">Профил</string>
     <string name="dialog_generic_title">Съобщение</string>
+    <string name="dialog_generic_error_title">Грешка</string>
     <string name="profile_changes_saved">Промените са запазени.</string>
     <string name="profile_delete_success">Успешно изтрихте личните си данни.</string>
     <string name="profile_delete_confirmation">Потвърдете изтриване на профила</string>
@@ -115,6 +117,8 @@
     <string name="violation_upload_publishing">Публикуване на сигнал</string>
     <string name="violation_upload_published">Сигналът беше публикуван успешно</string>
     <string name="upload_notification_channel_name">Публикуване</string>
+    <string name="verify_your_email">Моля потвърдете регистрацията си с отваряне на връзката,
+        получена на Вашия имейл адрес.</string>
 
     <!-- Common Buttons -->
     <string name="button_close">Затвори</string>
