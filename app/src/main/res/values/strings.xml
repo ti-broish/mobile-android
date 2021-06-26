@@ -6,7 +6,7 @@
     <string name="important_notification_channel_name">Важни</string>
 
     <string name="internet_connection_offline">Няма връзка с интернет</string>
-    <string name="oops_went_wrong_try">Опа, нещо се обърка. Понякога тези неща се случват, опитайте отново</string>
+    <string name="oops_went_wrong_try">Възникна грешка. Моля опитайте отново.</string>
     <string name="list_is_empty">Не бе намерено нищо</string>
     <string name="profile">Профил</string>
     <string name="send_protocol">Изпрати протокол</string>
