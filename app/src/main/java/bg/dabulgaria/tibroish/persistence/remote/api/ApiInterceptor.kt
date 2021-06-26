@@ -5,7 +5,11 @@ import bg.dabulgaria.tibroish.persistence.remote.AuthException
 import com.android.volley.toolbox.HttpHeaderParser
 import okhttp3.Interceptor
 import okhttp3.Response
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 import java.io.UnsupportedEncodingException
+import java.lang.StringBuilder
 
 class ApiInterceptor (private val userAgent: String) : Interceptor {
 
@@ -52,12 +56,51 @@ class ApiInterceptor (private val userAgent: String) : Interceptor {
             }
         }
 
-        var code =networkResponse?.code ?: 500
+        val code =networkResponse?.code ?: 500
+        val jsonObject = JSONObject(responseData)
+        val message: String? = getMessageOrNull(jsonObject)
+        val exception = if(code == UNAUTHORIZED) {
+            AuthException(response, responseData, message)
+        } else {
+            ApiException(response, responseData, message)
+        }
+        throw exception
+    }
 
-        if(code == UNAUTHORIZED)
-            throw AuthException(response, responseData)
-        else
-            throw ApiException(response, responseData)
+    private fun getMessageOrNull(jsonObject: JSONObject): String? {
+        var message: String? = null
+        try {
+            message = getMessageFromJsonArray(jsonObject)
+            if (message == null) {
+                message = jsonObject.getString("message")
+            }
+        } catch (e: JSONException) {
+        }
+        return message
+    }
+
+    private fun getMessageFromJsonArray(jsonObject: JSONObject): String? {
+        val jsonArray: JSONArray?
+        try {
+            jsonArray = jsonObject.getJSONArray("message")
+        } catch (e: JSONException) {
+            return null
+        }
+        if (jsonArray.length() == 0) {
+            return null
+        }
+        val sb = StringBuilder()
+        for (i in 0 until jsonArray.length()) {
+            sb.append(removeQuotesFromStringStartAndEnd(jsonArray.getString(i)))
+            if (i != jsonArray.length()-1) {
+                sb.append("\n")
+            }
+        }
+        return sb.toString()
+    }
+
+    private fun removeQuotesFromStringStartAndEnd(string: String): String {
+        return string.replace(Regex("^\"+|\"+$"), "")
     }
 
     companion object{

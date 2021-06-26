@@ -63,7 +63,20 @@ class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistratio
             callback = object : IRegistrationCallback {
                 override fun onSuccess() {
                     Log.i(TAG, "Registration success!")
-                    presenter.navigateToLoginScreen()
+                    dialogUtil.showDismissableDialog(
+                        requireActivity(),
+                        R.string.dialog_generic_title,
+                        getString(R.string.verify_your_email))
+                    {
+                        presenter.navigateToLoginScreen()
+                    }
+                }
+
+                override fun onError(message: String?) {
+                    dialogUtil.showDismissableDialog(
+                        requireActivity(),
+                        R.string.dialog_title_error,
+                        message ?: getString(R.string.oops_went_wrong_try)) {}
                 }
             })
     }

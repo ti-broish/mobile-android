@@ -9,6 +9,7 @@ import bg.dabulgaria.tibroish.domain.organisation.Organization
 import bg.dabulgaria.tibroish.domain.organisation.OrganizationDto
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.user.User
+import bg.dabulgaria.tibroish.persistence.remote.ApiException
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
@@ -69,6 +70,8 @@ interface IRegistrationPresenter : IBasePresenter<IRegisterView> {
 
 interface IRegistrationCallback {
     fun onSuccess()
+
+    fun onError(message: String?)
 }
 
 class RegistrationPresenter @Inject constructor(
@@ -84,6 +87,9 @@ class RegistrationPresenter @Inject constructor(
     companion object {
         @JvmField
         val TAG: String = RegistrationPresenter::class.java.name
+
+        const val ERROR_CODE_FORBIDDEN = 409
+        const val ERROR_CODE_BAD_REQUEST = 400
     }
 
     override fun getCountryCodes(context: Context, callback: (List<CountryCode>?) -> Unit) {
@@ -201,13 +207,28 @@ class RegistrationPresenter @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 tiBroishRemoteRepository.createUser(userToken, userData)
+                withContext(Dispatchers.Main) {
+                    sendEmailVerification(user, callback)
+                }
             } catch (exception: Exception) {
                 withContext(Dispatchers.Main) {
-                    onError(exception)
+                    if(exception is ApiException && exception.message != null) {
+                        when (exception.response.code) {
+                            ERROR_CODE_BAD_REQUEST -> {
+                                callback.onError(exception.message!!)
+                            }
+                            ERROR_CODE_FORBIDDEN -> {
+                                callback.onError(
+                                    resourceProvider.getString(R.string.error_user_exists))
+                            }
+                            else -> {
+                                onError(exception)
+                            }
+                        }
+                    } else {
+                        onError(exception)
+                    }
                 }
-            }
-            withContext(Dispatchers.Main) {
-                sendEmailVerification(user, callback)
             }
         }
     }
