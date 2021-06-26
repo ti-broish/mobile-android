@@ -1,4 +1,4 @@
-package bg.dabulgaria.tibroish.presentation.ui.rights
+package bg.dabulgaria.tibroish.presentation.ui.licenses
 
 
 import android.os.Build
@@ -8,36 +8,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
-import bg.dabulgaria.tibroish.presentation.ui.common.DialogUtil
 import bg.dabulgaria.tibroish.presentation.ui.common.IHtmlTextUtil
 import javax.inject.Inject
 
-interface IRightsAndObligationsView : IBaseView {
+interface ILicensesView : IBaseView {
 
 }
 
-class RightsAndObligationsFragment constructor()
-    : BasePresentableFragment<IRightsAndObligationsView, IRightsAndObligationsPresenter>(), IRightsAndObligationsView {
+class LicensesFragment constructor()
+    : BasePresentableFragment<ILicensesView, ILicensesPresenter>(),
+    ILicensesView {
 
     @Inject
     lateinit var htmlTextUtil: IHtmlTextUtil
 
-    private fun getRightsAndObligationsTextView() = view?.findViewById<TextView>(R.id.rightsAndObligationsText)
+    private fun getLicensesTextView() = view?.findViewById<TextView>(R.id.licensesText)
 
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?,
                               savedInstanceState : Bundle?) : View? {
-        return inflater.inflate(R.layout.fragment_rights, container, false)
+        return inflater.inflate(R.layout.fragment_licenses, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        getRightsAndObligationsTextView()?.text =
-            htmlTextUtil.convertTextToHtml(presenter.getRightsAndObligationsText())
+        getLicensesTextView()?.text = htmlTextUtil.convertTextToHtml(presenter.getLicensesText())
     }
 
     override fun onError(errorMessage: String) {
@@ -49,13 +47,14 @@ class RightsAndObligationsFragment constructor()
 
     companion object {
 
-        val TAG = RightsAndObligationsFragment::class.java.simpleName
+        val TAG = LicensesFragment::class.java.simpleName
 
-        fun newInstance(RightsAndObligationsViewData: RightsAndObligationsViewData): RightsAndObligationsFragment {
+        fun newInstance(licensesViewData: LicensesViewData):
+                LicensesFragment {
 
-            return RightsAndObligationsFragment().apply {
+            return LicensesFragment().apply {
                 arguments = Bundle().apply {
-                    putSerializable(RightsAndObligationsConstants.VIEW_DATA_KEY, RightsAndObligationsViewData)
+                    putSerializable(LicensesConstants.VIEW_DATA_KEY, licensesViewData)
                 }
             }
         }
