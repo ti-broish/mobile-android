@@ -213,9 +213,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="@string/register_confirm_over_18"
-                app:buttonTint="@color/colorPrimary"
-                android:focusableInTouchMode="true"
-                android:focusable="true"/>
+                app:buttonTint="@color/colorPrimary"/>
 
             <Button
                 android:id="@+id/button_register"

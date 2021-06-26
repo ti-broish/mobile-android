@@ -82,6 +82,10 @@ class ProfileFragment : BasePresentableFragment<IProfileView,
             override fun onSuccess() {
                 onUserDeletionSuccess()
             }
+
+            override fun onError(error: String) {
+                onUserDeletionError(error)
+            }
         })
     }
 
@@ -93,6 +97,14 @@ class ProfileFragment : BasePresentableFragment<IProfileView,
         ) {
             presenter.navigateToLoginScreen()
         }
+    }
+
+    private fun onUserDeletionError(error: String) {
+        dialogUtil.showDismissableDialog(
+            requireActivity(),
+            R.string.dialog_title_error,
+            error
+        ) {}
     }
 
     private fun setupOrganizations() {
