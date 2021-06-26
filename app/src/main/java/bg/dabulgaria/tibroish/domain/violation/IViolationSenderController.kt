@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 
 interface IViolationSenderController {
-    fun upload(metadata: ViolationMetadata): String
+    fun upload(metadata: ViolationMetadata): Pair<String,Long>
 
-    fun getIntent(context: Context, violationServerId: String): Intent
+    fun getIntent(context: Context, serverAndDbIds: Pair<String,Long>): Intent
 }

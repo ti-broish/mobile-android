@@ -5,7 +5,6 @@ import android.text.TextWatcher
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.send.ImageSendStatus
 import bg.dabulgaria.tibroish.presentation.providers.getSpannableStringRedWarnStar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -93,7 +92,7 @@ class SendItemButtonsViewHolder(itemView: View) : SendItemViewHolder(itemView) {
             itemView.sendItemCameraBtn?.setOnClickListener(null)
         }
 
-        itemView.sendItemContinueBtn?.setOnClickListener { presenter.onContinue() }
+        itemView.sendItemContinueBtn?.setOnClickListener { presenter.onSend() }
     }
 }
 

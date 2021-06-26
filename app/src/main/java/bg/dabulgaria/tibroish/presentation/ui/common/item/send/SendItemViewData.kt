@@ -2,6 +2,7 @@ package bg.dabulgaria.tibroish.presentation.ui.common.item.send
 
 import bg.dabulgaria.tibroish.domain.send.ImageSendStatus
 import bg.dabulgaria.tibroish.domain.locations.SectionsViewData
+import bg.dabulgaria.tibroish.domain.send.SendStatus
 import java.io.Serializable
 
 enum class SendItemListItemType {
@@ -13,7 +14,7 @@ class EntityItemImage(val id: Long,
                       val localFilePath: String?,
                       val imageSendStatus: ImageSendStatus) : Serializable
 
-class EntityItem(val id: Long) : Serializable {
+class EntityItem(val id: Long, var sendStatus: SendStatus = SendStatus.New) : Serializable {
 
     val images = mutableListOf<EntityItemImage>()
 }
@@ -30,7 +31,7 @@ class SendItemListItemImage(val image: EntityItemImage)
     : SendItemListItem(SendItemListItemType.Image), Serializable
 
 class SendItemListItemButtons(val supportsImages: Boolean)
-    : SendItemListItem(SendItemListItemType.Buttons), Serializable
+    : SendItemListItem(SendItemListItemType. Buttons), Serializable
 
 class SendItemListItemSendSuccess(val messageText: String)
     : SendItemListItem(SendItemListItemType.SendSuccess), Serializable
@@ -39,14 +40,15 @@ class SendItemListItemMessage(val labelText:String, val messageText: String)
     : SendItemListItem(SendItemListItemType.Message), Serializable
 
 
-class SendItemViewData() : Serializable {
+class SendItemViewData(val entityDbId: Long?=null) : Serializable {
 
     var entityItem: EntityItem? = null
     val items = mutableListOf<SendItemListItem>()
     var sectionsData: SectionsViewData? = null
     var message: String = ""
+    var cameraPermissionRequested = false
 
-    constructor(source: SendItemViewData) : this() {
+    constructor(source: SendItemViewData) : this(null) {
 
         this.entityItem = source.entityItem
         this.items.addAll(source.items)

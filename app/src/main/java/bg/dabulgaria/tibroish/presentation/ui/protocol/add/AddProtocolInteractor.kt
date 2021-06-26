@@ -81,18 +81,25 @@ class AddProtocolInteractor @Inject constructor(sectionPickerInteractor: ISectio
         return EntityItem(protocol.id)
     }
 
-    override fun loadEntityItemExt(id: Long): EntityItem {
+    override fun loadEntityItem(id: Long): EntityItem {
 
         val protocol = protocolsRepo.get(id)!!
         val images = protocolImagesRepo.getByProtocolId(protocol.id)
 
-        return EntityItem(protocol.id).apply {
+        return EntityItem(protocol.id, protocol.status).apply {
 
             this.images.addAll(images.map {
 
                 EntityItemImage(it.id, protocol.id, it.localFilePath, it.imageSendStatus)
             })
         }
+    }
+
+    override fun updateEntityItemStatus(id: Long, status: SendStatus) {
+
+        val protocol = protocolsRepo.get(id)!!
+        protocol.status = status
+        protocolsRepo.update(protocol)
     }
 
     override fun deleteImageConcrete(entityItemImage: EntityItemImage) {
@@ -120,14 +127,19 @@ class AddProtocolInteractor @Inject constructor(sectionPickerInteractor: ISectio
         protocolImagesRepo.insert(protocolImage)
     }
 
-    override fun sendItemConcrete(viewData: SendItemViewData) {
+    override fun sendItemConcrete(viewData: SendItemViewData): EntityItem {
 
         selectedSectionLocalRepo.selectedSectionData = viewData.sectionsData
 
         val metadata = ProtocolMetadata(
             protocolId = viewData.entityItem!!.id,
             sectionId = viewData.sectionsData!!.selectedSection!!.id)
+        val protocol = protocolsRepo.get(metadata.protocolId)!!
+        protocol.status = SendStatus.Sending
+        protocolsRepo.update(protocol)
+
         UploaderService.uploadProtocol(context, metadata)
+        return EntityItem(protocol.id, protocol.status)
     }
 
     override fun addSelectedGalleryImages(currentData: SendItemViewData) {

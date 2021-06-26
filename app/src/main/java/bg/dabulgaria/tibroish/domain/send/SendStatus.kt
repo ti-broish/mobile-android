@@ -5,7 +5,9 @@ import java.util.*
 
 enum class SendStatus constructor(val code:Int){
     New(0),
-    Send(1);
+    Send(1),
+    Sending(2),
+    SendError(3);
 
     companion object {
 
