@@ -11,6 +11,7 @@ import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentManager
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
+import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.live.FetchStreamActivity
@@ -37,7 +38,8 @@ import bg.dabulgaria.tibroish.presentation.ui.violation.send.SendViolationFragme
 import java.io.File
 import javax.inject.Inject
 
-class MainRouter @Inject constructor(@AppContext private val appContext: Context)
+class MainRouter @Inject constructor(@AppContext private val appContext: Context,
+                                     private val logger: ILogger)
     : IMainRouter {
 
     private var view: IMainScreenView? = null
@@ -126,13 +128,13 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
         appContext.startActivity(intent)
     }
 
-    override fun showAddProtocol() {
+    override fun showAddProtocol(dbId: Long?) {
 
         var content = view?.supportFragmentMngr?.findFragmentByTag(AddProtocolFragment.TAG)
         if (content == null) {
 
             clearBackStack()
-            content = AddProtocolFragment.newInstance(SendItemViewData())
+            content = AddProtocolFragment.newInstance(SendItemViewData(dbId))
         }
 
         view?.showScreen(content, AddProtocolFragment.TAG, addToBackStack = true, transitionContent = true)
@@ -236,17 +238,18 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
 
             view?.appCompatActivity?.startActivityForResult(takePictureIntent,
                     PhotoPickerConstants.REQUEST_IMAGE_CAPTURE)
-        } catch (e: ActivityNotFoundException) {
+        } catch (e: Exception) {
+            logger.e(TAG, e)
         }
     }
 
-    override fun showSendViolation() {
+    override fun showSendViolation(dbId: Long?) {
 
         var content = view?.supportFragmentMngr?.findFragmentByTag(SendViolationFragment.TAG)
         if (content == null) {
 
             clearBackStack()
-            content = SendViolationFragment.newInstance(SendItemViewData())
+            content = SendViolationFragment.newInstance(SendItemViewData(dbId))
         }
 
         view?.showScreen(content, SendViolationFragment.TAG, addToBackStack = true, transitionContent = true)

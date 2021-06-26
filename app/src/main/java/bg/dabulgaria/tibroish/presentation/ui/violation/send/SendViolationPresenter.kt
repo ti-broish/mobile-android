@@ -3,6 +3,7 @@ package bg.dabulgaria.tibroish.presentation.ui.violation.send
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.io.IFileRepository
 import bg.dabulgaria.tibroish.domain.providers.ILogger
+import bg.dabulgaria.tibroish.infrastructure.permission.IPermissionRequester
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.ui.common.item.send.ISendItemPresenter
@@ -17,19 +18,21 @@ import javax.inject.Inject
 interface ISendViolationPresenter: ISendItemPresenter
 
 class SendViolationPresenter @Inject constructor(schedulersProvider: ISchedulersProvider,
-                                               mainRouter: IMainRouter,
-                                               interactor: ISendViolationInteractor,
-                                               fileRepository: IFileRepository,
-                                               logger: ILogger,
-                                               dispHandler: IDisposableHandler,
-                                                 cameraTakenImageProvider: ICameraTakenImageProvider)
+                                                 mainRouter: IMainRouter,
+                                                 interactor: ISendViolationInteractor,
+                                                 fileRepository: IFileRepository,
+                                                 logger: ILogger,
+                                                 dispHandler: IDisposableHandler,
+                                                 cameraTakenImageProvider: ICameraTakenImageProvider,
+                                                 permissionRequester : IPermissionRequester)
     : SendItemPresenter(schedulersProvider,
         mainRouter,
         interactor,
         fileRepository,
         logger,
         dispHandler,
-        cameraTakenImageProvider),
+        cameraTakenImageProvider,
+        permissionRequester),
         ISendViolationPresenter{
 
     override val MinSelectedImages: Int = 0

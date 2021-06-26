@@ -117,7 +117,7 @@ class PhotoPickerPresenter @Inject constructor(private val interactor : IPhotoPi
 
     override fun onPermissionResult(permissionCode: Int, granted: Boolean) {
 
-        if( permissionCode != PermissionCodes.READ_STORAGE.code)
+        if(permissionCode != PermissionCodes.READ_STORAGE.code || !granted)
             return
 
         loadData()

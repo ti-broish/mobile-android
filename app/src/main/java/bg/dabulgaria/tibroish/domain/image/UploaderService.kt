@@ -15,6 +15,7 @@ import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.protocol.IProtocolSenderController
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolMetadata
 import bg.dabulgaria.tibroish.domain.providers.ILogger
+import bg.dabulgaria.tibroish.domain.send.ItemSendResultEvent
 import bg.dabulgaria.tibroish.domain.violation.IViolationSenderController
 import bg.dabulgaria.tibroish.domain.violation.ViolationMetadata
 import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
@@ -22,6 +23,8 @@ import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 
@@ -57,29 +60,7 @@ class UploaderService : Service() {
             val startJobIntent = Intent(context, UploaderService::class.java)
             startJobIntent.putExtra(EXTRA_UPLOAD_INFO, UploadInfo(uploadType, metadata))
 
-            val latch = CountDownLatch(1)
-            context.registerReceiver(object : BroadcastReceiver() {
-                    override fun onReceive(context: Context?, intent: Intent?) {
-                        if (intent == null) {
-                            return;
-                        }
-                        if (intent.getLongExtra(EXTRA_UPLOAD_DATA_ID, -1) != dataId) {
-                            return
-                        }
-                        latch.countDown()
-                        context?.unregisterReceiver(this)
-                    }
-                },
-                IntentFilter(ACTION_UPLOAD_COMPLETE)
-            )
-            enqueueWork(
-                context,
-                startJobIntent)
-            try {
-                latch.await()
-            } catch (e: InterruptedException) {
-
-            }
+            enqueueWork(context, startJobIntent)
         }
 
         private fun enqueueWork(
@@ -98,7 +79,7 @@ class UploaderService : Service() {
         private val ACTION_UPLOAD_COMPLETE = "action_upload_complete"
         private val EXTRA_UPLOAD_DATA_ID = "extra_upload_data_id"
         private val PROGRESS_NOTIFICATION_ID = 1
-        private val DONE_NOTIFICATION_ID = 2
+        private val SEND_RESULT_NOTIFICATION_ID = 2
         private val NOTIFICATION_CHANNEL_ID = "uploader_channel"
     }
 
@@ -150,15 +131,17 @@ class UploaderService : Service() {
             .build()
     }
 
-    private fun createDoneNotification(uploadType: UploadType, intent: Intent): Notification {
-        val contentTitle = when (uploadType) {
+    private fun createResultNotification(uploadType: UploadType, success: Boolean, intent: Intent): Notification {
+
+        val contentTitle = resourceProvider.getString(when (uploadType) {
             UploadType.PROTOCOL -> {
-                resourceProvider.getString(R.string.protocol_upload_published)
+                if(success) R.string.protocol_upload_published else R.string.protocol_upload_failed
             }
             UploadType.VIOLATION -> {
-                resourceProvider.getString(R.string.violation_upload_published)
+                if(success) R.string.violation_upload_published else R.string.violation_upload_failed
             }
-        }
+        })
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel(
                 NOTIFICATION_CHANNEL_ID,
@@ -176,30 +159,40 @@ class UploaderService : Service() {
     }
 
     private fun onHandleWork(uploadInfo: UploadInfo) {
+
         logger.i(TAG, "Background service started for upload $uploadInfo")
-        val uploadId: Long;
-        val intent: Intent;
+        val uploadId: Long
+        val intent: Intent
+        val serverAndDbIds: Pair<String, Long>
+
         when (uploadInfo.uploadType) {
+
             UploadType.VIOLATION -> {
+
                 val metadata: ViolationMetadata = uploadInfo.metadata as ViolationMetadata
-                uploadId = metadata.violationId
-                val violationServerId = violationSenderController.upload(metadata)
-                intent = violationSenderController.getIntent(this, violationServerId)
+                serverAndDbIds = violationSenderController.upload(metadata)
+                intent = violationSenderController.getIntent(this, serverAndDbIds)
             }
+
             UploadType.PROTOCOL -> {
+
                 val metadata: ProtocolMetadata = uploadInfo.metadata as ProtocolMetadata
-                uploadId = metadata.protocolId
-                val protocolServerId = protocolSenderController.upload(metadata)
-                intent = protocolSenderController.getIntent(this, protocolServerId)
+                serverAndDbIds = protocolSenderController.upload(metadata)
+                intent = protocolSenderController.getIntent(this, serverAndDbIds)
             }
         }
-        val doneNotification = createDoneNotification(uploadInfo.uploadType, intent)
+
+        val success = serverAndDbIds.first.isNotEmpty()
+        val resultNotification = createResultNotification(uploadInfo.uploadType, success, intent)
         with(NotificationManagerCompat.from(this)) {
-            notify(DONE_NOTIFICATION_ID, doneNotification)
+            notify(SEND_RESULT_NOTIFICATION_ID, resultNotification)
         }
-        val resultIntent = Intent(ACTION_UPLOAD_COMPLETE)
-        resultIntent.putExtra(EXTRA_UPLOAD_DATA_ID, uploadId)
-        applicationContext.sendBroadcast(resultIntent)
+
+        CoroutineScope(Dispatchers.Main).launch{
+
+            EventBus.getDefault().post(ItemSendResultEvent(success))
+        }
+
         logger.i(TAG, "Upload job completed $uploadInfo")
     }
 

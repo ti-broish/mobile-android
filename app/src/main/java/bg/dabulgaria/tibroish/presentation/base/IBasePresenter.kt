@@ -4,7 +4,6 @@ import android.os.Bundle
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.providers.INetworkInfoProvider
 import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
-import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerPresenter
 import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 

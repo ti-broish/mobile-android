@@ -38,6 +38,7 @@ class PushActionRouter @Inject constructor(private val logger: ILogger,
 
         val entityId = intent.extras?.getString(ENTITY_ID_KEY)
         val detailMessage = intent.extras?.getString(DETAIL_MESSAGE_KEY)
+        val entityDBId = intent.extras?.getLong(ENTITY_DB_ID_KEY)
 
         when (PushActionValuesShowScreen[intent.extras?.getString(ACTION_VALUE_KEY) ?: ""]) {
 
@@ -45,6 +46,8 @@ class PushActionRouter @Inject constructor(private val logger: ILogger,
             PushActionValuesShowScreen.ProtocolDetails -> showProtocolDetails(entityId, detailMessage)
             PushActionValuesShowScreen.Violations -> mainRouter.showViolations()
             PushActionValuesShowScreen.ViolationDetails -> showViolationDetails(entityId, detailMessage)
+            PushActionValuesShowScreen.SendProtocol -> mainRouter.showAddProtocol(entityDBId)
+            PushActionValuesShowScreen.SendViolation -> mainRouter.showSendViolation(entityDBId)
         }
     }
 
@@ -113,6 +116,7 @@ class PushActionRouter @Inject constructor(private val logger: ILogger,
         val ACTION_TYPE_KEY = "ActionType"
         val ACTION_VALUE_KEY = "ActionValue"
         val ENTITY_ID_KEY = "EntityId"
+        val ENTITY_DB_ID_KEY = "EntityDBId"
         val DETAIL_MESSAGE_KEY = "DetailMessage"
     }
 }

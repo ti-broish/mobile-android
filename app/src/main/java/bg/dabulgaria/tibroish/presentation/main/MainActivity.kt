@@ -1,10 +1,8 @@
 package bg.dabulgaria.tibroish.presentation.main
 
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -16,7 +14,6 @@ import androidx.navigation.NavController
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.infrastructure.permission.IPermissionResponseHandler
 import bg.dabulgaria.tibroish.presentation.base.BaseActivity
-import bg.dabulgaria.tibroish.presentation.event.CameraPhotoTakenEvent
 import bg.dabulgaria.tibroish.presentation.navigation.NavigationDrawerFragment
 import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
 import bg.dabulgaria.tibroish.presentation.push.IPushActionRouter
@@ -25,7 +22,6 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import kotlinx.android.synthetic.main.activity_main.*
-import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(),

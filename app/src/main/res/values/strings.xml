@@ -111,13 +111,16 @@
     <string name="check_in_send_successfully">Отбелязването е изпратено успешно!</string>
     <string name="description_label">Описание:</string>
     <string name="message_label">Съобщение:</string>
-    <string name="protocol_upload_publishing">Публикуване на протокол</string>
-    <string name="protocol_upload_published">Протоколът беше публикуван успешно</string>
-    <string name="violation_upload_publishing">Публикуване на сигнал</string>
-    <string name="violation_upload_published">Сигналът беше публикуван успешно</string>
-    <string name="upload_notification_channel_name">Публикуване</string>
     <string name="verify_your_email">Моля потвърдете регистрацията си с отваряне на връзката,
         получена на Вашия имейл адрес.</string>
+    <string name="protocol_upload_publishing">Изпращане на протокол</string>
+    <string name="protocol_upload_published">Протоколът беше изпратен успешно</string>
+    <string name="violation_upload_publishing">Изпращане на сигнал</string>
+    <string name="violation_upload_published">Сигналът беше изпратен успешно</string>
+    <string name="upload_notification_channel_name">Изпращане</string>
+    <string name="send_error_try_again">Възникна грешка при изпращането. Моля опитайте отново.</string>
+    <string name="protocol_upload_failed">Възникна грешка при изпращането на протокола</string>
+    <string name="violation_upload_failed">Възникна грешка при изпращането на сигнала</string>
 
     <!-- Common Buttons -->
     <string name="button_close">Затвори</string>
