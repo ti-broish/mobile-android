@@ -10,6 +10,9 @@ import bg.dabulgaria.tibroish.presentation.ui.forgotpassword.ForgotPasswordFragm
 import bg.dabulgaria.tibroish.presentation.ui.forgotpassword.ForgotPasswordPresenter
 import bg.dabulgaria.tibroish.presentation.ui.forgotpassword.IForgotPasswordPresenter
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
+import bg.dabulgaria.tibroish.presentation.ui.licenses.ILicensesPresenter
+import bg.dabulgaria.tibroish.presentation.ui.licenses.LicensesFragment
+import bg.dabulgaria.tibroish.presentation.ui.licenses.LicensesPresenter
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.*
 import bg.dabulgaria.tibroish.presentation.ui.profile.IProfilePresenter
 import bg.dabulgaria.tibroish.presentation.ui.profile.ProfileFragment
@@ -172,4 +175,13 @@ interface FragmentModule {
     fun bindIViolationDetailsPresenter(implementation: ViolationDetailsPresenter):
             IViolationDetailsPresenter
     //endregion Violation Details screen
+
+    //region Licenses screen
+    @ContributesAndroidInjector
+    fun bindLicensesFragment(): LicensesFragment
+
+    @Binds
+    fun bindILicensesPresenter(implementation: LicensesPresenter):
+            ILicensesPresenter
+    //endregion Licenses screen
 }
