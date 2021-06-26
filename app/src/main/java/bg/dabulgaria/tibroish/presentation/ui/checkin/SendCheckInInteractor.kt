@@ -6,6 +6,7 @@ import bg.dabulgaria.tibroish.domain.io.IFileRepository
 import bg.dabulgaria.tibroish.domain.locations.ISelectedSectionLocalRepository
 import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
 import bg.dabulgaria.tibroish.domain.providers.ILogger
+import bg.dabulgaria.tibroish.domain.send.SendStatus
 import bg.dabulgaria.tibroish.domain.user.SendCheckInRequest
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.persistence.local.ImageCopier
@@ -64,18 +65,22 @@ class SendCheckInInteractor @Inject constructor(sectionPickerInteractor: ISectio
 
     override fun addNew() = EntityItem(0)
 
-    override fun loadEntityItemExt(id: Long) = EntityItem(0)
+    override fun loadEntityItem(id: Long) = EntityItem(0)
+
+    override fun updateEntityItemStatus(id: Long, status: SendStatus) {}
 
     override fun deleteImageConcrete(entityItemImage: EntityItemImage) {}
 
     override fun addImageToRepo(itemId: Long, imageFilePath: String, width: Int, height: Int) { }
 
-    override fun sendItemConcrete(viewData: SendItemViewData) {
+    override fun sendItemConcrete(viewData: SendItemViewData): EntityItem {
 
         selectedSectionLocalRepo.selectedSectionData = viewData.sectionsData
 
         val request = SendCheckInRequest(viewData!!.sectionsData!!.selectedSection!!.id)
         val response = tiBroishRemoteRepository.sendCheckIn(request)
+
+        return EntityItem(1, if(response.section.isNullOrEmpty()) SendStatus.SendError else SendStatus.Send)
     }
 
     override fun addSelectedGalleryImages(currentData: SendItemViewData){}

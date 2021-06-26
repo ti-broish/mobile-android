@@ -75,7 +75,7 @@ interface TiBroishApiController {
     @GET("/me/violations")
     fun getViolations(@Header(ApiHeader.Authorization) authorization: String): Call<List<VoteViolationRemote>>
 
-    @POST("/checkin")
+    @POST("/me/checkins ")
     fun sendCheckIn(@Header(ApiHeader.Authorization) authorization: String,
                     @Body request: SendCheckInRequest): Call<SendCheckInResponse>
 

@@ -14,8 +14,15 @@ import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerPresenter
 import bg.dabulgaria.tibroish.domain.locations.SectionViewType
 import bg.dabulgaria.tibroish.domain.locations.SectionsViewData
+import bg.dabulgaria.tibroish.domain.send.ItemSendResultEvent
+import bg.dabulgaria.tibroish.domain.send.SendStatus
+import bg.dabulgaria.tibroish.infrastructure.permission.IPermissionRequester
+import bg.dabulgaria.tibroish.infrastructure.permission.PermissionCodes
+import bg.dabulgaria.tibroish.presentation.main.IPermissionResponseListener
 import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
 import io.reactivex.rxjava3.core.Single
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 interface ISendItemPresenter : IBasePresenter<ISendItemView>, ISectionPickerPresenter {
@@ -24,7 +31,7 @@ interface ISendItemPresenter : IBasePresenter<ISendItemView>, ISectionPickerPres
 
     fun onAddFromCameraClick()
 
-    fun onContinue()
+    fun onSend()
 
     fun onImageDeleteClick(item: SendItemListItemImage, position:Int)
 
@@ -40,12 +47,17 @@ constructor(private val schedulersProvider: ISchedulersProvider,
             private val fileRepository: IFileRepository,
             private val logger: ILogger,
             disposableHandler: IDisposableHandler,
-            private val cameraTakenImageProvider: ICameraTakenImageProvider)
-    : BasePresenter<ISendItemView>(disposableHandler), ISendItemPresenter {
+            private val cameraTakenImageProvider: ICameraTakenImageProvider,
+            private val permissionRequester : IPermissionRequester)
+    : BasePresenter<ISendItemView>(disposableHandler), ISendItemPresenter, IPermissionResponseListener {
 
     init {
         logger.i(TAG, "SendItemPresenter constructor")
     }
+
+    override val registerEventBus = true
+
+    val permission = PermissionCodes.CAMERA
 
     var data: SendItemViewData? = null
 
@@ -73,7 +85,7 @@ constructor(private val schedulersProvider: ISchedulersProvider,
 
         view?.onLoadingStateChange(true)
 
-        add( Single.fromCallable{ interactor.loadData(currentData)}
+        add(Single.fromCallable{ interactor.loadData(currentData)}
                 .subscribeOn(schedulersProvider.ioScheduler())
                 .observeOn(schedulersProvider.uiScheduler())
                 .subscribe( { onDataLoaded( it ) },{ th -> onError(th) }) )
@@ -104,38 +116,21 @@ constructor(private val schedulersProvider: ISchedulersProvider,
 
     override fun onAddFromCameraClick() {
 
-        val currentData = data?: return
-
-        view?.hideSoftKeyboard()
-        view?.onLoadingStateChange(true)
-
-        add( Single.fromCallable{
-
-            val imageFilePath = fileRepository.createNewJpgFile(Folders.LocalPicturesFolder)!!.absolutePath
-            val protocol= if( currentData.entityItem != null )
-                currentData.entityItem!!
-            else
-                interactor.addNew()
-
-            Pair(protocol, imageFilePath)
+        if(permissionRequester.hasPermission(permission)){
+            addFromCamera()
         }
-                .subscribeOn(schedulersProvider.ioScheduler())
-                .observeOn(schedulersProvider.uiScheduler())
-                .subscribe( { pair ->
-
-                    view?.onLoadingStateChange(false)
-                    currentData.entityItem = pair.first
-                    val path = pair.second
-                    cameraTakenImageProvider.cameraImagePath = path
-                    mainRouter.openCamera(path)
-                },{
-
-                    view?.onLoadingStateChange(false)
-                    onError(it)
-                }))
+        else if(data?.cameraPermissionRequested == true
+                && !permissionRequester.shouldShowRequestPermissionRationale(permission) ){
+            mainRouter.openAppSettings()
+        }
+        else{
+            data?.cameraPermissionRequested = true
+            mainRouter.permissionResponseListener = this
+            permissionRequester.requestPermission(permission)
+        }
     }
 
-    override fun onContinue() {
+    override fun onSend() {
 
         val viewData = data ?: return
 
@@ -151,18 +146,20 @@ constructor(private val schedulersProvider: ISchedulersProvider,
             return
         }
 
+        if( !networkInfoProvider.isNetworkConnected ) {
+
+            view?.onError(resourceProvider.getString(R.string.internet_connection_offline))
+            return
+        }
+
         view?.onLoadingStateChange(true)
 
         add(Single.fromCallable{interactor.sendItem(viewData)}
                 .subscribeOn(schedulersProvider.ioScheduler())
                 .observeOn(schedulersProvider.uiScheduler())
-                .subscribe( {
+                .subscribe( { entityItem ->
 
-                    val newData = SendItemViewData(viewData)
-                    view?.onLoadingStateChange(false)
-                    newData.items.clear()
-                    newData.items.add(SendItemListItemSendSuccess(interactor.successMessageString))
-                    onDataLoaded(newData)
+                    onSendItemResult(viewData, entityItem)
                 },{
                     onError(it)
                 }))
@@ -199,7 +196,7 @@ constructor(private val schedulersProvider: ISchedulersProvider,
     }
     //endregion ISendItemPresenter implementation
 
-    //endregion ISectionPickerPresenter implementation
+    //region ISectionPickerPresenter implementation
     override fun onAbroadChecked(abroad: Boolean) {
 
         view?.onLoadingStateChange(true)
@@ -267,6 +264,23 @@ constructor(private val schedulersProvider: ISchedulersProvider,
     }
     //endregion ISectionPickerPresenter implementation
 
+    // region IPermissionResponseListener implementation
+    override fun onPermissionResult(permissionCode: Int, granted: Boolean) {
+
+        if(permissionCode != PermissionCodes.CAMERA.code || !granted)
+            return
+
+        addFromCamera()
+    }
+    // endregion IPermissionResponseListener implementation
+
+    //region Subscriptions
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onItemSendResultEvent(event: ItemSendResultEvent){
+
+        loadData()
+    }
+
     private fun <ItemType> onSectionFieldSelected(item:ItemType, loadMethod:(data: SectionsViewData, item:ItemType )-> SectionsViewData){
 
         val sectionsData = data?.sectionsData ?:return
@@ -292,6 +306,16 @@ constructor(private val schedulersProvider: ISchedulersProvider,
 
         view?.onLoadingStateChange(false)
         view?.setData(currentData)
+
+        when(currentData.entityItem?.sendStatus) {
+
+            SendStatus.SendError -> {
+                view?.onError(resourceProvider.getString(R.string.send_error_try_again))
+                currentData.entityItem?.sendStatus = SendStatus.New
+            }
+
+            SendStatus.Sending -> view?.onLoadingStateChange(true)
+        }
     }
 
     private fun onSectionDataLoaded(sectionsData: SectionsViewData){
@@ -307,6 +331,60 @@ constructor(private val schedulersProvider: ISchedulersProvider,
             view?.hideSoftKeyboard()
 
         view?.setSectionsData(currentData)
+    }
+
+
+    private fun addFromCamera(){
+
+        val currentData = data?: return
+
+        view?.hideSoftKeyboard()
+        view?.onLoadingStateChange(true)
+
+        add( Single.fromCallable{
+
+            val imageFilePath = fileRepository.createNewJpgFile(Folders.LocalPicturesFolder)!!.absolutePath
+            val protocol= if( currentData.entityItem != null )
+                currentData.entityItem!!
+            else
+                interactor.addNew()
+
+            Pair(protocol, imageFilePath)
+        }
+                .subscribeOn(schedulersProvider.ioScheduler())
+                .observeOn(schedulersProvider.uiScheduler())
+                .subscribe( { pair ->
+
+                    view?.onLoadingStateChange(false)
+                    currentData.entityItem = pair.first
+                    val path = pair.second
+                    cameraTakenImageProvider.cameraImagePath = path
+                    mainRouter.openCamera(path)
+                },{
+
+                    view?.onLoadingStateChange(false)
+                    onError(it)
+                }))
+    }
+    private fun onSendItemResult(viewData:SendItemViewData, entityItem: EntityItem){
+
+        when(entityItem.sendStatus){
+
+            SendStatus.Send -> onItemSend(viewData, entityItem)
+            SendStatus.SendError -> onError(null )
+            else -> view?.onLoadingStateChange(true) // wait for upload service to do its job
+        }
+    }
+
+    private fun onItemSend(viewData:SendItemViewData, entityItem: EntityItem){
+
+        val newData = SendItemViewData(viewData)
+        newData.entityItem = entityItem
+        view?.onLoadingStateChange(false)
+        newData.items.clear()
+        newData.items.add(SendItemListItemSendSuccess(interactor.successMessageString))
+        data = newData
+        onDataLoaded(newData)
     }
 
     companion object {

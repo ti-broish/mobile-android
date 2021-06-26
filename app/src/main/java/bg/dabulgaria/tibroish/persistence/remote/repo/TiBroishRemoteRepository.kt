@@ -136,12 +136,8 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
 
     override fun sendCheckIn(request: SendCheckInRequest): SendCheckInResponse {
 
-        Thread.sleep(2000)
-        return SendCheckInResponse(request.section)
-
-        /* TODO uncomment when check in request is available
         return authenticator.executeCall( { pParams, token ->
-            apiController.sendCheckIn(getAuthorization(token), pParams)}, request)!!*/
+            apiController.sendCheckIn(getAuthorization(token), pParams)}, request)!!
     }
 
     override fun sendFCMToken(request: SendTokenRequest): SendTokenResponse {
