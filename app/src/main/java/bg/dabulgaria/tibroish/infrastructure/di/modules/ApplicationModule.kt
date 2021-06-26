@@ -172,34 +172,12 @@ class ApplicationModule {
     }
 
     @Provides
-    @Singleton
-    fun providesProtocolSenderController(
-        protocolImageUploader: IProtocolImageUploader,
-        protocolsRepository: IProtocolsRepository,
-        protocolImagesRepository: IProtocolImagesRepository,
-        tiBroishRemoteRepository: ITiBroishRemoteRepository
-    ): IProtocolSenderController {
-        return ProtocolSenderController(
-            protocolImageUploader,
-            protocolImagesRepository,
-            protocolsRepository,
-            tiBroishRemoteRepository
-        )
+    fun providesProtocolSenderController(implementation: ProtocolSenderController): IProtocolSenderController {
+        return implementation
     }
 
     @Provides
-    @Singleton
-    fun providesViolationSenderController(
-        violationImageUploader: IViolationImageUploader,
-        violationsRepository: IViolationRepository,
-        violationImagesRepository: IViolationImagesRepository,
-        tiBroishRemoteRepository: ITiBroishRemoteRepository
-    ): IViolationSenderController {
-        return ViolationSenderController(
-            violationsRepository,
-            violationImagesRepository,
-            violationImageUploader,
-            tiBroishRemoteRepository
-        )
+    fun providesViolationSenderController(implementation: ViolationSenderController): IViolationSenderController {
+        return implementation
     }
 }

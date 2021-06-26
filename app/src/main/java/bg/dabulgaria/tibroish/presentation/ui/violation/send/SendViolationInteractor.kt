@@ -95,18 +95,25 @@ class SendViolationInteractor @Inject constructor(sectionPickerInteractor: ISect
         return EntityItem(violation.id)
     }
 
-    override fun loadEntityItemExt(id: Long): EntityItem {
+    override fun loadEntityItem(id: Long): EntityItem {
 
         val violation = violationsRepo.get(id)!!
         val images = violationImagesRepo.getByViolationId(violation.id)
 
-        return EntityItem(violation.id).apply {
+        return EntityItem(violation.id, violation.status).apply {
 
             this.images.addAll(images.map {
 
                 EntityItemImage(it.id, violation.id, it.localFilePath, it.imageSendStatus)
             })
         }
+    }
+
+    override fun updateEntityItemStatus(id: Long, status: SendStatus) {
+
+        val item = violationsRepo.get(id)!!
+        item.status = status
+        violationsRepo.update(item)
     }
 
     override fun deleteImageConcrete(entityItemImage: EntityItemImage) {
@@ -134,20 +141,27 @@ class SendViolationInteractor @Inject constructor(sectionPickerInteractor: ISect
         violationImagesRepo.insert(violationImage)
     }
 
-    override fun sendItemConcrete(viewData: SendItemViewData) {
+    override fun sendItemConcrete(viewData: SendItemViewData): EntityItem {
 
         if(viewData.entityItem == null)
             viewData.entityItem = addNew()
 
         selectedSectionLocalRepo.selectedSectionData = viewData.sectionsData
 
-        val entity = viewData.entityItem?: return
+        val entity = viewData.entityItem!!
+        val violation = violationsRepo.get(entity.id)!!
+        violation.status = SendStatus.Sending
+        violationsRepo.update(violation)
+
         val metadata = ViolationMetadata(
             violationId = entity.id,
             sectionId = viewData.sectionsData?.selectedSection?.id ?:"",
             townId = viewData.sectionsData?.selectedTown?.id,
             description = viewData.message)
+
         UploaderService.uploadViolation(context, metadata)
+
+        return EntityItem(violation.id, violation.status)
     }
 
     override fun addSelectedGalleryImages(currentData: SendItemViewData){

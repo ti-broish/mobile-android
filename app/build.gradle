@@ -38,8 +38,8 @@ android {
         applicationId "bg.dabulgaria.tibroish"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 4
-        versionName "1.0"
+        versionCode 5
+        versionName "1.1"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         signingConfig signingConfigs.AppSigning
         setProperty("archivesBaseName", "Ti-Broish-$versionName.$versionCode")
@@ -49,6 +49,7 @@ android {
             debuggable false
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig = signingConfigs.ProdAppSigning
         }
         debug{
             debuggable true

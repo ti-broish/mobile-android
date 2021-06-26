@@ -3,6 +3,7 @@ package bg.dabulgaria.tibroish.presentation.ui.protocol.add
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.io.IFileRepository
 import bg.dabulgaria.tibroish.domain.providers.ILogger
+import bg.dabulgaria.tibroish.infrastructure.permission.IPermissionRequester
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.ui.common.item.send.ISendItemPresenter
@@ -22,14 +23,16 @@ class AddProtocolPresenter @Inject constructor(schedulersProvider: ISchedulersPr
                                                fileRepository: IFileRepository,
                                                logger: ILogger,
                                                dispHandler: IDisposableHandler,
-                                               cameraTakenImageProvider: ICameraTakenImageProvider,)
+                                               cameraTakenImageProvider: ICameraTakenImageProvider,
+                                               permissionRequester : IPermissionRequester)
     : SendItemPresenter(schedulersProvider,
         mainRouter,
         interactor,
         fileRepository,
         logger,
         dispHandler,
-        cameraTakenImageProvider),
+        cameraTakenImageProvider,
+        permissionRequester),
         IAddProtocolPresenter{
 
     override val MinSelectedImages: Int = 4

@@ -19,7 +19,7 @@ interface IMainRouter: OnMenuClickListener {
 
     fun showHomeScreen()
 
-    fun showAddProtocol()
+    fun showAddProtocol(dbId: Long? = null)
 
     fun openAppSettings()
 
@@ -39,7 +39,7 @@ interface IMainRouter: OnMenuClickListener {
 
     fun showProfile()
 
-    fun showSendViolation()
+    fun showSendViolation(dbId: Long? = null)
 
     fun showRightsAndObligations()
 

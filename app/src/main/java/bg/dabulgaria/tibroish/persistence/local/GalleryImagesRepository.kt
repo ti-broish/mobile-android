@@ -51,13 +51,18 @@ class GalleryImagesRepository @Inject constructor(@AppContext private val contex
                 val id = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID))
 
                 val imageUriString = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id).toString()
+                val filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
 
-                val imageFilePath = if(imageUriString.isEmpty())
-                    cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
+                val imageFilePath = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+                    if(imageUriString.isNullOrEmpty())
+                        filePath
+                    else
+                        imageUriString
+                }
                 else
-                   imageUriString
+                    filePath
 
-                if( imageFilePath.isEmpty())
+                if(imageFilePath.isEmpty())
                     continue
 
                 val height = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.HEIGHT))

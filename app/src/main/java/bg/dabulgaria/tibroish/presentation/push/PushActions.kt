@@ -36,7 +36,13 @@ enum class PushActionValuesShowScreen constructor(val stringValue: String) : Ser
     Violations("Violations"),
 
     @SerializedName("ViolationDetails")
-    ViolationDetails("ViolationDetails");
+    ViolationDetails("ViolationDetails"),
+
+    @SerializedName("SendViolation")
+    SendViolation("SendViolation"),
+
+    @SerializedName("SendProtocol")
+    SendProtocol("SendProtocol");
 
     companion object {
 

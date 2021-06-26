@@ -8,11 +8,9 @@ import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerInteractor
-import bg.dabulgaria.tibroish.domain.locations.SectionViewType
-import bg.dabulgaria.tibroish.domain.locations.SectionsViewData
+import bg.dabulgaria.tibroish.domain.send.SendStatus
 import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoId
-import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
 
 
@@ -26,7 +24,7 @@ interface ISendItemInteractor :ISectionPickerInteractor, IDisposableHandler {
 
     fun addCameraImage(viewData: SendItemViewData)
 
-    fun sendItem(viewData: SendItemViewData)
+    fun sendItem(viewData: SendItemViewData): EntityItem
 
     fun getItemImages(viewData: SendItemViewData):List<PhotoId>
 
@@ -47,11 +45,13 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
 
     abstract val titleString: String
 
-    abstract fun loadEntityItemExt(id: Long) : EntityItem
+    abstract fun loadEntityItem(id: Long) : EntityItem?
+
+    abstract fun updateEntityItemStatus(id: Long, status: SendStatus)
 
     abstract fun deleteImageConcrete(entityItemImage: EntityItemImage)
 
-    abstract fun sendItemConcrete(viewData: SendItemViewData)
+    abstract fun sendItemConcrete(viewData: SendItemViewData): EntityItem
 
     abstract fun addSelectedGalleryImages(viewData: SendItemViewData)
 
@@ -81,9 +81,24 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
 
         addCameraImage(newViewData)
 
-        val entityItemId = newViewData.entityItem?.id ?:0
-        if(entityItemId > 0)
-            newViewData.entityItem = loadEntityItemExt(entityItemId)
+        val entityItemId: Long = when{
+            newViewData.entityItem?.id != null ->  newViewData.entityItem!!.id
+            viewData.entityDbId != null -> viewData.entityDbId
+            else -> 0
+        }
+
+        if(entityItemId  > 0)
+            newViewData.entityItem = loadEntityItem(entityItemId)
+
+        if(newViewData.entityItem?.sendStatus == SendStatus.Send){
+
+            newViewData.items.clear()
+            newViewData.items.add(SendItemListItemSendSuccess(successMessageString))
+            return newViewData
+        }
+
+        if(entityItemId > 0 && newViewData.entityItem?.sendStatus == SendStatus.SendError)
+            updateEntityItemStatus(entityItemId, SendStatus.New)
 
         newViewData.items.add(SendItemListItemHeader(titleString))
         newViewData.items.add(SendItemListItemSection(newViewData.sectionsData))
@@ -131,9 +146,9 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
         cameraTakenImageProvider.cameraImagePath = ""
     }
 
-    override fun sendItem(viewData: SendItemViewData) {
+    override fun sendItem(viewData: SendItemViewData): EntityItem {
 
-        sendItemConcrete(viewData)
+        return sendItemConcrete(viewData)
     }
     //endregion ISendItemInteractor implementation
 
