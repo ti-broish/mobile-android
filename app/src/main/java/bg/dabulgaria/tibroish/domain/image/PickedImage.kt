@@ -36,5 +36,4 @@ data class PickedImage constructor(val id:String,
                                    val imageFilePath:String,
                                    val width:Int,
                                    val height:Int,
-                                   val dateTaken:Date) :Serializable {
-}
+                                   val dateTaken:Date) :Serializable

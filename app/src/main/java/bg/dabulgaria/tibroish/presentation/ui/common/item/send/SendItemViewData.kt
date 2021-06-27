@@ -3,6 +3,7 @@ package bg.dabulgaria.tibroish.presentation.ui.common.item.send
 import bg.dabulgaria.tibroish.domain.send.ImageSendStatus
 import bg.dabulgaria.tibroish.domain.locations.SectionsViewData
 import bg.dabulgaria.tibroish.domain.send.SendStatus
+import bg.dabulgaria.tibroish.presentation.ui.common.preview.images.PreviewImage
 import java.io.Serializable
 
 enum class SendItemListItemType {
@@ -12,7 +13,13 @@ enum class SendItemListItemType {
 class EntityItemImage(val id: Long,
                       val entityId: Long,
                       val localFilePath: String?,
-                      val imageSendStatus: ImageSendStatus) : Serializable
+                      val imageSendStatus: ImageSendStatus) : Serializable, PreviewImage{
+
+    override val photoFilePath = localFilePath?:""
+    override val photoId = id.toString()
+    override val photoPreviouslySelected = false
+    override val photoSelected = false
+}
 
 class EntityItem(val id: Long, var sendStatus: SendStatus = SendStatus.New) : Serializable {
 
@@ -47,6 +54,9 @@ class SendItemViewData(val entityDbId: Long?=null) : Serializable {
     var sectionsData: SectionsViewData? = null
     var message: String = ""
     var cameraPermissionRequested = false
+    var imagePreviewOpen = false
+    var previewImageIndex = 0
+    var imagesIndexesOffset = 0
 
     constructor(source: SendItemViewData) : this(null) {
 

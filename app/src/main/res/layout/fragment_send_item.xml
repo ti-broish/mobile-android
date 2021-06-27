@@ -31,6 +31,18 @@
         tools:listitem="@layout/send_item_header_layout"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
+    <bg.dabulgaria.tibroish.presentation.ui.common.preview.images.PreviewImagesView
+        android:id="@+id/previewImagesView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"
+        android:elevation="10dp"
+        />
+
     <View
         android:id="@+id/sendItemProcessingOverlay"
         android:layout_width="match_parent"

@@ -2,6 +2,7 @@ package bg.dabulgaria.tibroish.infrastructure.di.modules
 
 import android.content.Context
 import androidx.room.Room
+import bg.dabulgaria.tibroish.BuildConfig
 import bg.dabulgaria.tibroish.DaApplication
 import bg.dabulgaria.tibroish.domain.calculators.HashCalculator
 import bg.dabulgaria.tibroish.domain.calculators.IHashCalculator
@@ -81,7 +82,7 @@ class ApplicationModule {
     @Singleton
     internal fun providesTiBroishDatabase(@AppContext context: Context): TiBroishDatabase {
 
-        return Room.databaseBuilder(context, TiBroishDatabase::class.java, "ti_broish_db")
+        return Room.databaseBuilder(context, TiBroishDatabase::class.java, "ti_broish_db${BuildConfig.FLAVOR}")
                 .build()
     }
 
