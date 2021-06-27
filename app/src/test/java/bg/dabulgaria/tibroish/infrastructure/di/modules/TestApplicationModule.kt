@@ -1,4 +1,4 @@
-package bg.dabulgaria.tibroish.presentation
+package bg.dabulgaria.tibroish.infrastructure.di.modules
 
 import android.content.Context
 import androidx.room.Room
@@ -10,7 +10,6 @@ import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.providers.ITimestampProvider
 import bg.dabulgaria.tibroish.domain.providers.TimestampProvider
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
-import bg.dabulgaria.tibroish.infrastructure.di.modules.ApplicationModule
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.infrastructure.schedulers.SchedulersProvider
 import bg.dabulgaria.tibroish.persistence.local.Logger
