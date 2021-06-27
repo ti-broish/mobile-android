@@ -20,6 +20,8 @@ import bg.dabulgaria.tibroish.presentation.ui.checkin.SendCheckInFragment
 import bg.dabulgaria.tibroish.presentation.ui.common.item.send.SendItemViewData
 import bg.dabulgaria.tibroish.presentation.ui.forgotpassword.ForgotPasswordFragment
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
+import bg.dabulgaria.tibroish.presentation.ui.licenses.LicensesFragment
+import bg.dabulgaria.tibroish.presentation.ui.licenses.LicensesViewData
 import bg.dabulgaria.tibroish.presentation.ui.login.LoginFragment
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.camera.CameraPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoId
@@ -94,6 +96,9 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
                 val intent = Intent(appContext, FetchStreamActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 appContext.startActivity(intent)
+            }
+            NavItemAction.Licenses -> {
+                showLicenses()
             }
             NavItemAction.Exit -> {
             }
@@ -286,6 +291,22 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
         }
 
         view?.showScreen(content, RightsAndObligationsFragment.TAG, addToBackStack = true, transitionContent = true)
+    }
+
+    override fun showLicenses() {
+
+        var content = view?.supportFragmentMngr?.findFragmentByTag(LicensesFragment.TAG)
+        if (content == null) {
+
+            clearBackStack()
+            content = LicensesFragment.newInstance(LicensesViewData())
+        }
+
+        view?.showScreen(
+            content,
+            LicensesFragment.TAG,
+            addToBackStack = true,
+            transitionContent = true)
     }
 
     override fun showViolations() {

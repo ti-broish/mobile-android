@@ -180,4 +180,10 @@ class ApplicationModule {
     fun providesViolationSenderController(implementation: ViolationSenderController): IViolationSenderController {
         return implementation
     }
+
+    @Provides
+    @Singleton
+    fun providesHtmlTextUtil(): IHtmlTextUtil {
+        return HtmlTextUtil()
+    }
 }
