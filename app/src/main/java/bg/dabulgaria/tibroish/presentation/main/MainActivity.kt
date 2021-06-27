@@ -12,16 +12,20 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.infrastructure.permission.IPermissionResponseHandler
 import bg.dabulgaria.tibroish.presentation.base.BaseActivity
+import bg.dabulgaria.tibroish.presentation.event.CameraPhotoTakenEvent
 import bg.dabulgaria.tibroish.presentation.navigation.NavigationDrawerFragment
 import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
 import bg.dabulgaria.tibroish.presentation.push.IPushActionRouter
+import bg.dabulgaria.tibroish.presentation.ui.common.item.send.SendItemInteractor
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerConstants
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import kotlinx.android.synthetic.main.activity_main.*
+import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(),
@@ -38,6 +42,8 @@ class MainActivity : BaseActivity(),
     lateinit var permissionsResponseHandler: IPermissionResponseHandler
     @Inject
     protected lateinit var pushActionRouter: IPushActionRouter
+    @Inject
+    protected lateinit var logger: ILogger
 
     private var drawerLayout :DrawerLayout? = null
     private var navigationDrawerFragment :NavigationDrawerFragment ? = null
@@ -97,9 +103,7 @@ class MainActivity : BaseActivity(),
 
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == PhotoPickerConstants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-
-        }
+        logger.i(TAG, "onActivityResult(requestCode: $requestCode, resultCode: $resultCode)" )
     }
 
     override fun onNewIntent(newIntent: Intent?) {
@@ -188,5 +192,6 @@ class MainActivity : BaseActivity(),
     }
 
     companion object{
+        val TAG = MainActivity::class.java.simpleName
     }
 }

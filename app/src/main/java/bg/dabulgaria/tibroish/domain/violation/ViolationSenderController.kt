@@ -25,9 +25,10 @@ class ViolationSenderController @Inject constructor(
     override fun upload(metadata: ViolationMetadata): Pair<String,Long>  {
 
         val violationId = metadata.violationId
-        val violation = violationsRepo.get(violationId)!!
+        var violation: VoteViolation? =null
 
         try {
+            violation = violationsRepo.get(violationId)!!
             violationImageUploader.uploadImages(violationId)
 
             val images = violationImagesRepo.getByViolationId(violationId)
@@ -47,12 +48,12 @@ class ViolationSenderController @Inject constructor(
         }
         catch (ex:Exception){
             logger.e(TAG, ex)
-            violation.status = SendStatus.SendError
+            violation?.status = SendStatus.SendError
         }
 
-        violationsRepo.update(violation)
+        violation?.let { violationsRepo.update(it) }
 
-        return Pair(violation.serverId, violation.id)
+        return Pair(violation?.serverId?: "", violation?.id ?: -1)
     }
 
     override fun getIntent(context: Context, serverAndDbIds: Pair<String,Long>): Intent {

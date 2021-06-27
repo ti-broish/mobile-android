@@ -67,7 +67,7 @@ class SendCheckInInteractor @Inject constructor(sectionPickerInteractor: ISectio
 
     override fun loadEntityItem(id: Long) = EntityItem(0)
 
-    override fun updateEntityItemStatus(id: Long, status: SendStatus) {}
+    override fun updateEntityItemStatus(id: Long, status: SendStatus): EntityItem { return EntityItem( -1, status )}
 
     override fun deleteImageConcrete(entityItemImage: EntityItemImage) {}
 
