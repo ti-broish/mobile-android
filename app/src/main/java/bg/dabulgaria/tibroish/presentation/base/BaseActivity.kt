@@ -9,9 +9,14 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.main.IMainScreenView
+import bg.dabulgaria.tibroish.presentation.navigation.BackHandlerInterface
+import bg.dabulgaria.tibroish.presentation.navigation.BackHandlerObject
 import dagger.android.AndroidInjection
 
-abstract class BaseActivity : AppCompatActivity(), IMainScreenView {
+abstract class BaseActivity : AppCompatActivity(), IMainScreenView, BackHandlerInterface {
+
+    protected var mBackHandlerObject: BackHandlerObject? = null
+    protected var mTag: String? = null
 
     //region show screen
     override fun showScreen(content: Fragment,
@@ -52,6 +57,9 @@ abstract class BaseActivity : AppCompatActivity(), IMainScreenView {
 
     override fun onBackPressed() {
 
+        if (mBackHandlerObject?.handleBackPressed() == true)
+            return
+
         val backStackEntryCount = supportFragmentManager.backStackEntryCount
 
         if( backStackEntryCount >0){
@@ -89,6 +97,17 @@ abstract class BaseActivity : AppCompatActivity(), IMainScreenView {
 
     override val supportFragmentMngr: FragmentManager?
             = this.supportFragmentManager
+
+    override fun setSelectedHandler(backHandlerObject: BackHandlerObject?, tag: String?) {
+
+        if (mBackHandlerObject == null) {
+            mBackHandlerObject = backHandlerObject
+            this.mTag = tag
+        } else if (this.mTag != null && this.mTag == tag) {
+            mBackHandlerObject = backHandlerObject
+            this.mTag = tag
+        }
+    }
 
     protected fun setOrientationOnBack()
     {

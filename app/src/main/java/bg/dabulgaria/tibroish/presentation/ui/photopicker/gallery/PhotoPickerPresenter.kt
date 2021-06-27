@@ -17,11 +17,17 @@ import javax.inject.Inject
 
 interface IPhotoPickerPresenter : IBasePresenter<IPhotoPickerView> {
 
-    fun onImageClick(photo: PhotoItem, index:Int)
+    fun onImageClick(index:Int)
+
+    fun onPreviewImageClick(index:Int)
 
     fun onRequestPermissionClick()
 
     fun onDoneClick()
+
+    fun onPreviewCloseClick(lastPosition: Int)
+
+    fun onHandleBack(position: Int?): Boolean
 }
 
 class PhotoPickerPresenter @Inject constructor(private val interactor : IPhotoPickerInteractor,
@@ -62,11 +68,14 @@ class PhotoPickerPresenter @Inject constructor(private val interactor : IPhotoPi
                 .subscribe( { onLoaded(it) },{ onError(it) }))
     }
 
-    override fun onImageClick(photo: PhotoItem, index:Int) {
+    override fun onImageClick( index:Int) {
+
+        val photo: PhotoItem = data?.photoItems?.getOrNull(index)
+                ?: return
 
         val selected = !photo.isSelected
 
-        val item = data?.photoItems?.find { it.id == photo.id && it.source == photo.source }
+        val item = data?.photoItems?.find { it.photoId == photo.photoId && it.source == photo.source }
                 ?: return
 
         item.isSelected  = selected
@@ -80,6 +89,24 @@ class PhotoPickerPresenter @Inject constructor(private val interactor : IPhotoPi
             data?.selectedPhotos?.removeAt( selectedIndex )
 
         view?.onItemUpdated(item, index)
+    }
+
+    override fun onPreviewImageClick( photoIndex: Int) {
+
+        val viewData = data?:return
+        viewData.lastPhotoIndex = photoIndex
+        viewData.previewOpen = true
+
+        view?.onDataLoaded( viewData )
+    }
+
+    override fun onPreviewCloseClick(lastPosition: Int) {
+
+        val viewData = data?:return
+        viewData.lastPhotoIndex = lastPosition
+        viewData.previewOpen = false
+
+        view?.onDataLoaded( viewData )
     }
 
     override fun onDoneClick() {
@@ -123,9 +150,15 @@ class PhotoPickerPresenter @Inject constructor(private val interactor : IPhotoPi
         loadData()
     }
 
-    private fun onPhotosAdded(){
+    override fun onHandleBack(index: Int?): Boolean {
 
-        mainRouter.navigateBack()
+        val viewData = data?: return false
+        if(!viewData.previewOpen)
+            return false
+
+        onPreviewCloseClick(index?:0)
+
+        return true
     }
 
     private fun onLoaded(list: List<PhotoItem>){

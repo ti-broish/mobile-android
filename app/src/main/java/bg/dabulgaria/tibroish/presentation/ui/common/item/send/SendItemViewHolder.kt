@@ -68,6 +68,9 @@ class SendItemImageViewHolder(itemView: View) : SendItemViewHolder(itemView) {
         itemView.sendItemPhotoDeleteView.setOnClickListener {
             presenter.onImageDeleteClick(imageItem, position)
         }
+        itemView.sendItemPhotoZoom.setOnClickListener {
+            presenter.onImageZoomClick(position)
+        }
     }
 }
 

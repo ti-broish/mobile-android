@@ -21,11 +21,11 @@ import bg.dabulgaria.tibroish.infrastructure.permission.PermissionCodes
 import bg.dabulgaria.tibroish.presentation.event.CameraPhotoTakenEvent
 import bg.dabulgaria.tibroish.presentation.main.IPermissionResponseListener
 import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
+import bg.dabulgaria.tibroish.presentation.ui.common.preview.images.PreviewImage
 import io.reactivex.rxjava3.core.Single
 import org.greenrobot.eventbus.Logger
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-
 
 interface ISendItemPresenter : IBasePresenter<ISendItemView>, ISectionPickerPresenter {
 
@@ -40,6 +40,14 @@ interface ISendItemPresenter : IBasePresenter<ISendItemView>, ISectionPickerPres
     fun onSuccessOkClick()
 
     fun onMessageChanged(message: String)
+
+    fun onHandleBack(imagePosition: Int?): Boolean
+
+    fun onImageZoomClick(position:Int)
+
+    fun onPreviewDelete(previewPosition: Int, image: PreviewImage)
+
+    fun onPreviewCloseClick(previewLastPosition: Int)
 }
 
 abstract class SendItemPresenter
@@ -169,17 +177,7 @@ constructor(private val schedulersProvider: ISchedulersProvider,
 
     override fun onImageDeleteClick(item: SendItemListItemImage, position: Int) {
 
-        data?: return
-
-        view?.onLoadingStateChange(true)
-        add(Single.fromCallable{interactor.deleteImage(item.image)}
-                .subscribeOn(schedulersProvider.ioScheduler())
-                .observeOn(schedulersProvider.uiScheduler())
-                .subscribe( {
-                    loadData()
-                },{
-                    onError(it)
-                }))
+        onImageDelete(item.image)
     }
 
     override fun onViewHide() {
@@ -195,6 +193,28 @@ constructor(private val schedulersProvider: ISchedulersProvider,
         view?.onLoadingStateChange(false )
 
         super.onError(throwable)
+    }
+
+    override fun onImageZoomClick(position: Int) {
+
+        val viewData = data?:return
+        viewData.previewImageIndex = position - viewData.imagesIndexesOffset
+        viewData.imagePreviewOpen = true
+
+        view?.setData( viewData )
+    }
+
+    override fun onPreviewCloseClick(previewLastPosition: Int) {
+
+        val viewData = data?:return
+        viewData.imagePreviewOpen = false
+        view?.setData( viewData )
+    }
+
+    override fun onPreviewDelete(previewPosition: Int, image: PreviewImage) {
+
+        if(image is EntityItemImage)
+            onImageDelete(image)
     }
     //endregion ISendItemPresenter implementation
 
@@ -264,6 +284,19 @@ constructor(private val schedulersProvider: ISchedulersProvider,
         
         data?.message = message
     }
+
+    override fun onHandleBack(imagePosition: Int?): Boolean {
+
+        val viewData = data?: return false
+        if(!viewData.imagePreviewOpen)
+            return false
+
+        viewData.imagePreviewOpen = false
+        viewData.previewImageIndex = 0
+        view?.setData(viewData)
+
+        return true
+    }
     //endregion ISectionPickerPresenter implementation
 
     // region IPermissionResponseListener implementation
@@ -306,6 +339,9 @@ constructor(private val schedulersProvider: ISchedulersProvider,
         currentData.entityItem = newData.entityItem
         currentData.message = newData.message
         currentData.sectionsData = newData.sectionsData
+        currentData.previewImageIndex = newData.previewImageIndex
+        currentData.imagePreviewOpen = newData.imagePreviewOpen
+        currentData.imagesIndexesOffset = newData.imagesIndexesOffset
 
         view?.onLoadingStateChange(false)
         view?.setData(currentData)
@@ -387,6 +423,19 @@ constructor(private val schedulersProvider: ISchedulersProvider,
         newData.items.add(SendItemListItemSendSuccess(interactor.successMessageString))
         data = newData
         onDataLoaded(newData)
+    }
+
+    private fun onImageDelete(image: EntityItemImage){
+
+        view?.onLoadingStateChange(true)
+        add(Single.fromCallable{interactor.deleteImage(image)}
+                .subscribeOn(schedulersProvider.ioScheduler())
+                .observeOn(schedulersProvider.uiScheduler())
+                .subscribe( {
+                    loadData()
+                },{
+                    onError(it)
+                }))
     }
 
     companion object {

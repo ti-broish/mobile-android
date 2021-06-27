@@ -30,5 +30,15 @@
         android:src="@drawable/ic_baseline_delete_24"
         android:foreground="?android:attr/selectableItemBackgroundBorderless" />
 
+    <ImageView
+        android:id="@+id/sendItemPhotoZoom"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:padding="6dp"
+        android:src="@drawable/zoom_primary_42"
+        app:layout_constraintLeft_toLeftOf="@id/sendItemPhotoImageView"
+        app:layout_constraintBottom_toBottomOf="@id/sendItemPhotoImageView"
+        android:visibility="visible" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
