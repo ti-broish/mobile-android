@@ -73,6 +73,8 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
         val newViewData = SendItemViewData()
         newViewData.entityItem = viewData.entityItem
         newViewData.message = viewData.message
+        newViewData.imagesIndexesOffset = 0
+        newViewData.imagePreviewOpen = viewData.imagePreviewOpen
 
         newViewData.sectionsData = loadSectionsData(viewData.sectionsData)
         newViewData.sectionsData?.hideUniqueUntilSectionIsSelected = hideUniqueUntilSectionGetsSelected
@@ -108,14 +110,21 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
             updateEntityItemStatus(entityItemId, SendStatus.New)
 
         newViewData.items.add(SendItemListItemHeader(titleString))
+        newViewData.imagesIndexesOffset++
         newViewData.items.add(SendItemListItemSection(newViewData.sectionsData))
+        newViewData.imagesIndexesOffset++
 
-        if(supportsMessage)
+        if(supportsMessage) {
             newViewData.items.add(SendItemListItemMessage(messageLabel,
-                    newViewData.message?:"" ))
+                    newViewData.message ?: ""))
+            newViewData.imagesIndexesOffset++
+        }
 
         for( photo in newViewData.entityItem?.images.orEmpty())
             newViewData.items.add(SendItemListItemImage(photo))
+
+        if(newViewData.entityItem?.images.isNullOrEmpty())
+            newViewData.imagePreviewOpen = false
 
         newViewData.items.add(SendItemListItemButtons(supportsImages))
 

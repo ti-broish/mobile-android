@@ -1,6 +1,7 @@
 package bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery//package bg.dabulgaria.tibroish.presentation.ui.protocol.list
 
 import bg.dabulgaria.tibroish.domain.image.PickedImageSource
+import bg.dabulgaria.tibroish.presentation.ui.common.preview.images.PreviewImage
 import java.io.Serializable
 import java.util.*
 
@@ -15,7 +16,20 @@ class PhotoItem(id: String,
                 val dateTaken: Date,
                 var isSelected: Boolean,
                 var previouslySelected: Boolean,
-                val displaySize: Int) : PhotoId(id, source), Serializable
+                val displaySize: Int) : PhotoId(id, source), Serializable, PreviewImage{
+
+    override val photoSelected: Boolean
+        get() = isSelected || previouslySelected
+
+    override val photoId: String
+        get() = id
+
+    override val photoFilePath: String
+        get() = imageFilePath
+
+    override val photoPreviouslySelected: Boolean
+        get() = previouslySelected
+}
 
 data class PhotoPickerViewData(val prevSelectedPhotos: List<PhotoId>): Serializable {
 
@@ -24,6 +38,8 @@ data class PhotoPickerViewData(val prevSelectedPhotos: List<PhotoId>): Serializa
 
     var selectedPhotos =  mutableListOf<PhotoItem>()
     var photosPermissionRequested = false
+    var previewOpen = false
+    var lastPhotoIndex: Int = 0
 }
 
 class PhotoPickerConstants{

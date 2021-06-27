@@ -36,7 +36,7 @@ class GridPickerAdapter @Inject constructor(private val presenter: IPhotoPickerP
         val item = list[position]
 
         Glide.with(holder.itemView)
-                .load(item.imageFilePath)
+                .load(item.photoFilePath)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.itemView.photoImageView)
 
@@ -53,9 +53,11 @@ class GridPickerAdapter @Inject constructor(private val presenter: IPhotoPickerP
 
             holder.itemView.photoBoxView.visibility = View.GONE
             holder.itemView.photoBoxView.alpha = 0f
-            holder.itemView.photoImageView.setOnClickListener { presenter.onImageClick(item, position) }
-            holder.itemView.photoCheckBox.setOnClickListener { presenter.onImageClick(item, position) }
+            holder.itemView.photoImageView.setOnClickListener { presenter.onImageClick(position) }
+            holder.itemView.photoCheckBox.setOnClickListener { presenter.onImageClick(position) }
         }
+
+        holder.itemView.photoZoom.setOnClickListener { presenter.onPreviewImageClick(position) }
     }
 
     fun updateList(newItemsList:List<PhotoItem>) {
