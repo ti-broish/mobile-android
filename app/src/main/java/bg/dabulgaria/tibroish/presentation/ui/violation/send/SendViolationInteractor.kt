@@ -109,11 +109,12 @@ class SendViolationInteractor @Inject constructor(sectionPickerInteractor: ISect
         }
     }
 
-    override fun updateEntityItemStatus(id: Long, status: SendStatus) {
+    override fun updateEntityItemStatus(id: Long, status: SendStatus): EntityItem {
 
         val item = violationsRepo.get(id)!!
         item.status = status
         violationsRepo.update(item)
+        return EntityItem(item.id, item.status)
     }
 
     override fun deleteImageConcrete(entityItemImage: EntityItemImage) {
@@ -149,9 +150,6 @@ class SendViolationInteractor @Inject constructor(sectionPickerInteractor: ISect
         selectedSectionLocalRepo.selectedSectionData = viewData.sectionsData
 
         val entity = viewData.entityItem!!
-        val violation = violationsRepo.get(entity.id)!!
-        violation.status = SendStatus.Sending
-        violationsRepo.update(violation)
 
         val metadata = ViolationMetadata(
             violationId = entity.id,
@@ -159,9 +157,11 @@ class SendViolationInteractor @Inject constructor(sectionPickerInteractor: ISect
             townId = viewData.sectionsData?.selectedTown?.id,
             description = viewData.message)
 
+        val entityItem = updateEntityItemStatus(metadata.violationId, SendStatus.Sending)
+
         UploaderService.uploadViolation(context, metadata)
 
-        return EntityItem(violation.id, violation.status)
+        return entityItem
     }
 
     override fun addSelectedGalleryImages(currentData: SendItemViewData){

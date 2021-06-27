@@ -21,7 +21,7 @@
     <string name="navigation_drawer_open">Отваряне на навигационното чекмедже</string>
     <string name="navigation_drawer_close">Затваряне на навигационното чекмедже</string>
     <string name="take_photo">Снимай</string>
-    <string name="add_images">Качи снимки</string>
+    <string name="add_images">Избери снимки</string>
     <string name="add">Добави</string>
     <string name="give_permission">Разреши достъп</string>
     <string name="app_has_no_image_permissions">Приложението няма достъп до снимките на телефона ви. \n Разрешете достъп за да видите снимките.</string>
