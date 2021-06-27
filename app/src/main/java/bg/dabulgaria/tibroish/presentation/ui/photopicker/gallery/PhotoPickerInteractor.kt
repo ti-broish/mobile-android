@@ -4,8 +4,6 @@ import android.content.Context
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.image.IGalleryImagesRepository
 import bg.dabulgaria.tibroish.domain.image.PickedImageSource
-import bg.dabulgaria.tibroish.domain.protocol.image.IImageCopier
-import bg.dabulgaria.tibroish.domain.protocol.image.IProtocolImagesRepository
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import javax.inject.Inject
 
@@ -17,9 +15,7 @@ interface IPhotoPickerInteractor {
 }
 
 class PhotoPickerInteractor @Inject constructor(private val galleryImagesRepo: IGalleryImagesRepository,
-                                                private val protocolImagesRepo: IProtocolImagesRepository,
                                                 private val photoItemTypeAdapter: IPhotoItemTypeAdapter,
-                                                private val imageCopier: IImageCopier,
                                                 @AppContext private val context: Context) : IPhotoPickerInteractor {
 
     override fun loadImages(data: PhotoPickerViewData, columnsCount: Int): List<PhotoItem> {
@@ -46,7 +42,6 @@ class PhotoPickerInteractor @Inject constructor(private val galleryImagesRepo: I
 
         return images
     }
-
 
     private fun getMapKey(id: String, pickedImageSource: PickedImageSource): String {
 
