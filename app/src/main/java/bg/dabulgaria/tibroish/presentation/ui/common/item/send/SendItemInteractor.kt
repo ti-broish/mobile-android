@@ -47,7 +47,7 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
 
     abstract fun loadEntityItem(id: Long) : EntityItem?
 
-    abstract fun updateEntityItemStatus(id: Long, status: SendStatus)
+    abstract fun updateEntityItemStatus(id: Long, status: SendStatus): EntityItem
 
     abstract fun deleteImageConcrete(entityItemImage: EntityItemImage)
 
@@ -69,6 +69,7 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
 
     override fun loadData(viewData: SendItemViewData) : SendItemViewData {
 
+        logger.i(TAG, "Start load")
         val newViewData = SendItemViewData()
         newViewData.entityItem = viewData.entityItem
         newViewData.message = viewData.message
@@ -77,18 +78,24 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
         newViewData.sectionsData?.hideUniqueUntilSectionIsSelected = hideUniqueUntilSectionGetsSelected
         newViewData.sectionsData?.isSectionRequired = sectionIsRequired
 
+        logger.i(TAG, "section data loaded")
+
         addSelectedGalleryImages(newViewData)
 
         addCameraImage(newViewData)
 
+        logger.i(TAG, "selected images loaded")
+
         val entityItemId: Long = when{
             newViewData.entityItem?.id != null ->  newViewData.entityItem!!.id
             viewData.entityDbId != null -> viewData.entityDbId
-            else -> 0
+            else -> -1
         }
 
-        if(entityItemId  > 0)
+        if(entityItemId  > -1)
             newViewData.entityItem = loadEntityItem(entityItemId)
+
+        logger.i(TAG, "entity item loaded")
 
         if(newViewData.entityItem?.sendStatus == SendStatus.Send){
 
@@ -112,6 +119,8 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
 
         newViewData.items.add(SendItemListItemButtons(supportsImages))
 
+        logger.i(TAG, "End load")
+
         return newViewData
     }
 
@@ -123,11 +132,17 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
     override fun addCameraImage(viewData: SendItemViewData) {
 
         val path = cameraTakenImageProvider.cameraImagePath
+        logger.i(TAG, " addCameraImage cameraImagePath: ${path}" )
         if(path.isEmpty())
             return
 
+        val size = fileRepo.getFileSizeKb(path)
+        logger.i(TAG, "addCameraImage file size KB: ${size}" )
+
         if(fileRepo.getFileSizeKb(path) < MIN_FILE_SIZE_KB)
             return
+
+        logger.i(TAG, "addCameraImage  viewData.entityItem?.id: ${viewData.entityItem?.id}" )
 
         val itemId = viewData.entityItem?.id
                 ?:return
@@ -135,13 +150,19 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
         val imageFilePath = imageCopier.copyToLocalUploadsFolder(path)
                 ?: return
 
+        logger.i(TAG, "addCameraImage  imageFilePath ${imageFilePath}" )
+
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
         BitmapFactory.decodeFile(imageFilePath, options)
         val width = options.outWidth
         val height = options.outHeight
 
+        logger.i(TAG, "addCameraImage  options " )
+
         addImageToRepo(itemId, imageFilePath, width, height)
+
+        logger.i(TAG, "addCameraImage  addImageToRepo OK" )
 
         cameraTakenImageProvider.cameraImagePath = ""
     }
@@ -152,31 +173,9 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
     }
     //endregion ISendItemInteractor implementation
 
-    //region private methods
-
-    private fun retryUploadImages(itemId: Long){
-
-        try {
-
-            entityImageUploader.uploadImages(itemId)
-        }
-        catch (th:Throwable){
-
-            logger.e(TAG, th)
-            retryUploadImages(itemId)
-        }
-    }
-
-    private fun stopUpload(){
-
-        if( (imageUploadDisposable != null) && imageUploadDisposable?.isDisposed == false )
-            imageUploadDisposable?.dispose()
-    }
-    //endregion private methods
-
     companion object {
 
         private val TAG = SendItemInteractor::class.simpleName
-        private val MIN_FILE_SIZE_KB = 1024
+        private val MIN_FILE_SIZE_KB = 512
     }
 }

@@ -18,9 +18,11 @@ import bg.dabulgaria.tibroish.domain.send.ItemSendResultEvent
 import bg.dabulgaria.tibroish.domain.send.SendStatus
 import bg.dabulgaria.tibroish.infrastructure.permission.IPermissionRequester
 import bg.dabulgaria.tibroish.infrastructure.permission.PermissionCodes
+import bg.dabulgaria.tibroish.presentation.event.CameraPhotoTakenEvent
 import bg.dabulgaria.tibroish.presentation.main.IPermissionResponseListener
 import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
 import io.reactivex.rxjava3.core.Single
+import org.greenrobot.eventbus.Logger
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -280,6 +282,7 @@ constructor(private val schedulersProvider: ISchedulersProvider,
 
         loadData()
     }
+    //endregion Subscriptions
 
     private fun <ItemType> onSectionFieldSelected(item:ItemType, loadMethod:(data: SectionsViewData, item:ItemType )-> SectionsViewData){
 
@@ -332,7 +335,6 @@ constructor(private val schedulersProvider: ISchedulersProvider,
 
         view?.setSectionsData(currentData)
     }
-
 
     private fun addFromCamera(){
 

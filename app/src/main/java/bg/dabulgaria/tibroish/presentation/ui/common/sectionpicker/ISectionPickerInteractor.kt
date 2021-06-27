@@ -2,8 +2,10 @@ package bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker
 
 import bg.dabulgaria.tibroish.domain.locations.*
 import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
+import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.persistence.remote.model.SectionsRequestParams
 import bg.dabulgaria.tibroish.persistence.remote.model.TownsRequestParams
+import bg.dabulgaria.tibroish.presentation.ui.common.item.send.SendItemInteractor
 import javax.inject.Inject
 
 interface ISectionPickerInteractor {
@@ -27,7 +29,8 @@ interface ISectionPickerInteractor {
 
 class SectionPickerInteractor
 @Inject constructor(private val apiRepo: ITiBroishRemoteRepository,
-                    private val selectedSectionLocalRepo: ISelectedSectionLocalRepository)
+                    private val selectedSectionLocalRepo: ISelectedSectionLocalRepository,
+                    private val logger: ILogger)
     :ISectionPickerInteractor{
 
     override var autoFillSection:Boolean = true
@@ -78,7 +81,7 @@ class SectionPickerInteractor
 
             if(hasCityRegions)
                 data.viewType = SectionViewType.HomeCityRegion
-            else {
+            else if(data.sections.isEmpty()){
                 data.sections = apiRepo.getSections(SectionsRequestParams(data.selectedTown?.code?:-1, null))
 
                 if(autoFillSection && data.sections.size == 1)
@@ -230,6 +233,7 @@ class SectionPickerInteractor
     companion object{
 
         val BG_CODE = "00"
+        private val TAG = SectionPickerInteractor::class.simpleName
     }
 
 }
