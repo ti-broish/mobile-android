@@ -12,7 +12,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-class DaApplication : Application(), HasAndroidInjector  {
+open class DaApplication : Application(), HasAndroidInjector {
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
@@ -26,16 +26,19 @@ class DaApplication : Application(), HasAndroidInjector  {
         super.onCreate()
         FirebaseApp.initializeApp(this)
 
-        DaggerApplicationComponent.builder()
-                .application(this)
-                .device( DeviceModule(this))
-                .build()
+        createApplicationComponent()
                 .inject(this)
 
         channelInitializer.initChannels()
 
         pushTokenSender.initPushToken()
     }
+
+    open fun createApplicationComponent() = DaggerApplicationComponent
+        .builder()
+            .application(this)
+            .device(DeviceModule(this))
+            .build()
 
     override fun androidInjector(): AndroidInjector<Any> {
 
