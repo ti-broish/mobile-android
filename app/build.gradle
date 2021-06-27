@@ -86,6 +86,11 @@ android {
             signingConfig stagingSigning
         }
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -137,6 +142,9 @@ dependencies {
     api "com.google.dagger:dagger-android:$daggerVersion"
     api "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    kaptTest "com.google.dagger:dagger-compiler:$daggerVersion"
+
     // Room
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
@@ -157,6 +165,10 @@ dependencies {
     testImplementation 'junit:junit:4.13'
     //testImplementation 'org.mockito:mockito-core:2.+'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
+    // Robolectric
+    testImplementation 'org.robolectric:robolectric:4.4'
+    // Truth
+    testImplementation "com.google.truth:truth:1.1.3"
     // Android Test
     androidTestImplementation 'androidx.test:runner:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
