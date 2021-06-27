@@ -23,8 +23,9 @@ class ProtocolSenderController @Inject constructor(
     override fun upload(metadata: ProtocolMetadata): Pair<String,Long> {
 
         val protocolId = metadata.protocolId
-        val protocol = protocolsRepo.get(protocolId)!!
+        var protocol: Protocol? = null
         try {
+            protocol = protocolsRepo.get(protocolId)!!
             protocolImageUploader.uploadImages(protocolId)
             val images = protocolImagesRepo.getByProtocolId(protocolId)
 
@@ -40,12 +41,12 @@ class ProtocolSenderController @Inject constructor(
         }
         catch (ex: Exception){
             logger.e(TAG, ex)
-            protocol.status = SendStatus.SendError
+            protocol?.status = SendStatus.SendError
         }
 
-        protocolsRepo.update(protocol)
+        protocol?.let { protocolsRepo.update(it) }
 
-        return Pair(protocol.serverId, protocol.id)
+        return Pair(protocol?.serverId ?: "", protocol?.id?:-1)
     }
 
     override fun getIntent(context: Context, serverAndDbIds: Pair<String,Long>): Intent {
