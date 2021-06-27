@@ -1,4 +1,4 @@
-package bg.dabulgaria.tibroish
+package bg.dabulgaria.tibroish.persistence.remote.di
 
 import bg.dabulgaria.tibroish.domain.locations.Country
 import bg.dabulgaria.tibroish.domain.organisation.ITiBorishRemoteRepository

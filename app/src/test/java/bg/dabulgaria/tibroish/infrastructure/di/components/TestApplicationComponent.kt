@@ -1,20 +1,18 @@
-package bg.dabulgaria.tibroish
+package bg.dabulgaria.tibroish.infrastructure.di.components
 
 
-import bg.dabulgaria.tibroish.DaApplication
+import bg.dabulgaria.tibroish.TestApplication
+import bg.dabulgaria.tibroish.persistence.remote.di.TestRemotePersistenceModule
 import bg.dabulgaria.tibroish.domain.di.DomainModule
-import bg.dabulgaria.tibroish.infrastructure.di.components.ApplicationComponent
 import bg.dabulgaria.tibroish.infrastructure.di.modules.*
 import bg.dabulgaria.tibroish.persistence.local.di.LocalPersistenceModule
-import bg.dabulgaria.tibroish.persistence.remote.di.RemotePersistenceModule
-import bg.dabulgaria.tibroish.presentation.TestApplicationModule
+import bg.dabulgaria.tibroish.infrastructure.di.modules.TestApplicationModule
 
 import javax.inject.Singleton
 
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
-import dagger.android.AndroidInjector
 
 @Singleton // Constraints this component to one-per-application or unscoped bindings.
 @Component(

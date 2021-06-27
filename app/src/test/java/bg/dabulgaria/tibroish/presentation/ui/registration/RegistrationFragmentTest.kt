@@ -10,10 +10,10 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(minSdk = LOLLIPOP, application = TestApplication::class)
-public class RegistrationFragmentTest {
+class RegistrationFragmentTest {
 
     @Test
-    public fun testTest() {
+    fun testTest() {
         assertThat(true).isTrue()
     }
 }
