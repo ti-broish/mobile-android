@@ -60,6 +60,7 @@ class NavigationDrawerFragment : Fragment() {
                 NavItem( NavItemAction.RightsAndObligations, R.string.rights_and_obligations, null ),
                 NavItem( NavItemAction.YouCountLive, R.string.ti_broish, R.string.live ),
                 NavItem( NavItemAction.CheckIn, R.string.check_in, null ),
+                NavItem( NavItemAction.Licenses, R.string.licenses, null ),
                 NavItem( NavItemAction.Exit, R.string.exit, null )
         )
 

@@ -12,6 +12,7 @@ enum class NavItemAction{
     MySignals,
     RightsAndObligations,
     YouCountLive,
+    Licenses,
     Exit,
 }
 

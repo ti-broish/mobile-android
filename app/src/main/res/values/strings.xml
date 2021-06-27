@@ -163,5 +163,6 @@
     <string name="exit_message">Сигурни ли сте че искате да излезете?</string>
     <string name="yes">Да</string>
     <string name="no">Не</string>
+    <string name="licenses">Лицензи</string>
 
 </resources>

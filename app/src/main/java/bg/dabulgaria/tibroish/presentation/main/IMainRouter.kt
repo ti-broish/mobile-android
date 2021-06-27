@@ -52,4 +52,6 @@ interface IMainRouter: OnMenuClickListener {
     fun showViolationDetails(violation: VoteViolationRemote)
 
     fun showDismissableDialog(message: String, dismissCallback: () -> Unit)
+
+    fun showLicenses()
 }
