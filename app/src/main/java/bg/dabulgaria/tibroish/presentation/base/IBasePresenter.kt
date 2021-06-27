@@ -4,7 +4,7 @@ import android.os.Bundle
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.providers.INetworkInfoProvider
 import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
-import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerPresenter
+import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
 interface IBasePresenter<IView: IBaseView>  {
@@ -31,6 +31,8 @@ abstract class BasePresenter<IView:IBaseView> ( disposableHandler: IDisposableHa
 
     var view:IView? = null
 
+    open val registerEventBus = false
+
     @Inject
     lateinit var networkInfoProvider :INetworkInfoProvider
 
@@ -46,10 +48,19 @@ abstract class BasePresenter<IView:IBaseView> ( disposableHandler: IDisposableHa
     }
 
     override fun onViewShow() {
+
+        if(registerEventBus)
+            EventBus.getDefault().register(this)
+
         loadData()
     }
 
     override fun onViewHide() {
+
+        if(registerEventBus)
+            EventBus.getDefault().unregister(this)
+
+        dispose()
     }
 
     override fun onError( throwable : Throwable?){

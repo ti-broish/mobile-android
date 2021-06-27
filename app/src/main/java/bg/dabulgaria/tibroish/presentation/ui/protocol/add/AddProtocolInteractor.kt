@@ -1,73 +1,194 @@
 package bg.dabulgaria.tibroish.presentation.ui.protocol.add
 
+
+import android.content.Context
+import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.domain.image.UploaderService
+import bg.dabulgaria.tibroish.domain.protocol.image.IProtocolImageUploader
+import bg.dabulgaria.tibroish.domain.image.PickedImageSource
 import bg.dabulgaria.tibroish.domain.io.IFileRepository
-import bg.dabulgaria.tibroish.domain.organisation.ITiBorishRemoteRepository
-import bg.dabulgaria.tibroish.domain.protocol.IProtocolsRepository
-import bg.dabulgaria.tibroish.domain.protocol.Protocol
-import bg.dabulgaria.tibroish.domain.protocol.ProtocolExt
-import bg.dabulgaria.tibroish.domain.protocol.ProtocolStatus
+import bg.dabulgaria.tibroish.domain.locations.ISelectedSectionLocalRepository
+import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
+import bg.dabulgaria.tibroish.domain.protocol.*
+import bg.dabulgaria.tibroish.domain.protocol.image.IImageCopier
 import bg.dabulgaria.tibroish.domain.protocol.image.IProtocolImagesRepository
 import bg.dabulgaria.tibroish.domain.protocol.image.ProtocolImage
 import bg.dabulgaria.tibroish.domain.providers.ILogger
+import bg.dabulgaria.tibroish.domain.send.ImageSendStatus
+import bg.dabulgaria.tibroish.domain.send.SendStatus
+import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
+import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
+import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
+import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
+import bg.dabulgaria.tibroish.presentation.providers.IGallerySelectedImagesProvider
 import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
+import bg.dabulgaria.tibroish.presentation.ui.common.item.send.*
+import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerInteractor
+import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoId
 import java.util.*
-
-
 import javax.inject.Inject
 
-interface IAddProtocolInteractor {
 
-    fun addNew(protocol: Protocol): ProtocolExt
+interface IAddProtocolInteractor : ISendItemInteractor
 
-    fun loadData(viewData: AddProtocolViewData) :AddProtocolViewData
-
-    fun deleteImage(image: ProtocolImage)
-}
-
-class AddProtocolInteractor @Inject constructor(private val protocolsRepo: IProtocolsRepository,
-                                                private val protocolsImagesRepo: IProtocolImagesRepository,
-                                                private val fileRepo: IFileRepository,
-                                                private val apiRepo: ITiBorishRemoteRepository,
+class AddProtocolInteractor @Inject constructor(sectionPickerInteractor: ISectionPickerInteractor,
+                                                disposableHandler: IDisposableHandler,
+                                                schedulersProvider: ISchedulersProvider,
+                                                logger: ILogger,
+                                                private val protocolsRepo: IProtocolsRepository,
+                                                fileRepo: IFileRepository,
+                                                imageCopier: IImageCopier,
+                                                cameraTakenImageProvider: ICameraTakenImageProvider,
+                                                private val protocolImageUploader: IProtocolImageUploader,
+                                                private val selectedImagesProvider: IGallerySelectedImagesProvider,
+                                                private val protocolImagesRepo: IProtocolImagesRepository,
+                                                private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
                                                 private val resourceProvider: IResourceProvider,
-                                                private val logger:ILogger)
-    : IAddProtocolInteractor{
+                                                private val selectedSectionLocalRepo:
+                                                ISelectedSectionLocalRepository,
+                                                @AppContext val context: Context)
+    : SendItemInteractor(sectionPickerInteractor,
+        disposableHandler,
+        schedulersProvider,
+        logger,
+        protocolImageUploader,
+        imageCopier,
+        fileRepo,
+        cameraTakenImageProvider),
+        IAddProtocolInteractor {
 
-    override fun addNew(protocol: Protocol): ProtocolExt {
+    override val titleString: String
+        get() = resourceProvider.getString(R.string.send_protocol)
 
+    override val successMessageString: String
+        get() = resourceProvider.getString(R.string.protocol_send_successfully)
+
+    override fun getItemImages(viewData: SendItemViewData): List<PhotoId> {
+
+        val itemId = viewData.entityItem?.id ?: return emptyList()
+
+        val images = protocolImagesRepo.getByProtocolId(itemId)
+
+        return images.map { PhotoId(it.providerId, it.source) }
+    }
+
+    override fun addNew(): EntityItem {
+
+        val protocol = Protocol()
         protocol.uuid = UUID.randomUUID().toString()
-        protocol.status = ProtocolStatus.New
+        protocol.status = SendStatus.New
         protocolsRepo.insert(protocol)
-        return ProtocolExt(protocol)
+        return EntityItem(protocol.id)
     }
 
-    override fun loadData(viewData: AddProtocolViewData) :AddProtocolViewData{
+    override fun loadEntityItem(id: Long): EntityItem {
 
-        val newViewData = AddProtocolViewData()
-        newViewData.protocolId = viewData.protocolId
+        val protocol = protocolsRepo.get(id)!!
+        val images = protocolImagesRepo.getByProtocolId(protocol.id)
 
-        if(newViewData.protocolId ?:0 > 0){
+        return EntityItem(protocol.id, protocol.status).apply {
 
-            val protocol = protocolsRepo.get( viewData.protocolId?:0 )
-            val images = protocolsImagesRepo.getByProtocolId(protocol.id)
-            newViewData.protocol = ProtocolExt(protocol).apply { this.images.addAll(images) }
+            this.images.addAll(images.map {
+
+                EntityItemImage(it.id, protocol.id, it.localFilePath, it.imageSendStatus)
+            })
         }
-
-        newViewData.items.add(AddProtocolListItemHeader())
-        newViewData.items.add(AddProtocolListItemSection())
-
-        for( photo in newViewData.protocol?.images.orEmpty())
-            newViewData.items.add(AddProtocolListItemImage(photo))
-
-        newViewData.items.add(AddProtocolListItemButtons())
-
-        return newViewData
     }
 
-    override fun deleteImage(image: ProtocolImage) {
+    override fun updateEntityItemStatus(id: Long, status: SendStatus) {
 
-        fileRepo.deleteFile(image.localFilePath)
-        protocolsImagesRepo.delete(image)
+        val protocol = protocolsRepo.get(id)!!
+        protocol.status = status
+        protocolsRepo.update(protocol)
     }
+
+    override fun deleteImageConcrete(entityItemImage: EntityItemImage) {
+
+        entityItemImage.localFilePath?.let { fileRepo.deleteFile(it) }
+        protocolImagesRepo.delete(entityItemImage.id)
+    }
+
+    override fun addImageToRepo(itemId: Long, imageFilePath: String, width: Int, height: Int) {
+
+        val protocolImage = ProtocolImage(id = 0,
+                protocolId = itemId,
+                uuid = UUID.randomUUID().toString(),
+                serverId = "",
+                originalFilePath = imageFilePath,
+                localFilePath = imageFilePath,
+                localFileThumbPath = "",
+                imageSendStatus = ImageSendStatus.Copied,
+                providerId = "Camera_${UUID.randomUUID().toString()}",
+                source = PickedImageSource.Camera,
+                width = width,
+                height = height,
+                dateTaken = Date())
+
+        protocolImagesRepo.insert(protocolImage)
+    }
+
+    override fun sendItemConcrete(viewData: SendItemViewData): EntityItem {
+
+        selectedSectionLocalRepo.selectedSectionData = viewData.sectionsData
+
+        val metadata = ProtocolMetadata(
+            protocolId = viewData.entityItem!!.id,
+            sectionId = viewData.sectionsData!!.selectedSection!!.id)
+        val protocol = protocolsRepo.get(metadata.protocolId)!!
+        protocol.status = SendStatus.Sending
+        protocolsRepo.update(protocol)
+
+        UploaderService.uploadProtocol(context, metadata)
+        return EntityItem(protocol.id, protocol.status)
+    }
+
+    override fun addSelectedGalleryImages(currentData: SendItemViewData) {
+
+        if (selectedImagesProvider.selectedImages.isEmpty())
+            return
+
+        val protocolImages = mutableListOf<ProtocolImage>()
+        protocolImagesRepo.runInTransaction(Runnable {
+
+            if (currentData.entityItem == null) {
+
+                currentData.entityItem = addNew()
+            }
+
+            for (image in selectedImagesProvider.selectedImages) {
+
+                val protocolImage = ProtocolImage(id = 0,
+                        protocolId = currentData.entityItem!!.id,
+                        uuid = UUID.randomUUID().toString(),
+                        serverId = "",
+                        originalFilePath = image.imageFilePath,
+                        localFilePath = "",
+                        localFileThumbPath = "",
+                        imageSendStatus = ImageSendStatus.NotProcessed,
+                        providerId = image.id,
+                        source = image.source,
+                        width = image.width,
+                        height = image.height,
+                        dateTaken = image.dateTaken)
+
+                protocolImagesRepo.insert(protocolImage)
+                protocolImages.add(protocolImage)
+            }
+            selectedImagesProvider.selectedImages.clear()
+        })
+
+        for (protocolImage in protocolImages) {
+
+            val copiedPath = imageCopier.copyToLocalUploadsFolder(protocolImage.originalFilePath)
+            protocolImage.localFilePath = copiedPath ?: ""
+
+            if (protocolImage.localFilePath.isNotEmpty())
+                protocolImage.imageSendStatus = ImageSendStatus.Copied
+
+            protocolImagesRepo.update(protocolImage)
+        }
+    }
+    //endregion private methods
 
     companion object {
 

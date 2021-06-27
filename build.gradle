@@ -7,7 +7,7 @@ buildscript {
         rxjavaVersion = '3.0.5'
         appCompatVersion = '1.2.0'
         recyclerViewVersion = '1.2.0'
-        room_version = "2.2.6"
+        room_version = "2.3.0"
         glideVersion = "4.11.0"
         retrofit2Version = '2.9.0'
     }
@@ -31,8 +31,8 @@ buildscript {
         classpath "org.jetbrains.dokka:kotlin-as-java-plugin:1.4.30"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.4.30"
         classpath "org.openapitools:openapi-generator-gradle-plugin:5.0.0"
-        classpath 'com.google.gms:google-services:4.3.5'
-
+        classpath 'com.google.gms:google-services:4.3.8'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -42,6 +42,8 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url 'https://maven.google.com/' }
+        maven { url 'https://jitpack.io' }
     }
 }
 

@@ -19,21 +19,21 @@ import javax.inject.Inject
 
 class ImageCopier @Inject constructor(@AppContext private val context: Context,
                                       private val logger: ILogger,
-                                      private val fileReposotiry: IFileRepository,
+                                      private val fileRepository: IFileRepository,
                                       private val stremCopier:IStreamCopier) :IImageCopier {
 
-    override fun copyToUploadsFolder(localFileUrlPath: String): String? {
+    override fun copyToLocalUploadsFolder(localFileUrlPath: String): String? {
 
-        return copyToFolder(localFileUrlPath, Folders.LocalUploadsFolder)
+        return copyToLocalFolder(localFileUrlPath, Folders.LocalUploadsFolder)
     }
 
-    override fun copyToFolder(localFileUrlPath: String, folderName: String): String? {
+    override fun copyToLocalFolder(localFileUrlPath: String, folderName: String): String? {
 
         if (localFileUrlPath.isEmpty())
             throw Exception("Empty file path.")
 
-        val folderPath = fileReposotiry.getFolder(folderName)!!.absolutePath
-        val newFileName = UUID.randomUUID().toString()
+        val folderPath = fileRepository.getFolder(folderName)!!.absolutePath
+        val newFileName = UUID.randomUUID().toString()+".jpg"
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
                 && localFileUrlPath.startsWith(Uris.ContentScheme)) {
@@ -48,17 +48,7 @@ class ImageCopier @Inject constructor(@AppContext private val context: Context,
                 }
             }
 
-            if ( bitmap.width <= 0 || bitmap.height <= 0 || !bitmap.isMutable )
-                throw Exception("Unable to load the bitmap for image $localFileUrlPath")
-
-            val newFile = fileReposotiry.createNewFile(folderPath, newFileName)
-                    ?:return null
-
-            val fileStreamPhoto: OutputStream = FileOutputStream(newFile.path)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 99, fileStreamPhoto)
-            fileStreamPhoto.flush()
-            fileStreamPhoto.close()
-            newFile.absolutePath
+            saveBitmapToLocalFolderFile(bitmap, folderName)
         }
         else {
 
@@ -67,7 +57,7 @@ class ImageCopier @Inject constructor(@AppContext private val context: Context,
             if (fileName.isEmpty())
                 fileName = localFile.name
 
-            val newFile = fileReposotiry.createNewFile(folderPath, fileName)
+            val newFile = fileRepository.createNewFile(folderPath, fileName)
                     ?:return null
 
             stremCopier.copy(FileInputStream(localFile), FileOutputStream(newFile))
@@ -75,7 +65,34 @@ class ImageCopier @Inject constructor(@AppContext private val context: Context,
         }
     }
 
+    override fun saveBitmapToLocalUploadsFolderFile(bitmap: Bitmap ):String?
+            = saveBitmapToLocalFolderFile(bitmap, Folders.LocalUploadsFolder)
+
+    override fun saveBitmapToLocalFolderFile(bitmap: Bitmap, folderName: String):String?{
+
+        val folderPath = fileRepository.getFolder(folderName)!!.absolutePath
+
+        val mutableBitmap =  if(!bitmap.isMutable)
+            bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        else
+            bitmap
+
+        val newFileName = UUID.randomUUID().toString()+".jpg"
+        if ( mutableBitmap.width <= 0 || mutableBitmap.height <= 0)
+            throw Exception("Unable to load the bitmap for image from bitmap")
+
+        val newFile = fileRepository.createNewFile(folderPath, newFileName)
+                ?:return null
+
+        val fileStreamPhoto: OutputStream = FileOutputStream(newFile.path)
+        mutableBitmap.compress(Bitmap.CompressFormat.JPEG, 99, fileStreamPhoto)
+        fileStreamPhoto.flush()
+        fileStreamPhoto.close()
+        return newFile.absolutePath
+    }
+
     companion object{
+
         val LOG_TAG = ImageCopier::class.java.simpleName
     }
 }

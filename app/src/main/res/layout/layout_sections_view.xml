@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/dirtyWhite">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/sectionInText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/section_in"
+        android:textColor="@color/textBlack"
+        android:textSize="@dimen/sections_text_size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <RadioGroup
+        android:id="@+id/abroadLocalSectionRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sectionInText"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/localSectionsRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bulgaria"
+            android:textSize="@dimen/sections_text_size"
+            android:textColor="@color/textBlack"
+            android:checked="true"
+            android:buttonTint="@color/colorPrimary" />
+
+        <RadioButton
+            android:layout_marginStart="16dp"
+            android:id="@+id/abroadSectionsRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/abroad"
+            android:textSize="@dimen/sections_text_size"
+            android:textColor="@color/textBlack"
+            android:buttonTint="@color/colorPrimary"/>
+
+    </RadioGroup>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputCountry"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/country"
+        android:labelFor="@+id/inputCountryDropdown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/abroadLocalSectionRadioGroup"
+        app:boxBackgroundColor="@null">
+
+        <AutoCompleteTextView
+            android:id="@+id/inputCountryDropdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dropDownWidth="match_parent"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputMir"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/mir"
+        android:labelFor="@+id/inputMirDropdown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inputCountry"
+        app:boxBackgroundColor="@null">
+
+        <AutoCompleteTextView
+            android:id="@+id/inputMirDropdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dropDownWidth="match_parent"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputMunicipality"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/municipality"
+        android:labelFor="@+id/inputMunicipalityDropdown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inputMir"
+        app:boxBackgroundColor="@null">
+
+        <AutoCompleteTextView
+            android:id="@+id/inputMunicipalityDropdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dropDownWidth="match_parent"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputTown"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/town"
+        android:labelFor="@+id/inputTownDropdown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inputMunicipality"
+        app:boxBackgroundColor="@null">
+
+        <AutoCompleteTextView
+            android:id="@+id/inputTownDropdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dropDownWidth="match_parent"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputCityRegion"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/region"
+        android:labelFor="@+id/inputCityRegionDropdown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inputTown"
+        app:boxBackgroundColor="@null">
+
+        <AutoCompleteTextView
+            android:id="@+id/inputCityRegionDropdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dropDownWidth="match_parent"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputSection"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/section_number"
+        android:labelFor="@+id/inputSectionDropdown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inputCityRegion"
+        app:boxBackgroundColor="@null">
+
+        <AutoCompleteTextView
+            android:id="@+id/inputSectionDropdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dropDownWidth="match_parent"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/uniqueSectionLabelTextView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/unique_section_number"
+        android:textColor="@color/textBlack"
+        android:textSize="@dimen/sections_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inputSection" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/uniqueSectionValueTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="6dp"
+        android:background="@color/white"
+        android:digits="0123456789"
+        android:gravity="center"
+        android:inputType="number"
+        android:padding="6dp"
+        android:text="030602087"
+        android:textColor="@color/textBlack"
+        android:textSize="@dimen/sections_text_size"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/uniqueSectionLabelTextView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

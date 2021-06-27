@@ -3,10 +3,12 @@ package bg.dabulgaria.tibroish.persistence.local
 
 import bg.dabulgaria.tibroish.domain.protocol.IProtocolsRepository
 import bg.dabulgaria.tibroish.domain.protocol.Protocol
+import bg.dabulgaria.tibroish.persistence.local.db.BaseTiBroishLocalRepository
+import bg.dabulgaria.tibroish.persistence.local.db.TiBroishDatabase
 import javax.inject.Inject
 
 class ProtocolsRepository @Inject
-constructor(private val database:TiBroishDatabase ) : BaseTiBroishRepository(database), IProtocolsRepository {
+constructor(private val database: TiBroishDatabase) : BaseTiBroishLocalRepository(database), IProtocolsRepository {
 
     companion object {
 
@@ -18,7 +20,7 @@ constructor(private val database:TiBroishDatabase ) : BaseTiBroishRepository(dat
         return database.daoProtocol().getAll()
     }
 
-    override fun get(id: Long): Protocol {
+    override fun get(id: Long): Protocol? {
 
         return database.daoProtocol().getById( id )
     }

@@ -2,20 +2,26 @@ package bg.dabulgaria.tibroish.presentation.main
 
 import androidx.drawerlayout.widget.DrawerLayout
 import bg.dabulgaria.tibroish.domain.user.IUserAuthenticator
+import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
 import bg.dabulgaria.tibroish.presentation.navigation.OnMenuClickListener
 import javax.inject.Inject
 
-interface IMainPresenter : OnMenuClickListener {
+interface IMainPresenter : OnMenuClickListener, IDisposableHandler {
 
     var view: IMainScreenView?
 
     fun onAuthEvent(coldStart:Boolean)
+
+    fun onProcessStart()
+
+    fun onProcessEnd()
 }
 
 class MainPresenter @Inject constructor(private val mainRouter: IMainRouter,
-                                        private val userAuthenticator: IUserAuthenticator)
-    : IMainPresenter{
+                                        private val userAuthenticator: IUserAuthenticator,
+                                        disposableHandler: IDisposableHandler)
+    : IMainPresenter, IDisposableHandler by disposableHandler {
 
     init {
         mainRouter.setPresenter( this )
@@ -57,4 +63,8 @@ class MainPresenter @Inject constructor(private val mainRouter: IMainRouter,
         }
         mainRouter.onNavigateToItem(action)
     }
+
+    override fun onProcessStart() { view?.showProcessing(true) }
+
+    override fun onProcessEnd() { view?.showProcessing(false) }
 }

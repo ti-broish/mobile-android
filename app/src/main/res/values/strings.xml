@@ -1,18 +1,22 @@
 <resources>
 
+    <string name="primary_notification_channel" translatable="false">default</string>
+    <string name="primary_notification_channel_name">Default</string>
+    <string name="important_notification_channel" translatable="false">important</string>
+    <string name="important_notification_channel_name">Важни</string>
+
     <string name="internet_connection_offline">Няма връзка с интернет</string>
-    <string name="oops_went_wrong_try">Опа, нещо се обърка. Понякога тези неща се случват, опитайте отново</string>
+    <string name="oops_went_wrong_try">Възникна грешка. Моля опитайте отново.</string>
     <string name="list_is_empty">Не бе намерено нищо</string>
     <string name="profile">Профил</string>
-    <string name="send_protocol">Изпрати Протокол</string>
+    <string name="send_protocol">Изпрати протокол</string>
     <string name="my_protocols">Моите протоколи</string>
-    <string name="send_signal">Изпрати Сигнал</string>
+    <string name="send_signal">Изпрати сигнал</string>
     <string name="my_signals">Моите сигнали</string>
     <string name="live">LIVE</string>
     <string name="exit">Изход</string>
     <string name="rights_and_obligations">Права и Задължения</string>
-    <string name="ti_broish">Ти Броиш</string>
-    <string name="menu">Меню</string>
+    <string name="ti_broish">Ти броиш</string>
     <string name="start">Начало</string>
     <string name="navigation_drawer_open">Отваряне на навигационното чекмедже</string>
     <string name="navigation_drawer_close">Затваряне на навигационното чекмедже</string>
@@ -23,7 +27,7 @@
     <string name="app_has_no_image_permissions">Приложението няма достъп до снимките на телефона ви. \n Разрешете достъп за да видите снимките.</string>
 
     <!-- Login screen -->
-    <string name="login_username_label">Имейл адрес</string>
+    <string name="email_label">Имейл адрес</string>
     <string name="login_password_label">Парола</string>
     <string name="login_login">Вход</string>
     <string name="login_register">Регистрация</string>
@@ -36,7 +40,8 @@
     <string name="invalid_password">Невалидна парола</string>
     <string name="register_repeat_password">Повтори парола*</string>
     <string name="register_password">Парола*</string>
-    <string name="register_data_consent">Съгласен съм да съхранявате данните ми и за целите на застъпнически кампании за следващите избори (след 04.04.2021).</string>
+    <string name="register_data_consent">Съгласен съм да съхранявате данните ми и за целите на
+        застъпнически кампании за следващите избори (след 11.07.2021).</string>
     <string name="register_data_disclaimer">Данните ви се съхраняват по подразбиране до 30 дни след изборния ден на база на легитимния интерес на администратора и изискванията на Изборния кодекс.</string>
     <string name="register_confirm_over_18">Имам навършени 18 години.*</string>
     <string name="register_organization">Организация*</string>
@@ -47,7 +52,7 @@
     <string name="register_last_name">Фамилия*</string>
     <string name="register_create_profile">Създай профил</string>
     <string name="register_registration">Регистрация</string>
-    <string name="error_weak_password">Паролата трябва да е поне 6 символа, да съдържа малка, голяма буква, цифра и специален сиимвол</string>
+    <string name="error_weak_password">Паролата трябва да е поне 6 символа, да съдържа малка, голяма буква, цифра и специален символ</string>
     <string name="error_user_exists">Съществува потребител с този имейл адрес</string>
     <string name="required_field">Това поле е задължително</string>
     <string name="egn_four_digits_required">Невалидни цифри от ЕГН (последните 4)</string>
@@ -65,5 +70,99 @@
     <string name="region">Район</string>
     <string name="section_number">Номер на секция</string>
     <string name="unique_section_number">Единен номер на секция</string>
+    <string name="forgot_password">Забравена парола</string>
+    <string name="logo_content_description">Лого на ТиБроиш</string>
+    <string name="password_reset_success_title">Проверете Вашият имейл</string>
+    <string name="password_reset_success_message">За да промените паролата, отворете връзката,
+        получена на Вашия имейл адрес.</string>
+    <string name="password_reset_invalid_user">Не е открит регистриран потребител с въведения имейл адрес.</string>
+    <string name="password_reset_generic_error_message">Проблем при промяната на парола.</string>
+    <string name="dialog_title_error">Грешка</string>
+    <string name="country">Държава</string>
+    <string name="send">Изпрати</string>
+    <string name="profile_generic_error">Грешка при достъпване на профила</string>
+    <string name="profile_screen_title">Профил</string>
+    <string name="dialog_generic_title">Съобщение</string>
+    <string name="dialog_generic_error_title">Грешка</string>
+    <string name="profile_changes_saved">Промените са запазени.</string>
+    <string name="profile_delete_success">Успешно изтрихте личните си данни.</string>
+    <string name="profile_delete_confirmation">Потвърдете изтриване на профила</string>
+    <string name="save">Запази</string>
+    <string name="delete_profile">Изтрий профил</string>
+    <string name="please_choose_section">Моля изберете секция</string>
+    <string name="please_choose_min_images">Добавете още поне %d снимки</string>
+    <string name="protocol_send_successfully">Протоколът е изпратен успешно!</string>
+    <string name="ok">Добре</string>
+    <string name="violation_send_successfully">Сигналът е изпратен успешно!</string>
+    <string name="violation_description">Описание на нарушението</string>
+    <string name="please_choose_town">Моля изберете населено място</string>
+    <string name="please_choose_city_region">Моля изберете микрорайон</string>
+    <string name="please_type_description_more_than_d_symbols">Моля въведете описание. Описанието трябва да бъде повече от %d симовола</string>
+    <string name="protocols_list_section_id_unformatted">%d. Секция: %s</string>
+    <string name="status_label">Статус:</string>
+    <string name="protocol_label">Протокол:</string>
+    <string name="violation_label">Сигнал:</string>
+    <string name="location_label">Локация:</string>
+    <string name="section_label">Секция:</string>
+    <string name="protocol_picture_content_description">Снимка на протокол</string>
+    <string name="violation_picture_content_description">Снимка на сигнал</string>
+    <string name="description">Описание</string>
+    <string name="check_in">Отбелязване</string>
+    <string name="check_in_send_successfully">Отбелязването е изпратено успешно!</string>
+    <string name="description_label">Описание:</string>
+    <string name="message_label">Съобщение:</string>
+    <string name="verify_your_email">Моля потвърдете регистрацията си с отваряне на връзката,
+        получена на Вашия имейл адрес.</string>
+    <string name="protocol_upload_publishing">Изпращане на протокол</string>
+    <string name="protocol_upload_published">Протоколът беше изпратен успешно</string>
+    <string name="violation_upload_publishing">Изпращане на сигнал</string>
+    <string name="violation_upload_published">Сигналът беше изпратен успешно</string>
+    <string name="upload_notification_channel_name">Изпращане</string>
+    <string name="send_error_try_again">Възникна грешка при изпращането. Моля опитайте отново.</string>
+    <string name="protocol_upload_failed">Възникна грешка при изпращането на протокола</string>
+    <string name="violation_upload_failed">Възникна грешка при изпращането на сигнала</string>
+
+    <!-- Common Buttons -->
+    <string name="button_close">Затвори</string>
+
+    <!-- Login activity -->
+    <string name="username">Имейл</string>
+    <string name="password">Парола</string>
+    <string name="login">Вход</string>
+    <string name="username_helper_text">Имейлът от основното приложение Ти Броиш</string>
+    <string name="invalid_credentials">Грешен имейл или парола</string>
+
+    <!-- Home activity -->
+    <string name="name_format">Здравейте,\n%1$s</string>
+
+    <!-- Disabled streaming activity -->
+    <string name="streaming_disabled_no_internet_message">Нямате свързаност с интернет!\nМоля, свържете се и опитайте отново.</string>
+    <string name="streaming_disabled_other_error_message">Възникна грешка, моля, опитайте отново.\nАко проблемът продължи, излезте и опитайте отново.</string>
+    <string name="streaming_not_yet_possible_message">Предаването на живо е възможно само след края на изборния ден и след като сте избрали секция от основното приложение.</string>
+    <string name="try_again">Опитай отново</string>
+
+    <!-- Prepare activity -->
+    <string name="prepare_streaming_title">Малко инструкции</string>
+    <string name="instruction_horizontal_text">Предпочитайте хоризонтална ориентация на телефона</string>
+    <string name="instruction_centered_text">Уверете се, че важното действие се намира в центъра на екрана</string>
+    <string name="instruction_battery_text">Следете нивото на батерията</string>
+    <string name="instruction_interrupts_text">Живото предаване ще прекъсне ако напуснете приложението, получите обаждане или екрана се заключи.</string>
+    <string name="forward_label">Напред</string>
+
+
+    <string name="live_label">На живо</string>
+    <string name="retry">Опитай отново</string>
+    <string name="stream_unrecoverable_error">Опитахме да излъчваме, но срещнахме непреодолим проблем. Изглежда не поддържаме устройството ви.</string>
+    <string name="connection_lost">Връзката е прекъсната</string>
+    <string name="connecting_attempt_in_progress">Свързване…</string>
+    <string name="permission_rationale">За да започнете живо предаване е необходимо да дадете разрешения за достъп до камерата и микрофона на устройството</string>
+    <string name="allow">Разреши</string>
+
+    <string name="share">Сподели</string>
+    <string name="share_url">Сподели връзка</string>
+    <string name="exit_message">Сигурни ли сте че искате да излезете?</string>
+    <string name="yes">Да</string>
+    <string name="no">Не</string>
+    <string name="licenses">Лицензи</string>
 
 </resources>

@@ -1,23 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout
-    android:id="@+id/drawerLayout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.main.MainActivity"
-    android:background="@color/dirtyWhite">
+    android:background="@color/dirtyWhite"
+    tools:context=".presentation.main.MainActivity">
 
-    <FrameLayout
-        android:id="@+id/container"
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
-    <fragment android:id="@+id/navigation_drawer"
-        android:layout_width="280dp"
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <fragment
+            android:id="@+id/navigation_drawer"
+            android:name="bg.dabulgaria.tibroish.presentation.navigation.NavigationDrawerFragment"
+            android:layout_width="280dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            tools:layout="@layout/fragment_navigation_drawer" />
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+    <ProgressBar
+        android:id="@+id/mainActivityProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center"
+        android:indeterminateTint="@color/colorPrimary"
+        android:indeterminateTintMode="src_in"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/drawerLayout"
+        app:layout_constraintEnd_toEndOf="@+id/drawerLayout"
+        app:layout_constraintStart_toStartOf="@+id/drawerLayout"
+        app:layout_constraintTop_toTopOf="@+id/drawerLayout" />
+
+    <View
+        android:id="@+id/mainActivityProcessOverlay"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="left"
-        android:name="bg.dabulgaria.tibroish.presentation.navigation.NavigationDrawerFragment"
-        tools:layout="@layout/fragment_navigation_drawer" />
+        android:background="@color/half_transparent_white"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone" />
 
-</androidx.drawerlayout.widget.DrawerLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

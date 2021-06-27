@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import bg.dabulgaria.tibroish.R
-import kotlinx.android.synthetic.main.fragment_comic_list.*
 import kotlinx.android.synthetic.main.fragment_navigation_drawer.*
 import kotlinx.android.synthetic.main.fragment_navigation_drawer.view.*
 
@@ -60,6 +59,8 @@ class NavigationDrawerFragment : Fragment() {
                 NavItem( NavItemAction.MySignals, R.string.my_signals, null ),
                 NavItem( NavItemAction.RightsAndObligations, R.string.rights_and_obligations, null ),
                 NavItem( NavItemAction.YouCountLive, R.string.ti_broish, R.string.live ),
+                NavItem( NavItemAction.CheckIn, R.string.check_in, null ),
+                NavItem( NavItemAction.Licenses, R.string.licenses, null ),
                 NavItem( NavItemAction.Exit, R.string.exit, null )
         )
 

@@ -12,15 +12,24 @@ import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.organisation.Organization
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
+import bg.dabulgaria.tibroish.presentation.ui.common.IOrganizationsDropdownUtil
+import bg.dabulgaria.tibroish.presentation.ui.common.IOrganizationsManager
 import bg.dabulgaria.tibroish.presentation.ui.common.UserDataWrapper
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_user_register.*
+import javax.inject.Inject
 
 interface IRegisterView : IBaseView {
 
 }
 
 class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistrationPresenter>(), IRegisterView {
+
+    @Inject
+    lateinit var organizationsManager: IOrganizationsManager
+
+    @Inject
+    lateinit var organizationsDropdownUtil: IOrganizationsDropdownUtil
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_user_register, container, false)
@@ -31,6 +40,13 @@ class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistratio
         setupCountryCodes()
         setupOrganizations()
         setupRegisterButton()
+        setupLoginButton()
+    }
+
+    private fun setupLoginButton() {
+        button_login.setOnClickListener {
+            presenter.navigateToLoginScreen()
+        }
     }
 
     private fun setupRegisterButton() {
@@ -47,7 +63,20 @@ class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistratio
             callback = object : IRegistrationCallback {
                 override fun onSuccess() {
                     Log.i(TAG, "Registration success!")
-                    presenter.navigateToLoginScreen()
+                    dialogUtil.showDismissableDialog(
+                        requireActivity(),
+                        R.string.dialog_generic_title,
+                        getString(R.string.verify_your_email))
+                    {
+                        presenter.navigateToLoginScreen()
+                    }
+                }
+
+                override fun onError(message: String?) {
+                    dialogUtil.showDismissableDialog(
+                        requireActivity(),
+                        R.string.dialog_title_error,
+                        message ?: getString(R.string.oops_went_wrong_try)) {}
                 }
             })
     }
@@ -72,13 +101,10 @@ class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistratio
             if (organizations == null) {
                 return@getOrganizations
             }
-            val adapter = OrganizationsAdapter(requireContext(), organizations)
-            val dropdown = input_organization_dropdown
-            dropdown.setAdapter(adapter)
-            dropdown.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                dropdown.setText(adapter.getItem(position)?.name, /* filter= */ false)
-                adapter.filter.filter(null)
-            }
+            organizationsDropdownUtil.populateOrganizationsDropdown(
+                requireContext(),
+                input_organization_dropdown,
+                organizations)
         }
     }
 
