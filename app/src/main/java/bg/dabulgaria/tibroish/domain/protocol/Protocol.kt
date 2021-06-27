@@ -2,60 +2,33 @@ package bg.dabulgaria.tibroish.domain.protocol
 
 import androidx.room.*
 import bg.dabulgaria.tibroish.domain.protocol.image.ProtocolImage
+import bg.dabulgaria.tibroish.domain.send.SendStatus
+import bg.dabulgaria.tibroish.domain.send.SendStatusTypeConverter
 import java.io.Serializable
 import java.util.*
 
-enum class ProtocolStatus constructor(val code:Int){
-    New(0),
-    Uploaded(1);
 
-    companion object {
-
-        private val lookup = hashMapOf<Int, ProtocolStatus>()
-
-        init {
-
-            for (status in EnumSet.allOf(ProtocolStatus::class.java))
-                lookup.put(status.code, status)
-        }
-
-        operator fun get(code: Int): ProtocolStatus? = lookup[code]
-    }
-}
-
-class ProtocolTypeConverter {
+class ProtocolRemoteStatusConverter {
     @TypeConverter
-    fun toProtocolStatus(value: Int):ProtocolStatus? = ProtocolStatus.Companion.get( value )
+    fun toProtocolStatusRemote(value: String?):ProtocolStatusRemote? = if(value==null) null else ProtocolStatusRemote[value]
 
     @TypeConverter
-    fun fromProtocolStatus(value: ProtocolStatus) = value.code
+    fun fromProtocolStatusRemote(value: ProtocolStatusRemote?) = value?.stringValue
 }
 
-@Entity( tableName = "Protocol")
-@TypeConverters( ProtocolTypeConverter::class)
+@Entity(tableName = "Protocol")
+@TypeConverters(SendStatusTypeConverter::class, ProtocolRemoteStatusConverter::class)
 open class Protocol constructor(@PrimaryKey(autoGenerate = true)
-                           @ColumnInfo(name = "id")
-                           var id:Long=0,
-                           var uuid:String="",
-                           var serverId:String ="",
-                           var status:ProtocolStatus = ProtocolStatus.New) :Serializable {
+                                @ColumnInfo(name = "id")
+                                var id: Long = 0,
+                                var uuid: String = "",
+                                var serverId: String = "",
+                                var status: SendStatus = SendStatus.New,
+                                var remoteStatus: ProtocolStatusRemote?= null) : Serializable {
 
     constructor(source: Protocol) : this(source.id,
             source.uuid,
             source.serverId,
-            source.status)
-}
-
-class ProtocolExt(id:Long=-1,
-                  uuid:String="",
-                  serverId:String ="",
-                  status:ProtocolStatus = ProtocolStatus.New)
-    :Protocol( id, uuid, serverId, status), Serializable{
-
-    constructor(source: Protocol) : this(source.id,
-            source.uuid,
-            source.serverId,
-            source.status)
-
-    val images = mutableListOf<ProtocolImage>()
+            source.status,
+            source.remoteStatus)
 }

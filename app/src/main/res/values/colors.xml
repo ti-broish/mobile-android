@@ -2,13 +2,24 @@
 <resources>
     <color name="colorPrimary">#00D5BD</color>
     <color name="colorPrimaryDark">#02F1CC</color>
-    <color name="asdas">#00BDAA</color>
     <color name="colorAccent">#FD0002</color>
     <color name="textBlack">#020202</color>
-    <color name="textDarkGray">#626262</color>
-    <color name="textLightGreen">#4CAF52</color>
-    <color name="textRed">#C8181B</color>
+    <color name="textRed">#FD0002</color>
     <color name="white">#FFFFFF</color>
+    <color name="secondary_button_background">#b8b8b8</color>
     <color name="dirtyWhite">#F0F0F0</color>
     <color name="half_transparent_white">#7FFFFFFF</color>
+    <color name="colorOrange">#FF9100</color>
+
+    <color name="black">#000000</color>
+    <color name="grayBackground">#d8d8d8</color>
+    <color name="transparentBlack">#61000000</color>
+    <color name="errorRed">#DD0000</color>
+    <color name="colorTextLight">#99000000</color>
+
+    <color name="semi_transparent_white"> #BFFFFFFF</color>
+    <color name="slightlyTransparentBlack">#CC030303</color>
+
+    <color name="darkEditTextColor">#DE000000</color>
+    <color name="editTextHintColor">@color/colorTextLight</color>
 </resources>

@@ -2,6 +2,7 @@ package bg.dabulgaria.tibroish.domain.user
 
 import android.net.Uri
 import bg.dabulgaria.tibroish.domain.organisation.Organization
+
 import java.io.Serializable
 
 class User : Serializable {
@@ -17,6 +18,23 @@ class User : Serializable {
     var email: String? = ""
     var phone: String? = ""
     var isEmailVerified: Boolean = false
+
+    fun copy(): User {
+        val user = User()
+        user.firstName = firstName
+        user.lastName = lastName
+        user.pin = pin
+        user.organization = organization
+        user.hasAgreedToKeepData = hasAgreedToKeepData
+        user.firebaseUid = firebaseUid
+        user.providerId = providerId
+        user.displayName = displayName
+        user.photoUrl = photoUrl
+        user.email = email
+        user.phone = phone
+        user.isEmailVerified = isEmailVerified
+        return user
+    }
 }
 
 class UserS(

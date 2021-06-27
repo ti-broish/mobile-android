@@ -1,6 +1,9 @@
 package bg.dabulgaria.tibroish.presentation.main
 
+import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
+import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.presentation.navigation.OnMenuClickListener
+import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoId
 
 interface IMainRouter: OnMenuClickListener {
 
@@ -16,11 +19,11 @@ interface IMainRouter: OnMenuClickListener {
 
     fun showHomeScreen()
 
-    fun showAddProtocol()
+    fun showAddProtocol(dbId: Long? = null)
 
     fun openAppSettings()
 
-    fun showPhotoPicker(protocolId:Long)
+    fun showPhotoPicker(selectedImages:List<PhotoId>)
 
     fun showCameraPicker(protocolId:Long)
 
@@ -31,4 +34,24 @@ interface IMainRouter: OnMenuClickListener {
     fun showRegisterScreen(email:String)
 
     fun showForgotPasswordScreen(email:String)
+
+    fun openCamera(imageFilePath: String)
+
+    fun showProfile()
+
+    fun showSendViolation(dbId: Long? = null)
+
+    fun showRightsAndObligations()
+
+    fun showMyProtocols()
+
+    fun showProtocolDetails(protocol: ProtocolRemote)
+
+    fun showViolations()
+
+    fun showViolationDetails(violation: VoteViolationRemote)
+
+    fun showDismissableDialog(message: String, dismissCallback: () -> Unit)
+
+    fun showLicenses()
 }

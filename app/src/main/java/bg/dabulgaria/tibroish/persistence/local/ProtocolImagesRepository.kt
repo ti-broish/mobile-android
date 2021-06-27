@@ -3,10 +3,12 @@ package bg.dabulgaria.tibroish.persistence.local
 
 import bg.dabulgaria.tibroish.domain.protocol.image.IProtocolImagesRepository
 import bg.dabulgaria.tibroish.domain.protocol.image.ProtocolImage
+import bg.dabulgaria.tibroish.persistence.local.db.BaseTiBroishLocalRepository
+import bg.dabulgaria.tibroish.persistence.local.db.TiBroishDatabase
 import javax.inject.Inject
 
 class ProtocolImagesRepository @Inject
-constructor(private val database:TiBroishDatabase ) :BaseTiBroishRepository(database), IProtocolImagesRepository {
+constructor(private val database: TiBroishDatabase) : BaseTiBroishLocalRepository(database), IProtocolImagesRepository {
 
     companion object {
 
@@ -20,17 +22,17 @@ constructor(private val database:TiBroishDatabase ) :BaseTiBroishRepository(data
 
     override fun getByProtocolId(protocolId: Long): List<ProtocolImage> {
 
-        return database.daoProtocolImage().getByProtocolId( protocolId )
+        return database.daoProtocolImage().getByProtocolId(protocolId)
     }
 
-    override fun get(id: Long): ProtocolImage {
+    override fun get(id: Long): ProtocolImage? {
 
-        return database.daoProtocolImage().getById( id )
+        return database.daoProtocolImage().getById(id)
     }
 
     override fun insert(image: ProtocolImage) {
 
-        val id = database.daoProtocolImage().insert( image )
+        val id = database.daoProtocolImage().insert(image)
         image.id = id
     }
 
@@ -42,5 +44,8 @@ constructor(private val database:TiBroishDatabase ) :BaseTiBroishRepository(data
         database.daoProtocolImage().delete(image)
     }
 
+    override fun delete(protocolImageId: Long) {
+        database.daoProtocolImage().delete(protocolImageId)
+    }
 
 }

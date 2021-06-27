@@ -15,7 +15,7 @@ import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_comic_list.*
+import kotlinx.android.synthetic.main.fragment_camera_picker.*
 
 interface ICameraPickerView : IBaseView {
 
@@ -33,7 +33,7 @@ class CameraPickerFragment : BasePresentableFragment<ICameraPickerView,ICameraPi
     }
 
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View? {
-        return inflater.inflate(R.layout.fragment_photo_picker, container, false)
+        return inflater.inflate(R.layout.fragment_camera_picker, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

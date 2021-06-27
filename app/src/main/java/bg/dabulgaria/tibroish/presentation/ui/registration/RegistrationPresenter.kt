@@ -4,16 +4,18 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.CheckBox
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.organisation.ITiBorishRemoteRepository
+import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
 import bg.dabulgaria.tibroish.domain.organisation.Organization
 import bg.dabulgaria.tibroish.domain.organisation.OrganizationDto
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.user.User
+import bg.dabulgaria.tibroish.persistence.remote.ApiException
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.ui.common.FormValidator
+import bg.dabulgaria.tibroish.presentation.ui.common.IOrganizationsManager
 import bg.dabulgaria.tibroish.presentation.ui.common.UserDataWrapper
 import bg.dabulgaria.tibroish.utils.AssetReader
 import com.google.firebase.auth.*
@@ -68,21 +70,26 @@ interface IRegistrationPresenter : IBasePresenter<IRegisterView> {
 
 interface IRegistrationCallback {
     fun onSuccess()
+
+    fun onError(message: String?)
 }
 
 class RegistrationPresenter @Inject constructor(
     private val mainRouter: IMainRouter,
     disposableHandler: IDisposableHandler,
     private val logger: ILogger,
-    private val tiBroishRemoteRepository: ITiBorishRemoteRepository
-) :
+    private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
+    private val formValidator: FormValidator,
+    private val organizationsManager: IOrganizationsManager) :
     BasePresenter<IRegisterView>(disposableHandler), IRegistrationPresenter {
     private var registrationViewData: RegistrationViewData? = null
-    private var formValidator: FormValidator = FormValidator()
 
     companion object {
         @JvmField
         val TAG: String = RegistrationPresenter::class.java.name
+
+        const val ERROR_CODE_FORBIDDEN = 409
+        const val ERROR_CODE_BAD_REQUEST = 400
     }
 
     override fun getCountryCodes(context: Context, callback: (List<CountryCode>?) -> Unit) {
@@ -95,29 +102,18 @@ class RegistrationPresenter @Inject constructor(
 
     override fun getOrganizations(callback: (List<Organization>?) -> Unit) {
         if (registrationViewData?.organizationsData!!.isNullOrEmpty()) {
-            loadOrganizationsAsync(callback);
+            organizationsManager.loadOrganizationsAsync {
+                callback(it)
+                registrationViewData?.organizationsData?.clear()
+                registrationViewData?.organizationsData?.addAll(it!!)
+            }
             return
         }
         return callback(registrationViewData?.organizationsData)
     }
 
-    private fun loadOrganizationsAsync(callback: (List<Organization>?) -> Unit) {
-        CoroutineScope(Dispatchers.Main).launch {
-            val organizations: List<Organization> = fetchOrganizations()
-            callback(organizations)
-            registrationViewData?.organizationsData?.clear()
-            registrationViewData?.organizationsData?.addAll(organizations)
-        }
-    }
-
     override fun organizationToOrganizationDto(organization: Organization) =
         OrganizationDto(organization.id, organization.name, organization.type.value)
-
-    private suspend fun fetchOrganizations(): List<Organization> {
-        return withContext(Dispatchers.IO) {
-            tiBroishRemoteRepository.getOrganisations()
-        }
-    }
 
     private fun loadCountryCodesAsync(context: Context, callback: (List<CountryCode>?) -> Unit) {
         val json: String? = AssetReader().loadJsonFromAsset(
@@ -139,7 +135,7 @@ class RegistrationPresenter @Inject constructor(
             .addOnSuccessListener {
                 logger.i(TAG, "createUserWithEmailAndPassword success ")
                 onFirebaseUserCreated(auth.currentUser!!, userData, callback)
-            } .addOnFailureListener {
+            }.addOnFailureListener {
                 logger.e(TAG, "createUserWithEmailAndPassword failure", it)
                 if (it is FirebaseAuthUserCollisionException) {
                     signin(auth, userData, callback)
@@ -164,16 +160,14 @@ class RegistrationPresenter @Inject constructor(
     }
 
     override fun onError(throwable: Throwable?) {
-        if( throwable is FirebaseAuthWeakPasswordException) {
+        if (throwable is FirebaseAuthWeakPasswordException) {
             view?.onError(resourceProvider.getString(R.string.error_weak_password))
-        }
-        else if( throwable is FirebaseAuthUserCollisionException) {
+        } else if (throwable is FirebaseAuthUserCollisionException) {
             view?.onError(resourceProvider.getString(R.string.error_user_exists))
         }
-        if( throwable is FirebaseAuthInvalidCredentialsException) {
+        if (throwable is FirebaseAuthInvalidCredentialsException) {
             view?.onError(resourceProvider.getString(R.string.invalid_mail_or_pass));
-        }
-        else {
+        } else {
             super.onError(throwable)
         }
     }
@@ -183,15 +177,16 @@ class RegistrationPresenter @Inject constructor(
     }
 
     override fun getOrganizationWithName(organizationName: String): Organization? {
-        return registrationViewData?.organizationsData?.firstOrNull {
-            it.name == organizationName
-        }
+        return organizationsManager.getOrganizationWithName(
+            organizationName, registrationViewData?.organizationsData
+        );
     }
 
     private fun onFirebaseUserCreated(
         user: FirebaseUser,
         userDataWrapper: UserDataWrapper,
-        callback: IRegistrationCallback) {
+        callback: IRegistrationCallback
+    ) {
         user.getIdToken(/* forceRefresh= */ false)
             .addOnSuccessListener {
                 val userToken: String = it.token!!
@@ -212,13 +207,28 @@ class RegistrationPresenter @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 tiBroishRemoteRepository.createUser(userToken, userData)
+                withContext(Dispatchers.Main) {
+                    sendEmailVerification(user, callback)
+                }
             } catch (exception: Exception) {
                 withContext(Dispatchers.Main) {
-                    onError(exception)
+                    if(exception is ApiException && exception.message != null) {
+                        when (exception.response.code) {
+                            ERROR_CODE_BAD_REQUEST -> {
+                                callback.onError(exception.message!!)
+                            }
+                            ERROR_CODE_FORBIDDEN -> {
+                                callback.onError(
+                                    resourceProvider.getString(R.string.error_user_exists))
+                            }
+                            else -> {
+                                onError(exception)
+                            }
+                        }
+                    } else {
+                        onError(exception)
+                    }
                 }
-            }
-            withContext(Dispatchers.Main) {
-                sendEmailVerification(user, callback)
             }
         }
     }
@@ -260,39 +270,16 @@ class RegistrationPresenter @Inject constructor(
         return formValidator.processRequiredField(text, callback)
     }
 
-    override fun processEmailField(
-        email: String,
-        callback: (Int) -> Unit
-    ): Boolean {
+    override fun processEmailField(email: String, callback: (Int) -> Unit): Boolean {
         return formValidator.processEmailField(email, callback)
     }
 
-    override fun processPhoneNumberField(
-        telephone: String,
-        callback: (Int) -> Unit
-    ): Boolean {
-        if (!processRequiredField(telephone, callback)) {
-            return false
-        }
+    override fun processPhoneNumberField(telephone: String, callback: (Int) -> Unit): Boolean {
         return formValidator.processPhoneNumberField(telephone, callback)
     }
 
     override fun processEgnLastFourDigits(egn: String, callback: (Int) -> Unit): Boolean {
-        if (!processRequiredField(egn, callback)) {
-            return false
-        }
-        if (!formValidator.processConditionalField(
-                egn,
-                predicate = {
-                    it.length == 4
-                },
-                callback = callback,
-                errorResponse = R.string.egn_four_digits_required
-            )
-        ) {
-            return false
-        }
-        return true
+        return formValidator.processEgnLastFourDigits(egn, callback)
     }
 
     override fun processRepeatPassword(
@@ -306,7 +293,7 @@ class RegistrationPresenter @Inject constructor(
         if (!formValidator.processConditionalField(
                 password,
                 predicate = { password == repeatPassword },
-                callback = callback,
+                errorCallback = callback,
                 errorResponse = R.string.passwords_do_not_match
             )
         ) {
@@ -322,7 +309,7 @@ class RegistrationPresenter @Inject constructor(
         if (!formValidator.processConditionalField(
                 password,
                 predicate = { it.length >= 6 },
-                callback = callback,
+                errorCallback = callback,
                 errorResponse = R.string.invalid_password_too_short
             )
         ) {
@@ -332,18 +319,11 @@ class RegistrationPresenter @Inject constructor(
     }
 
     override fun processOrganization(organizationName: String, callback: (Int) -> Unit): Boolean {
-        if (registrationViewData?.organizationsData == null) {
-            logger.d(TAG, "organizationsData is null")
-            callback(R.string.invalid_organization)
-            return false
-        }
-        val organization = getOrganizationWithName(organizationName)
-        if (organization == null) {
-            logger.d(TAG, "organization name $organizationName$ does not exist")
-            callback(R.string.invalid_organization)
-            return false
-        }
-        return true
+        return formValidator.processOrganization(
+            organizationName,
+            registrationViewData?.organizationsData,
+            callback
+        )
     }
 
     override fun processRequiredCheckbox(

@@ -11,6 +11,7 @@ import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.main.IPermissionResponseListener
+import bg.dabulgaria.tibroish.presentation.providers.IGallerySelectedImagesProvider
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
@@ -28,7 +29,8 @@ class PhotoPickerPresenter @Inject constructor(private val interactor : IPhotoPi
                                                private val logger: ILogger,
                                                private val mainRouter: IMainRouter,
                                                dispHandler: IDisposableHandler,
-                                               private val permissionRequester : IPermissionRequester)
+                                               private val permissionRequester : IPermissionRequester,
+                                               private val selectedImagesProvider: IGallerySelectedImagesProvider)
     : BasePresenter<IPhotoPickerView>(dispHandler), IPhotoPickerPresenter, IPermissionResponseListener {
 
     var data : PhotoPickerViewData? = null
@@ -84,12 +86,8 @@ class PhotoPickerPresenter @Inject constructor(private val interactor : IPhotoPi
 
         val currentData = data?:return
 
-        view?.onLoadingStateChange(ViewState.Loading)
-
-        add(Single.fromCallable{ interactor.addImagesToProtocol(currentData)}
-                .subscribeOn(schedulersProvider.ioScheduler())
-                .observeOn(schedulersProvider.uiScheduler())
-                .subscribe( { onPhotosAdded() },{ th -> onError(th) }) )
+        selectedImagesProvider.selectedImages.addAll(currentData.selectedPhotos)
+        mainRouter.navigateBack()
     }
 
     override fun onRequestPermissionClick() {
@@ -119,7 +117,7 @@ class PhotoPickerPresenter @Inject constructor(private val interactor : IPhotoPi
 
     override fun onPermissionResult(permissionCode: Int, granted: Boolean) {
 
-        if( permissionCode != PermissionCodes.READ_STORAGE.code)
+        if(permissionCode != PermissionCodes.READ_STORAGE.code || !granted)
             return
 
         loadData()

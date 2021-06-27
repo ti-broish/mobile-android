@@ -5,6 +5,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'org.openapi.generator'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
 
@@ -19,28 +20,41 @@ android {
             v1SigningEnabled true
             v2SigningEnabled true
         }
+
+        ProdAppSigning {
+            def Properties signingProps = new Properties()
+            signingProps.load(new FileInputStream(file('../app/prodsigning.properties')))
+            storeFile file(signingProps["store"])
+            storePassword signingProps["storePass"]
+            keyAlias signingProps["alias"]
+            keyPassword signingProps["keypass"]
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
     }
 
     compileSdkVersion 30
     defaultConfig {
-        applicationId "bg.dabulgaria.android"
+        applicationId "bg.dabulgaria.tibroish"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 5
+        versionName "1.1"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         signingConfig signingConfigs.AppSigning
+        setProperty("archivesBaseName", "Ti-Broish-$versionName.$versionCode")
     }
     buildTypes {
         release {
+            debuggable false
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.AppSigning
+            signingConfig = signingConfigs.ProdAppSigning
         }
         debug{
             debuggable true
-            signingConfig signingConfigs.AppSigning
-
+            minifyEnabled false
+            signingConfig = signingConfigs.AppSigning
         }
     }
     buildToolsVersion '29.0.3'
@@ -52,19 +66,24 @@ android {
     flavorDimensions "free"
     productFlavors {
 
+        def productionSigning = signingConfigs.ProdAppSigning
+        def stagingSigning = signingConfigs.AppSigning
+
         production{
 
             applicationId = "bg.dabulgaria.tibroish"
-            def APP_NAME = "Ти Броиш"
+            resValue "string", "provider_authority", "${applicationId}.file_provider_camera"
+            def APP_NAME = "Ти броиш"
             resValue "string", "app_name", APP_NAME
-            signingConfig signingConfigs.AppSigning
+            signingConfig productionSigning
         }
         staging{
 
             applicationId = "bg.dabulgaria.tibroish.apn"
-            def APP_NAME = "Ти Броиш Stage"
+            resValue "string", "provider_authority", "${applicationId}.file_provider_camera"
+            def APP_NAME = "Ти броиш Stage"
             resValue "string", "app_name", APP_NAME
-            signingConfig signingConfigs.AppSigning
+            signingConfig stagingSigning
         }
     }
     testOptions {
@@ -110,6 +129,11 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxkotlin:3.0.1'
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    implementation 'org.greenrobot:eventbus:3.2.0'
+    implementation 'com.airbnb.android:lottie:3.4.0'
 
     // Dagger core
     api "com.google.dagger:dagger:$daggerVersion"
@@ -148,6 +172,9 @@ dependencies {
     // Android Test
     androidTestImplementation 'androidx.test:runner:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    implementation 'com.github.pedroSG94.rtmp-rtsp-stream-client-java:rtplibrary:1.9.9'
+
 }
 
 repositories {
