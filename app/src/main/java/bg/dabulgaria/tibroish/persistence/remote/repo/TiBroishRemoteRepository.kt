@@ -124,14 +124,13 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
     override fun getUserProtocols(): List<ProtocolRemote> {
         return authenticator.executeCall { token ->
             apiController.getUserProtocols(getAuthorization(token))
-        }!!.sortedByDescending { protocolRemote -> protocolRemote.id }
+        }!!.sortedBy { protocolRemote -> protocolRemote.id }
     }
 
     override fun getViolations(): List<VoteViolationRemote> {
-
         return authenticator.executeCall { token ->
             apiController.getViolations(getAuthorization(token))
-        }!!
+        }!!.sortedBy { violationRemote -> violationRemote.id }
     }
 
     override fun sendCheckIn(request: SendCheckInRequest): SendCheckInResponse {
