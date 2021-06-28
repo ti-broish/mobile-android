@@ -8,12 +8,10 @@ import androidx.annotation.StringRes
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
-import bg.dabulgaria.tibroish.presentation.ui.common.DialogUtil
 import kotlinx.android.synthetic.main.fragment_forgot_password.*
-import javax.inject.Inject
 
 interface IForgotPasswordView : IBaseView {
-    fun passwordResetSuccess()
+    fun passwordResetSuccess(email: String)
 
     fun passwordResetFail(@StringRes messageResId: Int)
 }
@@ -58,12 +56,14 @@ class ForgotPasswordFragment : BasePresentableFragment<IForgotPasswordView,
         }
     }
 
-    override fun passwordResetSuccess() {
+    override fun passwordResetSuccess(email: String) {
         dialogUtil.showDismissableDialog(
             activity = requireActivity(),
             titleResId = R.string.password_reset_success_title,
             messageResId = R.string.password_reset_success_message,
-            dismissCallback = {})
+            dismissCallback = {
+                presenter.showLoginScreen(email)
+            })
     }
 
     override fun passwordResetFail(@StringRes messageResId: Int) {

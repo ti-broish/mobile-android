@@ -27,7 +27,7 @@ interface IMainRouter: OnMenuClickListener {
 
     fun showCameraPicker(protocolId:Long)
 
-    fun showLoginScreen()
+    fun showLoginScreen(email: String? = null)
 
     fun onAuthEvent()
 
