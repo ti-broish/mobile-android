@@ -47,6 +47,8 @@ interface IProfilePresenter : IBasePresenter<IProfileView> {
     fun deleteUser(callback: IDeleteUserCallback)
 
     fun navigateToLoginScreen()
+
+    fun navigateToHomeScreen()
 }
 
 interface IUpdateProfileCallback {
@@ -173,6 +175,10 @@ class ProfilePresenter @Inject constructor(
 
     override fun navigateToLoginScreen() {
         mainRouter.showLoginScreen()
+    }
+
+    override fun navigateToHomeScreen() {
+        mainRouter.showHomeScreen()
     }
 
     override fun onRestoreData(bundle: Bundle?) {
