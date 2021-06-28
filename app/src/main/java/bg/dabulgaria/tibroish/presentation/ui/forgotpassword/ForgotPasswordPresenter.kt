@@ -2,8 +2,6 @@ package bg.dabulgaria.tibroish.presentation.ui.forgotpassword
 
 import android.os.Bundle
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
-import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
@@ -16,15 +14,15 @@ import javax.inject.Inject
 interface IForgotPasswordPresenter : IBasePresenter<IForgotPasswordView> {
     fun processEmailField(email: String, callback: (Int) -> Unit): Boolean
 
-    fun sendPasswordResetEmail(email: String);
+    fun sendPasswordResetEmail(email: String)
+
+    fun showLoginScreen(email: String)
 }
 
 class ForgotPasswordPresenter @Inject constructor(
-        private val mainRouter: IMainRouter,
-        disposableHandler: IDisposableHandler,
-        private val logger: ILogger,
-        private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
-        private val formValidator: FormValidator
+    private val mainRouter: IMainRouter,
+    disposableHandler: IDisposableHandler,
+    private val formValidator: FormValidator
 ) : BasePresenter<IForgotPasswordView>(disposableHandler),
     IForgotPasswordPresenter {
 
@@ -37,7 +35,7 @@ class ForgotPasswordPresenter @Inject constructor(
 
     override fun sendPasswordResetEmail(email: String) {
         FirebaseAuth.getInstance().sendPasswordResetEmail(email)
-            .addOnSuccessListener { view?.passwordResetSuccess() }
+            .addOnSuccessListener { view?.passwordResetSuccess(email) }
             .addOnFailureListener {
                 val errorResId: Int = if (it is FirebaseAuthInvalidUserException) {
                     R.string.password_reset_invalid_user
@@ -46,6 +44,10 @@ class ForgotPasswordPresenter @Inject constructor(
                 }
                 view?.passwordResetFail(errorResId)
             }
+    }
+
+    override fun showLoginScreen(email: String) {
+        mainRouter.showLoginScreen(email)
     }
 
     override fun onRestoreData(bundle: Bundle?) {}
