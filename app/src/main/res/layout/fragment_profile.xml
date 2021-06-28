@@ -123,20 +123,17 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/input_organization"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/form_vertical_field_distance"
                 android:hint="@string/register_organization"
-                android:labelFor="@+id/input_organization_dropdown"
-                app:boxBackgroundColor="@null">
+                app:boxBackgroundColor="@null"
+                android:enabled="false">
 
-                <AutoCompleteTextView
-                    android:id="@+id/input_organization_dropdown"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_organization_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:dropDownWidth="@dimen/text_input_max_width"
-                    android:imeOptions="flagNoExtractUi"
                     android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
