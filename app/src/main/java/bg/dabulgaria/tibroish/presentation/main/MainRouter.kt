@@ -1,6 +1,5 @@
 package bg.dabulgaria.tibroish.presentation.main
 
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -190,7 +189,7 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
         permissionResponseListener?.onPermissionResult(permissionCode, granted)
     }
 
-    override fun showLoginScreen() {
+    override fun showLoginScreen(email: String?) {
 
         view ?: return
 
@@ -200,6 +199,16 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
         if (content == null) {
 
             content = LoginFragment.newInstance()
+        }
+        val arguments = Bundle()
+        if (email != null) {
+            arguments.putString(LoginFragment.KEY_EMAIL, email)
+        }
+
+        content.arguments = arguments
+
+        if (content.isAdded) {
+            (content as LoginFragment).refreshUi()
         }
 
         view?.showScreen(content, LoginFragment.TAG, false, false)
