@@ -84,7 +84,7 @@ interface TiBroishApiController {
                      @Body tokenRequest: SendTokenRequest): Call<SendTokenResponse>
 
     @GET("me/stream")
-    fun getUserStream(@Header("Authorization") firebaseTokenHeader: String): Call<UserStreamModel>
+    fun getUserStream(@Header(ApiHeader.Authorization) firebaseTokenHeader: String): Call<UserStreamModel>
 
 
 }

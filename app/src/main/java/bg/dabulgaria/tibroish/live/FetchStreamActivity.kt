@@ -11,6 +11,7 @@ import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.live.model.UserStreamModel
 import bg.dabulgaria.tibroish.live.utils.LoginActivityLoader
 import bg.dabulgaria.tibroish.live.utils.makeFullScreen
+import bg.dabulgaria.tibroish.persistence.remote.repo.TiBroishRemoteRepository
 import bg.dabulgaria.tibroish.presentation.base.BaseActivity
 import com.google.android.material.button.MaterialButton
 import dagger.android.AndroidInjector
@@ -29,6 +30,9 @@ class FetchStreamActivity : BaseActivity(), HasAndroidInjector {
 
     @Inject
     lateinit var loginActivityLoader: LoginActivityLoader
+
+    @Inject
+    lateinit var remoteRepository: TiBroishRemoteRepository
 
 //    @Inject
 //    lateinit var streamService: StreamService
@@ -83,45 +87,47 @@ class FetchStreamActivity : BaseActivity(), HasAndroidInjector {
     private fun tryFetchingStream() {
         showProgressBar()
 
-        // TODO implement get user stream. Don't forget the STREAMING_NOT_ALLOWED_HTTP_CODE = 409 case
+
         thread {
+            // TODO remove this cde when ready t odo end to end test
             Thread.sleep(5000)
-            val userStream = UserStreamModel("rtmp://strm.ludost.net/st/streamtest1", "https://strm.ludost.net/hls/streamtest1.m3u8", true)
+            val userStream = UserStreamModel(
+                "rtmp://strm.ludost.net/st/streamtest1",
+                "https://strm.ludost.net/hls/streamtest1.m3u8",
+                true
+            )
             PrepareToStreamActivity.startWithParameters(this@FetchStreamActivity, userStream)
             finish()
-        }
-
-//        streamService.getUserStream(this, { result: UserStreamModel ->
-//            if (result.streamUrl != null) {
-//                val userStream = UserStream(result.streamUrl, result.audioDisabled
-//                        ?: true, result.viewUrl)
+            // TODO uncomment when ready to deploy to production. Do proper error management if have the time
+//            try {
+//                val userStream = remoteRepository.getUserStream()
 //                PrepareToStreamActivity.startWithParameters(this@FetchStreamActivity, userStream)
 //                finish()
-//            } else {
-//                hideProgressBar()
-//                streamingDisabledJustificationView.text = getString(R.string.streaming_disabled_other_error_message)
-//                disabledExplanationScrollView.setBackgroundResource(R.drawable.background_warn)
+//            } catch (ex: ApiConflictException) {
+//                runOnUiThread {
+//                    hideProgressBar()
+//                    streamingDisabledJustificationView.text =
+//                        getString(R.string.streaming_not_yet_possible_message)
+//                    disabledExplanationScrollView.setBackgroundResource(R.drawable.background_clock)
+//                }
+//            } catch (ex: ApiException) {
+//                runOnUiThread {
+//                    hideProgressBar()
+//                    streamingDisabledJustificationView.text =
+//                        getString(R.string.streaming_disabled_other_error_message)
+//                    disabledExplanationScrollView.setBackgroundResource(R.drawable.background_warn)
+//                }
+//            } catch (ex: Exception) {
+//                runOnUiThread {
+//                    hideProgressBar()
+//                    streamingDisabledJustificationView.text =
+//                        getString(R.string.streaming_disabled_no_internet_message)
+//                    disabledExplanationScrollView.setBackgroundResource(R.drawable.background_warn)
+//                }
 //            }
-//        }, onError = object : GetStreamErrorHandler {
-//            override fun onNoConnectivity() {
-//                hideProgressBar()
-//                streamingDisabledJustificationView.text = getString(R.string.streaming_disabled_no_internet_message)
-//                disabledExplanationScrollView.setBackgroundResource(R.drawable.background_warn)
-//            }
-//
-//            override fun onStreamingNotAllowed() {
-//                hideProgressBar()
-//                streamingDisabledJustificationView.text = getString(R.string.streaming_not_yet_possible_message)
-//                disabledExplanationScrollView.setBackgroundResource(R.drawable.background_clock)
-//            }
-//
-//            override fun onOtherError() {
-//                hideProgressBar()
-//                streamingDisabledJustificationView.text = getString(R.string.streaming_disabled_other_error_message)
-//                disabledExplanationScrollView.setBackgroundResource(R.drawable.background_warn)
-//            }
-//
-//        })
+
+        }
+
     }
 
     private fun showProgressBar() {
@@ -132,6 +138,7 @@ class FetchStreamActivity : BaseActivity(), HasAndroidInjector {
     private fun hideProgressBar() {
         progressBarView.visibility = View.GONE
         disabledExplanationContainer.visibility = View.VISIBLE
+
     }
 
     override fun androidInjector(): AndroidInjector<Any> {

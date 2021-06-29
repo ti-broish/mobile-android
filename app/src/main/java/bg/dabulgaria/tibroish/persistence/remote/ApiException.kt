@@ -9,3 +9,6 @@ class ApiException(val response: Response, val responseData:String, override val
 
 class AuthException(val response: Response, val responseData:String, override val message: String?)
     : IOException()
+
+class ApiConflictException(val response: Response, val responseData:String, override val message: String?)
+    : IOException()

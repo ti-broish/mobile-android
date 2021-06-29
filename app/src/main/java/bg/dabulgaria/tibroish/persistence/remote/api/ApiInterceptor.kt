@@ -1,5 +1,6 @@
 package bg.dabulgaria.tibroish.persistence.remote.api
 
+import bg.dabulgaria.tibroish.persistence.remote.ApiConflictException
 import bg.dabulgaria.tibroish.persistence.remote.ApiException
 import bg.dabulgaria.tibroish.persistence.remote.AuthException
 import com.android.volley.toolbox.HttpHeaderParser
@@ -9,7 +10,6 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.UnsupportedEncodingException
-import java.lang.StringBuilder
 
 class ApiInterceptor (private val userAgent: String) : Interceptor {
 
@@ -59,11 +59,13 @@ class ApiInterceptor (private val userAgent: String) : Interceptor {
         val code =networkResponse?.code ?: 500
         val jsonObject = JSONObject(responseData)
         val message: String? = getMessageOrNull(jsonObject)
-        val exception = if(code == UNAUTHORIZED) {
-            AuthException(response, responseData, message)
-        } else {
-            ApiException(response, responseData, message)
+
+        val exception = when (code) {
+            UNAUTHORIZED -> AuthException(response, responseData, message)
+            CONFLICT -> ApiConflictException(response, responseData, message)
+            else -> ApiException(response, responseData, message)
         }
+
         throw exception
     }
 
@@ -106,5 +108,6 @@ class ApiInterceptor (private val userAgent: String) : Interceptor {
     companion object{
 
         const val UNAUTHORIZED = 401
+        const val CONFLICT = 409
     }
 }
