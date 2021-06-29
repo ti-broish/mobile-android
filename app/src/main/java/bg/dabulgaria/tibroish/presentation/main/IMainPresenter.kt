@@ -5,6 +5,9 @@ import bg.dabulgaria.tibroish.domain.user.IUserAuthenticator
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
 import bg.dabulgaria.tibroish.presentation.navigation.OnMenuClickListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 interface IMainPresenter : OnMenuClickListener, IDisposableHandler {
@@ -37,16 +40,16 @@ class MainPresenter @Inject constructor(private val mainRouter: IMainRouter,
         }
 
     override fun onAuthEvent(coldStart:Boolean) {
+        CoroutineScope(Dispatchers.Main).launch {
+            if (!userAuthenticator.isUserLogged()) {
 
-        if( !userAuthenticator.isUserLogged() ){
+                mainRouter.showLoginScreen()
+                view?.showNavigation(false)
+            } else if (coldStart) {
 
-            mainRouter.showLoginScreen()
-            view?.showNavigation(false)
-        }
-        else if(coldStart) {
-
-            mainRouter.showHomeScreen()
-            view?.showNavigation(true)
+                mainRouter.showHomeScreen()
+                view?.showNavigation(true)
+            }
         }
     }
 
