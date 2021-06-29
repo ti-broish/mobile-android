@@ -43,7 +43,7 @@ interface ISendItemPresenter : IBasePresenter<ISendItemView>, ISectionPickerPres
 
     fun onHandleBack(imagePosition: Int?): Boolean
 
-    fun onImageZoomClick(position:Int)
+    fun onImagePreviewClick(position:Int)
 
     fun onPreviewDelete(previewPosition: Int, image: PreviewImage)
 
@@ -215,7 +215,7 @@ constructor(private val schedulersProvider: ISchedulersProvider,
         super.onError(throwable)
     }
 
-    override fun onImageZoomClick(position: Int) {
+    override fun onImagePreviewClick(position: Int) {
 
         val viewData = data?:return
         viewData.previewImageIndex = position - viewData.imagesIndexesOffset
