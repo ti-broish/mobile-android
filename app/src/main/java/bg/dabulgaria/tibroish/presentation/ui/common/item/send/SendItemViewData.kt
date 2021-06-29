@@ -7,7 +7,7 @@ import bg.dabulgaria.tibroish.presentation.ui.common.preview.images.PreviewImage
 import java.io.Serializable
 
 enum class SendItemListItemType {
-    Header, Section, Message, Image, Buttons, SendSuccess
+    Header, Section, SectionManual, Message, Image, Buttons, SendSuccess
 }
 
 class EntityItemImage(val id: Long,
@@ -34,6 +34,9 @@ class SendItemListItemHeader(val titleText: String)
 class SendItemListItemSection(var sectionsViewData: SectionsViewData?)
     : SendItemListItem(SendItemListItemType.Section), Serializable
 
+class SendItemListItemSectionManual(var sectionId: String?)
+    : SendItemListItem(SendItemListItemType.SectionManual), Serializable
+
 class SendItemListItemImage(val image: EntityItemImage)
     : SendItemListItem(SendItemListItemType.Image), Serializable
 
@@ -57,6 +60,7 @@ class SendItemViewData(val entityDbId: Long?=null) : Serializable {
     var imagePreviewOpen = false
     var previewImageIndex = 0
     var imagesIndexesOffset = 0
+    var manualSectionId: String? = null
 
     constructor(source: SendItemViewData) : this(null) {
 

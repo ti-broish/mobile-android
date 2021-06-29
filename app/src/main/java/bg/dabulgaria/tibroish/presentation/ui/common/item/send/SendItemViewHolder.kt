@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.send_item_header_layout.view.*
 import kotlinx.android.synthetic.main.send_item_message_layout.view.*
 import kotlinx.android.synthetic.main.send_item_photo_layout.view.*
 import kotlinx.android.synthetic.main.send_item_section_layout.view.*
+import kotlinx.android.synthetic.main.send_item_section_manual_layout.view.*
 import kotlinx.android.synthetic.main.send_item_success_layout.view.*
 
 sealed class SendItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -48,6 +49,32 @@ class SendItemSectionViewHolder(itemView: View) : SendItemViewHolder(itemView) {
         val data = sectionItem.sectionsViewData ?: return
 
         itemView.sectionPickerView.bindView(data, presenter)
+    }
+}
+
+class SendItemSectionManualViewHolder(itemView: View) : SendItemViewHolder(itemView) {
+
+    override fun bind(position: Int,
+                      item: SendItemListItem,
+                      presenter: ISendItemPresenter) {
+
+        if (item.type != SendItemListItemType.SectionManual)
+            return
+
+        val sectionItem = item as SendItemListItemSectionManual
+
+        itemView.uniqueSectionValueTextView.setText(sectionItem.sectionId)
+
+        itemView.uniqueSectionValueTextView.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                presenter.onManualSectionChanged(s.toString())
+            }
+
+        })
     }
 }
 

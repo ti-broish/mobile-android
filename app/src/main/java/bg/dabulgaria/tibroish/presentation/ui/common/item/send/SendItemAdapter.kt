@@ -21,6 +21,7 @@ class SendItemAdapter @Inject constructor(val presenter: ISendItemPresenter)
 
             SendItemListItemType.Header.ordinal -> R.layout.send_item_header_layout
             SendItemListItemType.Section.ordinal -> R.layout.send_item_section_layout
+            SendItemListItemType.SectionManual.ordinal -> R.layout.send_item_section_manual_layout
             SendItemListItemType.Message.ordinal -> R.layout.send_item_message_layout
             SendItemListItemType.Image.ordinal -> R.layout.send_item_photo_layout
             SendItemListItemType.Buttons.ordinal -> R.layout.send_item_buttons_layout
@@ -33,6 +34,7 @@ class SendItemAdapter @Inject constructor(val presenter: ISendItemPresenter)
 
             SendItemListItemType.Header.ordinal -> SendItemHeaderViewHolder(view)
             SendItemListItemType.Section.ordinal -> SendItemSectionViewHolder(view)
+            SendItemListItemType.SectionManual.ordinal -> SendItemSectionManualViewHolder(view)
             SendItemListItemType.Message.ordinal -> SendItemMessageViewHolder(view)
             SendItemListItemType.Image.ordinal -> SendItemImageViewHolder(view)
             SendItemListItemType.Buttons.ordinal -> SendItemButtonsViewHolder(view)

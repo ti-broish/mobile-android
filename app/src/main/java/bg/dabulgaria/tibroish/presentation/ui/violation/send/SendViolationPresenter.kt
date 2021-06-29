@@ -65,4 +65,6 @@ class SendViolationPresenter @Inject constructor(schedulersProvider: ISchedulers
 
         const val DESCRIPTION_MIN_LENGTH = 20
     }
+
+    override fun onManualSectionChanged(sectionId: String) {}
 }
