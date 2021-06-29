@@ -166,5 +166,7 @@
     <string name="licenses">Лицензи</string>
     <string name="error_section_id_contains_non_digits">Номерът на секцията трябва да съдържа само цифри</string>
     <string name="error_section_must_contain_at_least_9_digits">Номерът на секцията трябва да е поне 9 цифри</string>
+    <string name="choose_section_for_live_stream">Изберете секция от която ще предавате на живо</string>
+    <string name="start_live_stream">Започни живо предаване</string>
 
 </resources>

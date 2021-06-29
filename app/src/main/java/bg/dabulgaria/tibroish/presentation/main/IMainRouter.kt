@@ -1,5 +1,6 @@
 package bg.dabulgaria.tibroish.presentation.main
 
+import bg.dabulgaria.tibroish.domain.locations.SectionRemote
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.presentation.navigation.OnMenuClickListener
@@ -54,4 +55,8 @@ interface IMainRouter: OnMenuClickListener {
     fun showDismissableDialog(message: String, dismissCallback: () -> Unit)
 
     fun showLicenses()
+
+    fun showLivePickSection()
+
+    fun showLiveStream(section: SectionRemote)
 }
