@@ -34,9 +34,6 @@ class FetchStreamActivity : BaseActivity(), HasAndroidInjector {
     @Inject
     lateinit var remoteRepository: TiBroishRemoteRepository
 
-//    @Inject
-//    lateinit var streamService: StreamService
-
     private lateinit var progressBarView: ProgressBar
     private lateinit var disabledExplanationContainer: ConstraintLayout
     private lateinit var disabledExplanationScrollView: ScrollView
