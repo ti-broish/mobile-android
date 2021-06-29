@@ -13,6 +13,7 @@ import bg.dabulgaria.tibroish.persistence.local.ImageCopier
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
 import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
+import bg.dabulgaria.tibroish.presentation.ui.common.EmptyImageUploader
 import bg.dabulgaria.tibroish.presentation.ui.common.item.send.*
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerInteractor
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoId
