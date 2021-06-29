@@ -187,6 +187,7 @@ class MainActivity : BaseActivity(),
 
         AlertDialog.Builder(this)
                 .setMessage(message)
+                .setOnCancelListener { dismissCallback.invoke() }
                 .setPositiveButton(android.R.string.ok) { _, _ -> dismissCallback.invoke() }
                 .show()
     }

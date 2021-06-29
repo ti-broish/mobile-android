@@ -56,8 +56,10 @@ class LoginPresenter @Inject constructor(private val userLocalRepo : IUserLocalR
         if( data == null )
             data = LoginViewData()
 
-        data?.emailValid = true
-        data?.passValid = true
+        val data = data?: return
+
+        data.emailValid = true
+        data.passValid = true
     }
 
     override fun onForgotPasswordButtonClicked(email: String)
