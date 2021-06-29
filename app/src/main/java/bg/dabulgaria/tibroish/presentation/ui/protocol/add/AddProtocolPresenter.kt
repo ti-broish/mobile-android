@@ -47,4 +47,8 @@ class AddProtocolPresenter @Inject constructor(schedulersProvider: ISchedulersPr
 
         return true
     }
+
+    override fun onManualSectionChanged(sectionId: String) {
+        data?.manualSectionId = sectionId
+    }
 }

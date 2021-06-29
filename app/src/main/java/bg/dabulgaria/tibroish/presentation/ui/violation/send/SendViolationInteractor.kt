@@ -76,6 +76,9 @@ class SendViolationInteractor @Inject constructor(sectionPickerInteractor: ISect
     override val hideUniqueUntilSectionGetsSelected = true
 
     override val sectionIsRequired = false
+    override fun isSectionManual(): Boolean {
+        return false
+    }
 
     override fun getItemImages(viewData: SendItemViewData): List<PhotoId> {
 
