@@ -134,9 +134,6 @@ class LoginPresenter @Inject constructor(private val userLocalRepo : IUserLocalR
         else{
 
             firebaseUser.sendEmailVerification()
-                    .addOnFailureListener {
-                        onError(it)
-                    }
             view?.onLoading(false)
             view?.onError( resourceProvider.getString(R.string.to_continue_confirm_email))
         }
