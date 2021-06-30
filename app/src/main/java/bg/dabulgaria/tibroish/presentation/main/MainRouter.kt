@@ -9,6 +9,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentManager
+import bg.dabulgaria.tibroish.domain.locations.SectionRemote
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
@@ -21,6 +22,7 @@ import bg.dabulgaria.tibroish.presentation.ui.forgotpassword.ForgotPasswordFragm
 import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
 import bg.dabulgaria.tibroish.presentation.ui.licenses.LicensesFragment
 import bg.dabulgaria.tibroish.presentation.ui.licenses.LicensesViewData
+import bg.dabulgaria.tibroish.presentation.ui.live.sectionpick.LiveSectionPickFragment
 import bg.dabulgaria.tibroish.presentation.ui.login.LoginFragment
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.camera.CameraPickerFragment
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoId
@@ -92,9 +94,8 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
                 showRightsAndObligations()
             }
             NavItemAction.YouCountLive -> {
-                val intent = Intent(appContext, FetchStreamActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                appContext.startActivity(intent)
+
+                showLivePickSection()
             }
             NavItemAction.Licenses -> {
                 showLicenses()
@@ -356,6 +357,26 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
     override fun showDismissableDialog(message: String, dismissCallback: () -> Unit) {
 
         view?.showDismissableDialog(message, dismissCallback)
+    }
+
+    override fun showLivePickSection(){
+
+        var content = view?.supportFragmentMngr?.findFragmentByTag(LiveSectionPickFragment.TAG)
+        if (content == null) {
+
+            clearBackStack()
+            content = LiveSectionPickFragment.newInstance()
+        }
+
+        view?.showScreen(content, LiveSectionPickFragment.TAG, addToBackStack = true, transitionContent = true)
+    }
+
+    override fun showLiveStream(section: SectionRemote){
+
+        val intent = Intent(appContext, FetchStreamActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.putExtra("section", section)
+        appContext.startActivity(intent)
     }
 
     private fun clearBackStack() {
