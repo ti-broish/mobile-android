@@ -60,6 +60,9 @@ class SendCheckInInteractor @Inject constructor(sectionPickerInteractor: ISectio
     override val sectionIsRequired = true
 
     override val supportsImages = false
+    override fun isSectionManual(): Boolean {
+        return false
+    }
 
     override fun getItemImages(viewData: SendItemViewData): List<PhotoId> = emptyList()
 

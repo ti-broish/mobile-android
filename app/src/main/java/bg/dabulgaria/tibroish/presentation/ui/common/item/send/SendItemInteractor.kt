@@ -28,17 +28,20 @@ interface ISendItemInteractor :ISectionPickerInteractor, IDisposableHandler {
 
     fun getItemImages(viewData: SendItemViewData):List<PhotoId>
 
+    fun isSectionManual(): Boolean
+
     val successMessageString: String
 }
 
-abstract class SendItemInteractor constructor(protected val sectionPickerInteractor: ISectionPickerInteractor,
-                                              disposableHandler: IDisposableHandler,
-                                              protected val schedulersProvider: ISchedulersProvider,
-                                              protected val logger: ILogger,
-                                              protected val entityImageUploader: IEntityImageUploader,
-                                              protected val imageCopier:IImageCopier,
-                                              protected val fileRepo: IFileRepository,
-                                              protected  val cameraTakenImageProvider: ICameraTakenImageProvider)
+abstract class SendItemInteractor(
+    protected val sectionPickerInteractor: ISectionPickerInteractor,
+    disposableHandler: IDisposableHandler,
+    protected val schedulersProvider: ISchedulersProvider,
+    protected val logger: ILogger,
+    protected val entityImageUploader: IEntityImageUploader,
+    protected val imageCopier: IImageCopier,
+    protected val fileRepo: IFileRepository,
+    protected val cameraTakenImageProvider: ICameraTakenImageProvider)
     : ISendItemInteractor,
         ISectionPickerInteractor by sectionPickerInteractor,
         IDisposableHandler by disposableHandler{
@@ -111,7 +114,12 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
 
         newViewData.items.add(SendItemListItemHeader(titleString))
         newViewData.imagesIndexesOffset++
-        newViewData.items.add(SendItemListItemSection(newViewData.sectionsData))
+        if (isSectionManual()) {
+            val preselectedSection = viewData.manualSectionId ?: getManualDefaultSectionPrefill()
+            newViewData.items.add(SendItemListItemSectionManual(preselectedSection))
+        } else {
+            newViewData.items.add(SendItemListItemSection(newViewData.sectionsData))
+        }
         newViewData.imagesIndexesOffset++
 
         if(supportsMessage) {
@@ -132,6 +140,10 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
 
         return newViewData
     }
+
+    open fun getManualDefaultSectionPrefill(): String? = null
+
+    abstract override fun isSectionManual(): Boolean
 
     override fun deleteImage(image: EntityItemImage) {
 

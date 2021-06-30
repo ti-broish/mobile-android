@@ -164,5 +164,7 @@
     <string name="yes">Да</string>
     <string name="no">Не</string>
     <string name="licenses">Лицензи</string>
+    <string name="error_section_id_contains_non_digits">Номерът на секцията трябва да съдържа само цифри</string>
+    <string name="error_section_must_contain_at_least_9_digits">Номерът на секцията трябва да е поне 9 цифри</string>
 
 </resources>

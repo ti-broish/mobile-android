@@ -162,6 +162,10 @@ constructor(private val schedulersProvider: ISchedulersProvider,
             return
         }
 
+        if (interactor.isSectionManual() && !isManualSectionValid(viewData.manualSectionId)) {
+            return
+        }
+
         view?.onLoadingStateChange(true)
 
         add(Single.fromCallable{interactor.sendItem(viewData)}
@@ -173,6 +177,22 @@ constructor(private val schedulersProvider: ISchedulersProvider,
                 },{
                     onError(it)
                 }))
+    }
+
+    private fun isManualSectionValid(manualSectionId: String?): Boolean {
+        if (manualSectionId == null) {
+            return false
+        }
+        if (!manualSectionId.matches(Regex("\\d+"))) {
+            view?.onError(resourceProvider.getString(R.string.error_section_id_contains_non_digits))
+            return false
+        }
+        if (manualSectionId.length < 9) {
+            view?.onError(resourceProvider.getString(
+                R.string.error_section_must_contain_at_least_9_digits))
+            return false
+        }
+        return true
     }
 
     override fun onImageDeleteClick(item: SendItemListItemImage, position: Int) {
