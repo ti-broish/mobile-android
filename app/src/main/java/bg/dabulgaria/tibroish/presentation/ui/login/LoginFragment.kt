@@ -101,6 +101,6 @@ class LoginFragment : BasePresentableFragment<ILoginView, ILoginPresenter>(), IL
         val TAG = LoginFragment::class.java.simpleName
 
         @JvmStatic
-        fun newInstance() = LoginFragment()
+        fun newInstance(email: String?=null): LoginFragment = LoginFragment()
     }
 }

@@ -1,4 +1,4 @@
-package bg.dabulgaria.tibroish.presentation.ui.checkin
+package bg.dabulgaria.tibroish.presentation.ui.common
 
 import bg.dabulgaria.tibroish.domain.image.IEntityImageUploader
 

@@ -17,6 +17,7 @@ class DialogUtil @Inject constructor() : IDialogUtil{
         AlertDialog.Builder(activity)
             .setTitle(activity.getString(titleResId))
             .setMessage(activity.getString(messageResId))
+            .setOnCancelListener { dismissCallback.invoke() }
             .setPositiveButton(android.R.string.ok) { _, _ -> dismissCallback.invoke() }
             .show()
     }
@@ -25,6 +26,7 @@ class DialogUtil @Inject constructor() : IDialogUtil{
 
         AlertDialog.Builder(activity)
                 .setMessage(message)
+                .setOnCancelListener { dismissCallback.invoke() }
                 .setPositiveButton(android.R.string.ok) { _, _ -> dismissCallback.invoke() }
                 .show()
     }
@@ -38,6 +40,7 @@ class DialogUtil @Inject constructor() : IDialogUtil{
         AlertDialog.Builder(activity)
             .setTitle(titleResId)
             .setMessage(message)
+            .setOnCancelListener { dismissCallback.invoke() }
             .setPositiveButton(android.R.string.ok) { _, _ -> dismissCallback.invoke() }
             .show()
     }

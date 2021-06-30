@@ -13,6 +13,7 @@ import bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment
 import bg.dabulgaria.tibroish.presentation.ui.licenses.ILicensesPresenter
 import bg.dabulgaria.tibroish.presentation.ui.licenses.LicensesFragment
 import bg.dabulgaria.tibroish.presentation.ui.licenses.LicensesPresenter
+import bg.dabulgaria.tibroish.presentation.ui.live.sectionpick.*
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.*
 import bg.dabulgaria.tibroish.presentation.ui.profile.IProfilePresenter
 import bg.dabulgaria.tibroish.presentation.ui.profile.ProfileFragment
@@ -184,4 +185,12 @@ interface FragmentModule {
     fun bindILicensesPresenter(implementation: LicensesPresenter):
             ILicensesPresenter
     //endregion Licenses screen
+
+    //region Send CheckIn screen
+    @ContributesAndroidInjector
+    fun bindLiveSectionPickFragment(): LiveSectionPickFragment
+
+    @Binds
+    fun bindsILiveSectionPickPresenter(presenter: LiveSectionPickPresenter): ILiveSectionPickPresenter
+    //endregion Send CheckIn screen
 }
