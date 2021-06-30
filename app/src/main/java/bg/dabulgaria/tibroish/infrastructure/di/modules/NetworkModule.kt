@@ -39,7 +39,7 @@ class NetworkModule() {
 
         if (BuildConfig.DEBUG)
             okHttpClientBuilder.addInterceptor(HttpLoggingInterceptor()
-                    .setLevel(HttpLoggingInterceptor.Level.HEADERS))
+                    .setLevel(HttpLoggingInterceptor.Level.BODY))
 
         return okHttpClientBuilder.build()
     }
