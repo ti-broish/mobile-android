@@ -18,4 +18,6 @@ interface ISectionPickerPresenter {
     fun onCityRegionSelected(cityRegion:CityRegionRemote)
 
     fun onSectionSelected(section:SectionRemote)
+
+    fun onManualSectionChanged(sectionId: String)
 }
