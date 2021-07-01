@@ -133,10 +133,10 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
         }!!.sortedBy { violationRemote -> violationRemote.id }
     }
 
-    override fun sendCheckIn(request: SendCheckInRequest): SendCheckInResponse {
+    override fun sendCheckIn(request: SendCheckInRequest) {
 
-        return authenticator.executeCall( { pParams, token ->
-            apiController.sendCheckIn(getAuthorization(token), pParams)}, request)!!
+        return authenticator.executeVoidCall( { pParams, token ->
+            apiController.sendCheckIn(getAuthorization(token), pParams)}, request)
     }
 
     override fun sendFCMToken(request: SendTokenRequest): SendTokenResponse {

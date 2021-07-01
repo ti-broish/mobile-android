@@ -65,6 +65,7 @@ abstract class SendItemInteractor(
     open val hideUniqueUntilSectionGetsSelected = false
     open val sectionIsRequired = true
     open val supportsImages: Boolean = true
+    open val hasImagesInfo: Boolean = false
     
     var imageUploadDisposable :Disposable?=null
 
@@ -78,6 +79,7 @@ abstract class SendItemInteractor(
         newViewData.message = viewData.message
         newViewData.imagesIndexesOffset = 0
         newViewData.imagePreviewOpen = viewData.imagePreviewOpen
+        newViewData.manualSectionId = viewData.manualSectionId
 
         newViewData.sectionsData = loadSectionsData(viewData.sectionsData)
         newViewData.sectionsData?.hideUniqueUntilSectionIsSelected = hideUniqueUntilSectionGetsSelected
@@ -109,18 +111,27 @@ abstract class SendItemInteractor(
             return newViewData
         }
 
-        if(entityItemId > 0 && newViewData.entityItem?.sendStatus == SendStatus.SendError)
+        if(entityItemId > 0 && (newViewData.entityItem?.sendStatus == SendStatus.SendError
+                        ||newViewData.entityItem?.sendStatus == SendStatus.SendErrorInvalidSection))
             updateEntityItemStatus(entityItemId, SendStatus.New)
 
         newViewData.items.add(SendItemListItemHeader(titleString))
         newViewData.imagesIndexesOffset++
         if (isSectionManual()) {
-            val preselectedSection = viewData.manualSectionId ?: getManualDefaultSectionPrefill()
-            newViewData.items.add(SendItemListItemSectionManual(preselectedSection))
+
+            if(newViewData.manualSectionId == null)
+                newViewData.manualSectionId = getManualDefaultSectionPrefill()
+
+            newViewData.items.add(SendItemListItemSectionManual(newViewData.manualSectionId))
         } else {
             newViewData.items.add(SendItemListItemSection(newViewData.sectionsData))
         }
         newViewData.imagesIndexesOffset++
+
+        if(hasImagesInfo){
+            newViewData.items.add(SendItemListItemInfoText())
+            newViewData.imagesIndexesOffset++
+        }
 
         if(supportsMessage) {
             newViewData.items.add(SendItemListItemMessage(messageLabel,

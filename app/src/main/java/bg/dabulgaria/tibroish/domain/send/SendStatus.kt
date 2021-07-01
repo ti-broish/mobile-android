@@ -7,7 +7,8 @@ enum class SendStatus constructor(val code:Int){
     New(0),
     Send(1),
     Sending(2),
-    SendError(3);
+    SendError(3),
+    SendErrorInvalidSection(4);
 
     companion object {
 

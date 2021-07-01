@@ -166,3 +166,7 @@ class SendItemMessageViewHolder(itemView: View) : SendItemViewHolder(itemView) {
         })
     }
 }
+
+class SendItemInfoTextViewHolder(itemView: View) : SendItemViewHolder(itemView) {
+    override fun bind(position: Int, item: SendItemListItem, presenter: ISendItemPresenter) { }
+}
