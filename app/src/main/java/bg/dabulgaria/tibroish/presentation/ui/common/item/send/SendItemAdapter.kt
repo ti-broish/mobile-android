@@ -26,6 +26,7 @@ class SendItemAdapter @Inject constructor(val presenter: ISendItemPresenter)
             SendItemListItemType.Image.ordinal -> R.layout.send_item_photo_layout
             SendItemListItemType.Buttons.ordinal -> R.layout.send_item_buttons_layout
             SendItemListItemType.SendSuccess.ordinal -> R.layout.send_item_success_layout
+            SendItemListItemType.InfoText.ordinal -> R.layout.send_item_info_text_layout
             else-> throw NotImplementedError( "SendItemListItemType( $viewType ) ViewHolder layout not implemented")
         },
                 parent, false)
@@ -39,6 +40,7 @@ class SendItemAdapter @Inject constructor(val presenter: ISendItemPresenter)
             SendItemListItemType.Image.ordinal -> SendItemImageViewHolder(view)
             SendItemListItemType.Buttons.ordinal -> SendItemButtonsViewHolder(view)
             SendItemListItemType.SendSuccess.ordinal -> SendItemSendSuccessViewHolder(view)
+            SendItemListItemType.InfoText.ordinal -> SendItemInfoTextViewHolder(view)
             else -> throw NotImplementedError("SendItemListItemType( $viewType ) View holder class not implemented")
         }
     }

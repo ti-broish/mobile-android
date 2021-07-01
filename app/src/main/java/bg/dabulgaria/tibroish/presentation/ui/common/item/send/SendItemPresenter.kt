@@ -152,17 +152,17 @@ constructor(private val schedulersProvider: ISchedulersProvider,
         val neededImages = MinSelectedImages - data?.entityItem?.images.orEmpty().size
         if(neededImages > 0){
 
-            view?.onError(resourceProvider.getString(R.string.please_choose_min_images, neededImages))
+            if(neededImages == 1)
+                view?.onError(resourceProvider.getString(R.string.please_choose_one_more_images))
+            else
+                view?.onError(resourceProvider.getString(R.string.please_choose_min_images, neededImages))
+
             return
         }
 
         if( !networkInfoProvider.isNetworkConnected ) {
 
             view?.onError(resourceProvider.getString(R.string.internet_connection_offline))
-            return
-        }
-
-        if (interactor.isSectionManual() && !isManualSectionValid(viewData.manualSectionId)) {
             return
         }
 
@@ -179,8 +179,10 @@ constructor(private val schedulersProvider: ISchedulersProvider,
                 }))
     }
 
-    private fun isManualSectionValid(manualSectionId: String?): Boolean {
+    protected fun isManualSectionValid(manualSectionId: String?): Boolean {
+
         if (manualSectionId == null) {
+            view?.onError(resourceProvider.getString(R.string.input_section_number))
             return false
         }
         if (!manualSectionId.matches(Regex("\\d+"))) {
@@ -362,6 +364,7 @@ constructor(private val schedulersProvider: ISchedulersProvider,
         currentData.previewImageIndex = newData.previewImageIndex
         currentData.imagePreviewOpen = newData.imagePreviewOpen
         currentData.imagesIndexesOffset = newData.imagesIndexesOffset
+        currentData.manualSectionId = newData.manualSectionId
 
         view?.onLoadingStateChange(false)
         view?.setData(currentData)
@@ -370,6 +373,11 @@ constructor(private val schedulersProvider: ISchedulersProvider,
 
             SendStatus.SendError -> {
                 view?.onError(resourceProvider.getString(R.string.send_error_try_again))
+                currentData.entityItem?.sendStatus = SendStatus.New
+            }
+
+            SendStatus.SendErrorInvalidSection -> {
+                view?.onError(resourceProvider.getString(R.string.invalid_section_number))
                 currentData.entityItem?.sendStatus = SendStatus.New
             }
 
@@ -441,7 +449,6 @@ constructor(private val schedulersProvider: ISchedulersProvider,
         view?.onLoadingStateChange(false)
         newData.items.clear()
         newData.items.add(SendItemListItemSendSuccess(interactor.successMessageString))
-        data = newData
         onDataLoaded(newData)
     }
 

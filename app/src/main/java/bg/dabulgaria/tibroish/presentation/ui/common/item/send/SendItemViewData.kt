@@ -7,7 +7,7 @@ import bg.dabulgaria.tibroish.presentation.ui.common.preview.images.PreviewImage
 import java.io.Serializable
 
 enum class SendItemListItemType {
-    Header, Section, SectionManual, Message, Image, Buttons, SendSuccess
+    Header, Section, SectionManual, Message, Image, Buttons, SendSuccess, InfoText
 }
 
 class EntityItemImage(val id: Long,
@@ -49,6 +49,9 @@ class SendItemListItemSendSuccess(val messageText: String)
 class SendItemListItemMessage(val labelText:String, val messageText: String)
     : SendItemListItem(SendItemListItemType.Message), Serializable
 
+class SendItemListItemInfoText()
+    : SendItemListItem(SendItemListItemType.InfoText), Serializable
+
 
 class SendItemViewData(val entityDbId: Long?=null) : Serializable {
 
@@ -65,7 +68,7 @@ class SendItemViewData(val entityDbId: Long?=null) : Serializable {
     constructor(source: SendItemViewData) : this(null) {
 
         this.entityItem = source.entityItem
-        this.items.addAll(source.items)
+        this.items.addAll(source.items.toMutableList())
         this.sectionsData = source.sectionsData
     }
 }

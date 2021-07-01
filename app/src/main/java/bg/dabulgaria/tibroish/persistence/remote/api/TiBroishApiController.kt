@@ -78,7 +78,7 @@ interface TiBroishApiController {
 
     @POST("/me/checkins ")
     fun sendCheckIn(@Header(ApiHeader.Authorization) authorization: String,
-                    @Body request: SendCheckInRequest): Call<SendCheckInResponse>
+                    @Body request: SendCheckInRequest): Call<Any>
 
     @POST("/me/clients")
     fun sendFCMToken(@Header(ApiHeader.Authorization) authorization: String,

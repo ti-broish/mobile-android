@@ -7,6 +7,7 @@ import bg.dabulgaria.tibroish.domain.protocol.image.IProtocolImageUploader
 import bg.dabulgaria.tibroish.domain.protocol.image.IProtocolImagesRepository
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.send.SendStatus
+import bg.dabulgaria.tibroish.persistence.remote.ApiException
 import bg.dabulgaria.tibroish.presentation.main.MainActivity
 import bg.dabulgaria.tibroish.presentation.push.PushActionRouter
 import bg.dabulgaria.tibroish.presentation.push.PushActionType
@@ -38,6 +39,14 @@ class ProtocolSenderController @Inject constructor(
             protocol.remoteStatus = response.status
             protocol.serverId = response.id
             protocol.status = SendStatus.Send
+        }
+        catch (apiEx: ApiException){
+
+            logger.e(TAG, apiEx)
+            if(apiEx.response.code == 400)
+                protocol?.status = SendStatus.SendErrorInvalidSection
+            else
+                protocol?.status = SendStatus.SendError
         }
         catch (ex: Exception){
             logger.e(TAG, ex)

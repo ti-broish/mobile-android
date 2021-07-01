@@ -38,7 +38,7 @@ android {
         applicationId "bg.dabulgaria.tibroish"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 10
+        versionCode 11
         versionName "1.1.0.$versionCode"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         signingConfig signingConfigs.AppSigning
