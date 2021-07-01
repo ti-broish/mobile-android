@@ -62,6 +62,8 @@ class AddProtocolInteractor @Inject constructor(sectionPickerInteractor: ISectio
     override val successMessageString: String
         get() = resourceProvider.getString(R.string.protocol_send_successfully)
 
+    override val hasImagesInfo: Boolean = true
+
     override fun getItemImages(viewData: SendItemViewData): List<PhotoId> {
 
         val itemId = viewData.entityItem?.id ?: return emptyList()

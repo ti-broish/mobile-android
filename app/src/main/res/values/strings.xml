@@ -33,7 +33,7 @@
     <string name="login_register">Регистрация</string>
     <string name="login_forgot_password">Забравена парола</string>
     <string name="to_continue_confirm_email">За да продължите трябва да потвърдите имейл адреса си</string>
-    <string name="invalid_mail_or_pass">Невавлиден email или парола</string>
+    <string name="invalid_mail_or_pass">Невалиден email или парола</string>
 
     <!-- Common -->
     <string name="invalid_email">Невалиден имейл адрес</string>
@@ -90,14 +90,15 @@
     <string name="save">Запази</string>
     <string name="delete_profile">Изтрий профил</string>
     <string name="please_choose_section">Моля изберете секция</string>
-    <string name="please_choose_min_images">Добавете още поне %d снимки</string>
+    <string name="please_choose_min_images">Добавете поне още %d снимки</string>
+    <string name="please_choose_one_more_images">Добавете поне още 1 снимка</string>
     <string name="protocol_send_successfully">Протоколът е изпратен успешно!</string>
     <string name="ok">Добре</string>
     <string name="violation_send_successfully">Сигналът е изпратен успешно!</string>
     <string name="violation_description">Описание на нарушението</string>
     <string name="please_choose_town">Моля изберете населено място</string>
     <string name="please_choose_city_region">Моля изберете микрорайон</string>
-    <string name="please_type_description_more_than_d_symbols">Моля въведете описание. Описанието трябва да бъде повече от %d симовола</string>
+    <string name="please_type_description_more_than_d_symbols">Моля въведете описание. Описанието трябва да бъде повече от %d символа</string>
     <string name="protocols_list_section_id_unformatted">%d. Секция: %s</string>
     <string name="status_label">Статус:</string>
     <string name="protocol_label">Протокол:</string>
@@ -168,5 +169,8 @@
     <string name="error_section_must_contain_at_least_9_digits">Номерът на секцията трябва да е поне 9 цифри</string>
     <string name="choose_section_for_live_stream">Изберете секция от която ще предавате на живо</string>
     <string name="start_live_stream">Започни живо предаване</string>
+    <string name="protocol_images_info_text">Минималният брой страници за хартиен протокол е четири. Моля, добавете 4 или повече снимки на хартиен протокол. В случай, че в секцията е налична машина за гласуване, моля добавете снимки на разпечатаната от нея лента с финалния протокол.</string>
+    <string name="input_section_number">Моля въведете 9 цифрен номер на секция</string>
+    <string name="invalid_section_number">Невалиден номер на секция</string>
 
 </resources>
