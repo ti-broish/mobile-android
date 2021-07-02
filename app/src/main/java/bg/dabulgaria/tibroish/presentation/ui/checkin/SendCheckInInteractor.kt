@@ -13,6 +13,7 @@ import bg.dabulgaria.tibroish.persistence.local.ImageCopier
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
 import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
+import bg.dabulgaria.tibroish.presentation.ui.common.EmptyImageUploader
 import bg.dabulgaria.tibroish.presentation.ui.common.item.send.*
 import bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker.ISectionPickerInteractor
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoId
@@ -60,6 +61,9 @@ class SendCheckInInteractor @Inject constructor(sectionPickerInteractor: ISectio
     override val sectionIsRequired = true
 
     override val supportsImages = false
+    override fun isSectionManual(): Boolean {
+        return false
+    }
 
     override fun getItemImages(viewData: SendItemViewData): List<PhotoId> = emptyList()
 
@@ -78,9 +82,9 @@ class SendCheckInInteractor @Inject constructor(sectionPickerInteractor: ISectio
         selectedSectionLocalRepo.selectedSectionData = viewData.sectionsData
 
         val request = SendCheckInRequest(viewData!!.sectionsData!!.selectedSection!!.id)
-        val response = tiBroishRemoteRepository.sendCheckIn(request)
+        tiBroishRemoteRepository.sendCheckIn(request)
 
-        return EntityItem(1, if(response.section.isNullOrEmpty()) SendStatus.SendError else SendStatus.Send)
+        return EntityItem(1, SendStatus.Send)
     }
 
     override fun addSelectedGalleryImages(currentData: SendItemViewData){}

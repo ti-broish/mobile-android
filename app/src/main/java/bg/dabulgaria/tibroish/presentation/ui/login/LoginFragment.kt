@@ -1,11 +1,13 @@
 package bg.dabulgaria.tibroish.presentation.ui.login
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView.OnEditorActionListener
+import androidx.fragment.app.Fragment
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
@@ -25,9 +27,17 @@ class LoginFragment : BasePresentableFragment<ILoginView, ILoginPresenter>(), IL
         = inflater.inflate(R.layout.fragment_user_login, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-
         super.onActivityCreated(savedInstanceState)
+
         setupOnClickListeners()
+    }
+
+    private fun prefillEmail(email: String?) {
+        if (email.isNullOrEmpty()) {
+            input_username_edit_text.text = null
+            return
+        }
+        input_username_edit_text.setText(email)
     }
 
     private fun setupOnClickListeners() {
@@ -81,11 +91,16 @@ class LoginFragment : BasePresentableFragment<ILoginView, ILoginPresenter>(), IL
                 input_password_edit_text?.text?.toString() ?:"")
     }
 
+    fun refreshUi() {
+        prefillEmail(arguments?.getString(KEY_EMAIL, null))
+    }
+
     companion object {
 
+        const val KEY_EMAIL: String = "email"
         val TAG = LoginFragment::class.java.simpleName
 
         @JvmStatic
-        fun newInstance() = LoginFragment()
+        fun newInstance(email: String?=null): LoginFragment = LoginFragment()
     }
 }

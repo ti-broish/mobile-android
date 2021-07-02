@@ -43,7 +43,7 @@ interface ISendItemPresenter : IBasePresenter<ISendItemView>, ISectionPickerPres
 
     fun onHandleBack(imagePosition: Int?): Boolean
 
-    fun onImageZoomClick(position:Int)
+    fun onImagePreviewClick(position:Int)
 
     fun onPreviewDelete(previewPosition: Int, image: PreviewImage)
 
@@ -152,7 +152,11 @@ constructor(private val schedulersProvider: ISchedulersProvider,
         val neededImages = MinSelectedImages - data?.entityItem?.images.orEmpty().size
         if(neededImages > 0){
 
-            view?.onError(resourceProvider.getString(R.string.please_choose_min_images, neededImages))
+            if(neededImages == 1)
+                view?.onError(resourceProvider.getString(R.string.please_choose_one_more_images))
+            else
+                view?.onError(resourceProvider.getString(R.string.please_choose_min_images, neededImages))
+
             return
         }
 
@@ -175,6 +179,24 @@ constructor(private val schedulersProvider: ISchedulersProvider,
                 }))
     }
 
+    protected fun isManualSectionValid(manualSectionId: String?): Boolean {
+
+        if (manualSectionId == null) {
+            view?.onError(resourceProvider.getString(R.string.input_section_number))
+            return false
+        }
+        if (!manualSectionId.matches(Regex("\\d+"))) {
+            view?.onError(resourceProvider.getString(R.string.error_section_id_contains_non_digits))
+            return false
+        }
+        if (manualSectionId.length < 9) {
+            view?.onError(resourceProvider.getString(
+                R.string.error_section_must_contain_at_least_9_digits))
+            return false
+        }
+        return true
+    }
+
     override fun onImageDeleteClick(item: SendItemListItemImage, position: Int) {
 
         onImageDelete(item.image)
@@ -195,7 +217,7 @@ constructor(private val schedulersProvider: ISchedulersProvider,
         super.onError(throwable)
     }
 
-    override fun onImageZoomClick(position: Int) {
+    override fun onImagePreviewClick(position: Int) {
 
         val viewData = data?:return
         viewData.previewImageIndex = position - viewData.imagesIndexesOffset
@@ -342,6 +364,7 @@ constructor(private val schedulersProvider: ISchedulersProvider,
         currentData.previewImageIndex = newData.previewImageIndex
         currentData.imagePreviewOpen = newData.imagePreviewOpen
         currentData.imagesIndexesOffset = newData.imagesIndexesOffset
+        currentData.manualSectionId = newData.manualSectionId
 
         view?.onLoadingStateChange(false)
         view?.setData(currentData)
@@ -350,6 +373,11 @@ constructor(private val schedulersProvider: ISchedulersProvider,
 
             SendStatus.SendError -> {
                 view?.onError(resourceProvider.getString(R.string.send_error_try_again))
+                currentData.entityItem?.sendStatus = SendStatus.New
+            }
+
+            SendStatus.SendErrorInvalidSection -> {
+                view?.onError(resourceProvider.getString(R.string.invalid_section_number))
                 currentData.entityItem?.sendStatus = SendStatus.New
             }
 
@@ -421,7 +449,6 @@ constructor(private val schedulersProvider: ISchedulersProvider,
         view?.onLoadingStateChange(false)
         newData.items.clear()
         newData.items.add(SendItemListItemSendSuccess(interactor.successMessageString))
-        data = newData
         onDataLoaded(newData)
     }
 

@@ -39,12 +39,16 @@ class AddProtocolPresenter @Inject constructor(schedulersProvider: ISchedulersPr
 
     override fun validateData(data: SendItemViewData): Boolean {
 
-        if(data.sectionsData?.selectedSection == null){
 
-            view?.onError(resourceProvider.getString(R.string.please_choose_section))
+        if (!isManualSectionValid(data.manualSectionId)) {
+
             return false
         }
 
         return true
+    }
+
+    override fun onManualSectionChanged(sectionId: String) {
+        data?.manualSectionId = sectionId
     }
 }

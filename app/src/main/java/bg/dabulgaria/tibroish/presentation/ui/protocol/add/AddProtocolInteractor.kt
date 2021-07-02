@@ -44,8 +44,7 @@ class AddProtocolInteractor @Inject constructor(sectionPickerInteractor: ISectio
                                                 private val protocolImagesRepo: IProtocolImagesRepository,
                                                 private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
                                                 private val resourceProvider: IResourceProvider,
-                                                private val selectedSectionLocalRepo:
-                                                ISelectedSectionLocalRepository,
+                                                private val selectedSectionLocalRepo: ISelectedSectionLocalRepository,
                                                 @AppContext val context: Context)
     : SendItemInteractor(sectionPickerInteractor,
         disposableHandler,
@@ -62,6 +61,8 @@ class AddProtocolInteractor @Inject constructor(sectionPickerInteractor: ISectio
 
     override val successMessageString: String
         get() = resourceProvider.getString(R.string.protocol_send_successfully)
+
+    override val hasImagesInfo: Boolean = true
 
     override fun getItemImages(viewData: SendItemViewData): List<PhotoId> {
 
@@ -128,13 +129,23 @@ class AddProtocolInteractor @Inject constructor(sectionPickerInteractor: ISectio
         protocolImagesRepo.insert(protocolImage)
     }
 
+    override fun isSectionManual(): Boolean {
+        return true
+    }
+
+    override fun getManualDefaultSectionPrefill(): String {
+        return selectedSectionLocalRepo.selectedSectionData?.selectedSection?.id.orEmpty()
+    }
+
     override fun sendItemConcrete(viewData: SendItemViewData): EntityItem {
 
-        selectedSectionLocalRepo.selectedSectionData = viewData.sectionsData
+       // selectedSectionLocalRepo.selectedSectionData = viewData.sectionsData
+
+        val sectionId = viewData.manualSectionId!!
 
         val metadata = ProtocolMetadata(
             protocolId = viewData.entityItem!!.id,
-            sectionId = viewData.sectionsData!!.selectedSection!!.id)
+            sectionId = sectionId)
 
         val entityItem = updateEntityItemStatus(metadata.protocolId, SendStatus.Sending)
         UploaderService.uploadProtocol(context, metadata)

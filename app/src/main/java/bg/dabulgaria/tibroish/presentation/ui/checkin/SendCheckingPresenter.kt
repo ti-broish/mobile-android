@@ -51,4 +51,6 @@ class SendCheckInPresenter @Inject constructor(schedulersProvider: ISchedulersPr
     companion object{
 
     }
+
+    override fun onManualSectionChanged(sectionId: String) {}
 }

@@ -57,8 +57,7 @@ class ApiInterceptor (private val userAgent: String) : Interceptor {
         }
 
         val code =networkResponse?.code ?: 500
-        val jsonObject = JSONObject(responseData)
-        val message: String? = getMessageOrNull(jsonObject)
+        val message: String? = getMessageOrNull(responseData)
 
         val exception = when (code) {
             UNAUTHORIZED -> AuthException(response, responseData, message)
@@ -69,9 +68,10 @@ class ApiInterceptor (private val userAgent: String) : Interceptor {
         throw exception
     }
 
-    private fun getMessageOrNull(jsonObject: JSONObject): String? {
+    private fun getMessageOrNull(responseData: String): String? {
         var message: String? = null
         try {
+            val jsonObject = JSONObject(responseData)
             message = getMessageFromJsonArray(jsonObject)
             if (message == null) {
                 message = jsonObject.getString("message")

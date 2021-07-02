@@ -17,6 +17,7 @@ import bg.dabulgaria.tibroish.domain.user.User
 import bg.dabulgaria.tibroish.domain.violation.SendViolationRequest
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.live.model.UserStreamModel
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -54,7 +55,7 @@ interface TiBroishApiController {
             @Header(ApiHeader.Authorization) authorization: String, @Body userData: User): Call<Any>
 
     @DELETE("/me")
-    fun deleteUser(@Header(ApiHeader.Authorization) authorization: String): Call<Any>
+    fun deleteUser(@Header(ApiHeader.Authorization) authorization: String): Call<ResponseBody>
 
     @POST("/pictures")
     fun uploadImage(@Header(ApiHeader.Authorization) authorization: String,
@@ -77,7 +78,7 @@ interface TiBroishApiController {
 
     @POST("/me/checkins ")
     fun sendCheckIn(@Header(ApiHeader.Authorization) authorization: String,
-                    @Body request: SendCheckInRequest): Call<SendCheckInResponse>
+                    @Body request: SendCheckInRequest): Call<Any>
 
     @POST("/me/clients")
     fun sendFCMToken(@Header(ApiHeader.Authorization) authorization: String,

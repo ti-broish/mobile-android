@@ -50,7 +50,7 @@ interface ITiBroishRemoteRepository {
 
     fun getViolations():List<VoteViolationRemote>
 
-    fun sendCheckIn(request: SendCheckInRequest): SendCheckInResponse
+    fun sendCheckIn(request: SendCheckInRequest)
 
     fun sendFCMToken(request: SendTokenRequest): SendTokenResponse
 

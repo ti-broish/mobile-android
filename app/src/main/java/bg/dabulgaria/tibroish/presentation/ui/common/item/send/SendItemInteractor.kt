@@ -28,17 +28,20 @@ interface ISendItemInteractor :ISectionPickerInteractor, IDisposableHandler {
 
     fun getItemImages(viewData: SendItemViewData):List<PhotoId>
 
+    fun isSectionManual(): Boolean
+
     val successMessageString: String
 }
 
-abstract class SendItemInteractor constructor(protected val sectionPickerInteractor: ISectionPickerInteractor,
-                                              disposableHandler: IDisposableHandler,
-                                              protected val schedulersProvider: ISchedulersProvider,
-                                              protected val logger: ILogger,
-                                              protected val entityImageUploader: IEntityImageUploader,
-                                              protected val imageCopier:IImageCopier,
-                                              protected val fileRepo: IFileRepository,
-                                              protected  val cameraTakenImageProvider: ICameraTakenImageProvider)
+abstract class SendItemInteractor(
+    protected val sectionPickerInteractor: ISectionPickerInteractor,
+    disposableHandler: IDisposableHandler,
+    protected val schedulersProvider: ISchedulersProvider,
+    protected val logger: ILogger,
+    protected val entityImageUploader: IEntityImageUploader,
+    protected val imageCopier: IImageCopier,
+    protected val fileRepo: IFileRepository,
+    protected val cameraTakenImageProvider: ICameraTakenImageProvider)
     : ISendItemInteractor,
         ISectionPickerInteractor by sectionPickerInteractor,
         IDisposableHandler by disposableHandler{
@@ -62,6 +65,7 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
     open val hideUniqueUntilSectionGetsSelected = false
     open val sectionIsRequired = true
     open val supportsImages: Boolean = true
+    open val hasImagesInfo: Boolean = false
     
     var imageUploadDisposable :Disposable?=null
 
@@ -75,6 +79,7 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
         newViewData.message = viewData.message
         newViewData.imagesIndexesOffset = 0
         newViewData.imagePreviewOpen = viewData.imagePreviewOpen
+        newViewData.manualSectionId = viewData.manualSectionId
 
         newViewData.sectionsData = loadSectionsData(viewData.sectionsData)
         newViewData.sectionsData?.hideUniqueUntilSectionIsSelected = hideUniqueUntilSectionGetsSelected
@@ -106,13 +111,27 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
             return newViewData
         }
 
-        if(entityItemId > 0 && newViewData.entityItem?.sendStatus == SendStatus.SendError)
+        if(entityItemId > 0 && (newViewData.entityItem?.sendStatus == SendStatus.SendError
+                        ||newViewData.entityItem?.sendStatus == SendStatus.SendErrorInvalidSection))
             updateEntityItemStatus(entityItemId, SendStatus.New)
 
         newViewData.items.add(SendItemListItemHeader(titleString))
         newViewData.imagesIndexesOffset++
-        newViewData.items.add(SendItemListItemSection(newViewData.sectionsData))
+        if (isSectionManual()) {
+
+            if(newViewData.manualSectionId == null)
+                newViewData.manualSectionId = getManualDefaultSectionPrefill()
+
+            newViewData.items.add(SendItemListItemSectionManual(newViewData.manualSectionId))
+        } else {
+            newViewData.items.add(SendItemListItemSection(newViewData.sectionsData))
+        }
         newViewData.imagesIndexesOffset++
+
+        if(hasImagesInfo){
+            newViewData.items.add(SendItemListItemInfoText())
+            newViewData.imagesIndexesOffset++
+        }
 
         if(supportsMessage) {
             newViewData.items.add(SendItemListItemMessage(messageLabel,
@@ -132,6 +151,10 @@ abstract class SendItemInteractor constructor(protected val sectionPickerInterac
 
         return newViewData
     }
+
+    open fun getManualDefaultSectionPrefill(): String? = null
+
+    abstract override fun isSectionManual(): Boolean
 
     override fun deleteImage(image: EntityItemImage) {
 

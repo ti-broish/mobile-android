@@ -17,6 +17,10 @@ interface IRemoteRepoAuthenticator {
 
     @Throws(Exception::class)
     fun <V> executeCall(authenticatedRepoCall: (token: String) -> Call<V>): V?
+
+    @Throws(Exception::class)
+    fun <P> executeVoidCall(authenticatedRepoCall: (param: P, authorization: String) ->Call<Any>,
+                                     parameter: P)
 }
 
 class RemoteRepoAuthenticator @Inject constructor(private val authRepo: IAuthRepository,
@@ -57,6 +61,16 @@ class RemoteRepoAuthenticator @Inject constructor(private val authRepo: IAuthRep
         return result
     }
 
+    @Throws(Exception::class)
+    override fun <P> executeVoidCall(authenticatedRepoCall: (param: P, authorization: String) ->Call<Any>,
+                            parameter: P) {
+
+        for( i in 0 until NUM_RETRIES) {
+
+            executeCallIntVoid( authenticatedRepoCall, parameter )
+        }
+    }
+
     //region private methods
     private fun <P, V> executeCallInt(authenticatedRepoCall: (param: P, authorization: String) ->Call<V>,
                            parameter: P): V?{
@@ -82,6 +96,31 @@ class RemoteRepoAuthenticator @Inject constructor(private val authRepo: IAuthRep
             throw ex
         }
         return null
+    }
+
+    private fun <P> executeCallIntVoid(authenticatedRepoCall: (param: P, authorization: String) ->Call<Any>,
+                                      parameter: P){
+
+        try {
+
+            val token = authRepo.token
+
+            if (token.isEmpty())
+                return
+
+            authenticatedRepoCall(parameter, token).execute().body()
+        }
+        catch (authEx: AuthException){
+
+            val token = refreshToken()
+            if( token.isEmpty())
+                throw LogoutException()
+        }
+        catch (ex: Exception) {
+
+            logger.e(TAG, ex)
+            throw ex
+        }
     }
 
     private fun <V> executeCallInt(authenticatedRepoCall: (token: String) -> Call<V>): V? {
