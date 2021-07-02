@@ -43,12 +43,12 @@ class ViolationsAdapter @Inject constructor(private val statusColorUtil: IStatus
             number=""
         }
 
-        holder.itemView.violationPlace.visibility = if(!violationSignal.section?.place.isNullOrEmpty())
+        holder.itemView.violationPlace.visibility = if(!violationSignal.town?.name.isNullOrEmpty())
             View.VISIBLE
         else
             View.GONE
 
-        violationSignal.section?.place?.let {
+        violationSignal.town?.name?.let {
             val place = "${number}${context.getString(R.string.location_label)} $it"
             holder.itemView.violationPlace.text =  place
             number=""
