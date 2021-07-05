@@ -53,4 +53,7 @@ interface LocalPersistenceModule {
 
     @Binds
     fun bindsISelectedSectionLocalRepository(implementation: SelectedSectionLocalRepository): ISelectedSectionLocalRepository
+
+    @Binds
+    fun bindsIOrientationReader(implementation: OrientationReader): IOrientationReader
 }
