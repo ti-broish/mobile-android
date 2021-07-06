@@ -41,23 +41,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sendProtocol"/>
 
-    <Button
-        android:id="@+id/rightsAndObligations"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/action_button_primary_selector"
-        android:text="@string/rights_and_obligations"
-        android:textAllCaps="true"
-        android:textColor="@color/white"
-        android:textSize="@dimen/action_button_text_size"
-        android:maxLines="2"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMaxTextSize="@dimen/action_button_text_size"
-        app:autoSizeMinTextSize="@dimen/action_button_min_text_size"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sendSignal"/>
 
     <Button
         android:id="@+id/tiBroishLive"
@@ -75,7 +58,7 @@
         app:autoSizeMinTextSize="@dimen/action_button_min_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rightsAndObligations"/>
+        app:layout_constraintTop_toBottomOf="@id/sendSignal"/>
 
     <Button
         android:id="@+id/homeCheckIn"
@@ -94,5 +77,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tiBroishLive"/>
+
+    <Button
+        android:id="@+id/rightsAndObligations"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/action_button_primary_selector"
+        android:text="@string/rights_and_obligations"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/action_button_text_size"
+        android:maxLines="2"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMaxTextSize="@dimen/action_button_text_size"
+        app:autoSizeMinTextSize="@dimen/action_button_min_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/homeCheckIn"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

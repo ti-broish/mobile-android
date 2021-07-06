@@ -3,6 +3,7 @@ package bg.dabulgaria.tibroish.presentation.main
 import bg.dabulgaria.tibroish.domain.locations.SectionRemote
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
+import bg.dabulgaria.tibroish.live.model.UserStreamModel
 import bg.dabulgaria.tibroish.presentation.navigation.OnMenuClickListener
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoId
 
@@ -58,5 +59,5 @@ interface IMainRouter: OnMenuClickListener {
 
     fun showLivePickSection()
 
-    fun showLiveStream(section: SectionRemote)
+    fun showLiveStream(userStreamModel: UserStreamModel)
 }

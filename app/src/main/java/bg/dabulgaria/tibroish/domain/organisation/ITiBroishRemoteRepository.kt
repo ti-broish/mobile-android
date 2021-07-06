@@ -10,6 +10,7 @@ import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.domain.protocol.SendProtocolRequest
 import bg.dabulgaria.tibroish.domain.push.SendTokenRequest
 import bg.dabulgaria.tibroish.domain.push.SendTokenResponse
+import bg.dabulgaria.tibroish.domain.stream.StreamRequest
 import bg.dabulgaria.tibroish.domain.user.SendCheckInRequest
 import bg.dabulgaria.tibroish.domain.user.SendCheckInResponse
 import bg.dabulgaria.tibroish.domain.user.User
@@ -55,4 +56,6 @@ interface ITiBroishRemoteRepository {
     fun sendFCMToken(request: SendTokenRequest): SendTokenResponse
 
     fun getUserStream(): UserStreamModel
+
+    fun getStream(request: StreamRequest): UserStreamModel
 }
