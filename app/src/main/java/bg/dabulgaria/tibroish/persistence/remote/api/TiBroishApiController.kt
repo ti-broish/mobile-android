@@ -11,6 +11,8 @@ import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.domain.protocol.SendProtocolRequest
 import bg.dabulgaria.tibroish.domain.push.SendTokenRequest
 import bg.dabulgaria.tibroish.domain.push.SendTokenResponse
+import bg.dabulgaria.tibroish.domain.stream.StreamRequest
+import bg.dabulgaria.tibroish.domain.stream.StreamResponse
 import bg.dabulgaria.tibroish.domain.user.SendCheckInRequest
 import bg.dabulgaria.tibroish.domain.user.SendCheckInResponse
 import bg.dabulgaria.tibroish.domain.user.User
@@ -87,5 +89,8 @@ interface TiBroishApiController {
     @GET("me/stream")
     fun getUserStream(@Header("Authorization") firebaseTokenHeader: String): Call<UserStreamModel>
 
+    @POST("streams")
+    fun postStream(@Header(ApiHeader.Authorization) authorization: String,
+                  @Body tokenRequest: StreamRequest): Call<UserStreamModel>
 
 }

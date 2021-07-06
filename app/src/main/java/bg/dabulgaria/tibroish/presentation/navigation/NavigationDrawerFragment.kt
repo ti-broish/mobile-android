@@ -52,15 +52,15 @@ class NavigationDrawerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val navItems = listOf(NavItem( NavItemAction.Home, R.string.start, null ),
-                NavItem( NavItemAction.Profile, R.string.profile, null ),
                 NavItem( NavItemAction.SendProtocol, R.string.send_protocol, null ),
                 NavItem( NavItemAction.SendSignal, R.string.send_signal, null ),
+                NavItem( NavItemAction.YouCountLive, R.string.ti_broish, R.string.live ),
+                NavItem( NavItemAction.CheckIn, R.string.check_in, null ),
                 NavItem( NavItemAction.MyProtocols, R.string.my_protocols, null ),
                 NavItem( NavItemAction.MySignals, R.string.my_signals, null ),
                 NavItem( NavItemAction.RightsAndObligations, R.string.rights_and_obligations, null ),
-                NavItem( NavItemAction.YouCountLive, R.string.ti_broish, R.string.live ),
-                NavItem( NavItemAction.CheckIn, R.string.check_in, null ),
                 NavItem( NavItemAction.Licenses, R.string.licenses, null ),
+                NavItem( NavItemAction.Profile, R.string.profile, null ),
                 NavItem( NavItemAction.Exit, R.string.exit, null )
         )
 

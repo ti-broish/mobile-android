@@ -13,6 +13,7 @@ import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.domain.protocol.SendProtocolRequest
 import bg.dabulgaria.tibroish.domain.push.SendTokenRequest
 import bg.dabulgaria.tibroish.domain.push.SendTokenResponse
+import bg.dabulgaria.tibroish.domain.stream.StreamRequest
 import bg.dabulgaria.tibroish.domain.user.SendCheckInRequest
 import bg.dabulgaria.tibroish.domain.user.SendCheckInResponse
 import bg.dabulgaria.tibroish.domain.user.User
@@ -150,6 +151,13 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
         return authenticator.executeCall { token ->
             apiController.getUserStream(getAuthorization(token))
         } ?: throw  Exception()
+    }
+
+    override fun getStream(request: StreamRequest): UserStreamModel {
+
+        return authenticator.executeCall({ param, token ->
+            apiController.postStream(getAuthorization(token), param)
+        }, request)!!
     }
 
     private fun getAuthorization(idToken: String): String = "Bearer $idToken"

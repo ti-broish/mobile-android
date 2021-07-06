@@ -15,6 +15,8 @@ import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.live.FetchStreamActivity
+import bg.dabulgaria.tibroish.live.PrepareToStreamActivity
+import bg.dabulgaria.tibroish.live.model.UserStreamModel
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
 import bg.dabulgaria.tibroish.presentation.ui.checkin.SendCheckInFragment
 import bg.dabulgaria.tibroish.presentation.ui.common.item.send.SendItemViewData
@@ -371,12 +373,11 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
         view?.showScreen(content, LiveSectionPickFragment.TAG, addToBackStack = true, transitionContent = true)
     }
 
-    override fun showLiveStream(section: SectionRemote){
+    override fun showLiveStream(userStreamModel: UserStreamModel){
 
-        val intent = Intent(appContext, FetchStreamActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.putExtra("section", section)
-        appContext.startActivity(intent)
+        view?.appCompatActivity?.let{
+            PrepareToStreamActivity.startWithParameters( it, userStreamModel)
+        }
     }
 
     private fun clearBackStack() {

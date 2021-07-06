@@ -4,7 +4,10 @@ package bg.dabulgaria.tibroish.presentation.ui.live.sectionpick
 import android.os.Bundle
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.locations.*
+import bg.dabulgaria.tibroish.domain.providers.ILogger
+import bg.dabulgaria.tibroish.domain.stream.StreamRequest
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
+import bg.dabulgaria.tibroish.persistence.remote.repo.TiBroishRemoteRepository
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
@@ -21,7 +24,9 @@ interface ILiveSectionPickPresenter :IBasePresenter<ILiveSectionPickView>, ISect
 
 class LiveSectionPickPresenter @Inject constructor(private val schedulersProvider: ISchedulersProvider,
                                                    private val mainRouter: IMainRouter,
+                                                   private val logger: ILogger,
                                                    private val interactor: ISectionPickerInteractor,
+                                                   private val tiBroishRemoteRepository: TiBroishRemoteRepository,
                                                    dispHandler: IDisposableHandler)
     : BasePresenter<ILiveSectionPickView>(dispHandler),
         ILiveSectionPickPresenter{
@@ -67,9 +72,23 @@ class LiveSectionPickPresenter @Inject constructor(private val schedulersProvide
             return
         }
 
-        viewData.sectionsData?.selectedSection?.let{
-            mainRouter.showLiveStream(it)
-        }
+        view?.onLoadingStateChange(true)
+
+        add(Single.fromCallable {
+            tiBroishRemoteRepository.getStream(StreamRequest(viewData.sectionsData!!.selectedSection!!.id))
+        }.subscribeOn(schedulersProvider.ioScheduler())
+                .observeOn(schedulersProvider.uiScheduler())
+                .subscribe({ result->
+
+                    view?.onLoadingStateChange(false)
+                    mainRouter.showLiveStream(result)
+                }, { throwable->
+
+                    view?.onLoadingStateChange(false)
+                    logger.e(TAG, throwable)
+                    onError(throwable)
+                } )
+        )
     }
 
     //region ISectionPickerPresenter implementation
@@ -163,6 +182,6 @@ class LiveSectionPickPresenter @Inject constructor(private val schedulersProvide
     override fun onManualSectionChanged(sectionId: String) {}
 
     companion object{
-
+        val TAG = LiveSectionPickPresenter::class.java.simpleName
     }
 }

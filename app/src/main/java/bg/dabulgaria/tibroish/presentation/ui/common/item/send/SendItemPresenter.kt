@@ -189,9 +189,10 @@ constructor(private val schedulersProvider: ISchedulersProvider,
             view?.onError(resourceProvider.getString(R.string.error_section_id_contains_non_digits))
             return false
         }
-        if (manualSectionId.length < 9) {
+
+        if (manualSectionId.length != SectionNumLength) {
             view?.onError(resourceProvider.getString(
-                R.string.error_section_must_contain_at_least_9_digits))
+                R.string.error_section_must_contain_n_digits, SectionNumLength))
             return false
         }
         return true
@@ -468,5 +469,6 @@ constructor(private val schedulersProvider: ISchedulersProvider,
     companion object {
 
         private val TAG = SendItemPresenter::class.simpleName
+        private val SectionNumLength = 9
     }
 }
