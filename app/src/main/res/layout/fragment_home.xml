@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment">
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sendProtocol"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sendSignal"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
@@ -42,14 +42,14 @@
         app:layout_constraintTop_toBottomOf="@id/sendProtocol"/>
 
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/tiBroishLive"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:background="@drawable/action_button_primary_selector"
         android:text="@string/ti_broish"
-        android:textAllCaps="true"
+        android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="@dimen/action_button_text_size"
         android:maxLines="2"
@@ -60,7 +60,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sendSignal"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/homeCheckIn"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tiBroishLive"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/rightsAndObligations"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
