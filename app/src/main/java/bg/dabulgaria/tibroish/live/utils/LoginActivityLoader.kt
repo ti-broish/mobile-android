@@ -15,7 +15,6 @@ private const val RESTARTED_TO_LOGIN_EXTRA =
 
 class LoginActivityLoader(private val context: Context, private val userAuthenticator: IUserAuthenticator) {
     fun logout() {
-        userAuthenticator.logout()
 
         val intent = LauncherIntent(context).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)

@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
 import bg.dabulgaria.tibroish.presentation.push.IPushTokenSender
 import kotlinx.android.synthetic.main.fragment_home.*
+import java.util.*
 import javax.inject.Inject
 
 class HomeFragment : BaseFragment() {
@@ -61,8 +63,8 @@ class HomeFragment : BaseFragment() {
             resources.getColor(R.color.textRed)
         }
 
-        val firstString = getString(R.string.ti_broish)
-        val secondString = getString(R.string.live)
+        val firstString = getString(R.string.ti_broish).toUpperCase(Locale.ENGLISH)
+        val secondString = getString(R.string.live).toUpperCase(Locale.ENGLISH)
 
         val spannableString = SpannableString( "${firstString} ${secondString}" )
         spannableString.setSpan(ForegroundColorSpan(color),
