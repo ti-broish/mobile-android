@@ -26,6 +26,7 @@
         android:layout_marginTop="6dp"
         android:background="@color/white"
         android:digits="0123456789"
+        android:maxLength="9"
         android:gravity="center"
         android:inputType="number"
         android:padding="6dp"

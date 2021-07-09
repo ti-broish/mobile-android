@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="bg.dabulgaria.tibroish.presentation.ui.home.HomeFragment">
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sendProtocol"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sendSignal"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
@@ -41,14 +41,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sendProtocol"/>
 
-    <Button
-        android:id="@+id/rightsAndObligations"
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/tiBroishLive"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:background="@drawable/action_button_primary_selector"
-        android:text="@string/rights_and_obligations"
-        android:textAllCaps="true"
+        android:text="@string/ti_broish"
+        android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="@dimen/action_button_text_size"
         android:maxLines="2"
@@ -59,25 +60,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sendSignal"/>
 
-    <Button
-        android:id="@+id/tiBroishLive"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/action_button_primary_selector"
-        android:text="@string/ti_broish"
-        android:textAllCaps="true"
-        android:textColor="@color/white"
-        android:textSize="@dimen/action_button_text_size"
-        android:maxLines="2"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMaxTextSize="@dimen/action_button_text_size"
-        app:autoSizeMinTextSize="@dimen/action_button_min_text_size"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rightsAndObligations"/>
-
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/homeCheckIn"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
@@ -94,5 +77,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tiBroishLive"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/rightsAndObligations"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/action_button_primary_selector"
+        android:text="@string/rights_and_obligations"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/action_button_text_size"
+        android:maxLines="2"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMaxTextSize="@dimen/action_button_text_size"
+        app:autoSizeMinTextSize="@dimen/action_button_min_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/homeCheckIn"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
