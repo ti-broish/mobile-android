@@ -11,7 +11,11 @@
 /.idea
 /.git
 /.gradle
+app/src/main/assets/appconfig.properties
 app/docs-json.json
 app/signing.properties
 app/keystores/
-app/src/main/assets/appconfig.properties
+app/staging/
+app/prodsigning.properties
+app/production/
+app/google-services.json

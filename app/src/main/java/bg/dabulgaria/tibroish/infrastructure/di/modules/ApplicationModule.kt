@@ -1,34 +1,53 @@
 package bg.dabulgaria.tibroish.infrastructure.di.modules
 
 import android.content.Context
-
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import androidx.room.Room
+import bg.dabulgaria.tibroish.BuildConfig
 import bg.dabulgaria.tibroish.DaApplication
-import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.domain.calculators.HashCalculator
 import bg.dabulgaria.tibroish.domain.calculators.IHashCalculator
-import bg.dabulgaria.tibroish.domain.interactors.ComicInteractor
-import bg.dabulgaria.tibroish.domain.interactors.IComicInteractor
+import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
+import bg.dabulgaria.tibroish.domain.protocol.IProtocolSenderController
+import bg.dabulgaria.tibroish.domain.protocol.IProtocolsRepository
+import bg.dabulgaria.tibroish.domain.protocol.ProtocolSenderController
+import bg.dabulgaria.tibroish.domain.protocol.ProtocolStatusRemote
+import bg.dabulgaria.tibroish.domain.protocol.image.IProtocolImageUploader
+import bg.dabulgaria.tibroish.domain.protocol.image.IProtocolImagesRepository
+import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.providers.ITimestampProvider
 import bg.dabulgaria.tibroish.domain.providers.TimestampProvider
-import bg.dabulgaria.tibroish.persistence.remote.MarvelsRemoteRepository
-import bg.dabulgaria.tibroish.domain.repositories.remote.IMarvelsRemoteRepository
-import bg.dabulgaria.tibroish.domain.repositories.local.IComicsLocalRepository
-import bg.dabulgaria.tibroish.persistence.local.ComicsLocalRepository
-import bg.dabulgaria.tibroish.persistence.local.MarvelsDatabase
+import bg.dabulgaria.tibroish.domain.user.IUserAuthenticator
+import bg.dabulgaria.tibroish.domain.violation.IViolationRepository
+import bg.dabulgaria.tibroish.domain.violation.IViolationSenderController
+import bg.dabulgaria.tibroish.domain.violation.ViolationSenderController
+import bg.dabulgaria.tibroish.domain.violation.image.IViolationImageUploader
+import bg.dabulgaria.tibroish.domain.violation.image.IViolationImagesRepository
+import bg.dabulgaria.tibroish.infrastructure.di.annotations.AppContext
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.infrastructure.schedulers.SchedulersProvider
-
-import javax.inject.Singleton
-
+import bg.dabulgaria.tibroish.live.utils.LoginActivityLoader
+import bg.dabulgaria.tibroish.persistence.local.Logger
+import bg.dabulgaria.tibroish.persistence.local.db.TiBroishDatabase
+import bg.dabulgaria.tibroish.presentation.main.IMainPresenter
+import bg.dabulgaria.tibroish.presentation.main.IMainRouter
+import bg.dabulgaria.tibroish.presentation.main.MainPresenter
+import bg.dabulgaria.tibroish.presentation.main.MainRouter
+import bg.dabulgaria.tibroish.presentation.notification.ChannelInitializer
+import bg.dabulgaria.tibroish.presentation.notification.IChannelInitializer
+import bg.dabulgaria.tibroish.presentation.providers.CameraTakenImageProvider
+import bg.dabulgaria.tibroish.presentation.providers.GallerySelectedImagesProvider
+import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
+import bg.dabulgaria.tibroish.presentation.providers.IGallerySelectedImagesProvider
+import bg.dabulgaria.tibroish.presentation.push.IPushActionRouter
+import bg.dabulgaria.tibroish.presentation.push.IPushTokenSender
+import bg.dabulgaria.tibroish.presentation.push.PushActionRouter
+import bg.dabulgaria.tibroish.presentation.push.PushTokenSender
+import bg.dabulgaria.tibroish.presentation.ui.common.*
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
-import androidx.room.Room
-import bg.dabulgaria.tibroish.domain.providers.ILogger
-import bg.dabulgaria.tibroish.domain.providers.Logger
-import bg.dabulgaria.tibroish.persistence.remote.ILocationsRemoteRepo
-import bg.dabulgaria.tibroish.persistence.remote.LocationsRemoteRepo
+import javax.inject.Singleton
 
 
 @Module
@@ -37,33 +56,34 @@ class ApplicationModule {
     @Provides
     @Singleton
     @AppContext
-    internal fun providesAppContext(DaApplication : DaApplication) : Context {
+    internal fun providesAppContext(DaApplication: DaApplication): Context {
 
         return DaApplication
     }
 
     @Provides
     @Singleton
-    internal fun providesGson() : Gson {
+    internal fun providesGson(): Gson {
         return GsonBuilder()
+                .registerTypeAdapter(ProtocolStatusRemote::class.java, ProtocolStatusRemote.deserializer)
                 .setDateFormat("dd/mm/yyyy HH:mm")
                 .create()
     }
 
     @Provides
     @Singleton
-    internal fun providesMarvelsDatabase( @AppContext context: Context ) :MarvelsDatabase{
-
-        return Room.databaseBuilder( context,
-                                     MarvelsDatabase::class.java,
-                                     "marvels_db" )
-                .build()
-    }
+    fun bindsMainRouter(implementation: MainRouter): IMainRouter = implementation
 
     @Provides
-    internal fun providesLocalStorageRepository(database :MarvelsDatabase): IComicsLocalRepository {
+    @Singleton
+    fun bindsMainPresenter(implementation: MainPresenter): IMainPresenter = implementation
 
-        return ComicsLocalRepository( database)
+    @Provides
+    @Singleton
+    internal fun providesTiBroishDatabase(@AppContext context: Context): TiBroishDatabase {
+
+        return Room.databaseBuilder(context, TiBroishDatabase::class.java, "ti_broish_db${BuildConfig.FLAVOR}")
+                .build()
     }
 
     @Provides
@@ -73,40 +93,98 @@ class ApplicationModule {
     }
 
     @Provides
-    internal fun providesMarvelsApiRepository( comicApiRepository: MarvelsRemoteRepository): IMarvelsRemoteRepository {
-
-        return comicApiRepository
-    }
-
-    @Provides
     @Singleton
-    internal fun providesIHashCalculator() :IHashCalculator{
+    internal fun providesIHashCalculator(): IHashCalculator {
 
         return HashCalculator()
     }
 
     @Provides
     @Singleton
-    internal fun providesITimestampProvider() :ITimestampProvider{
+    internal fun providesITimestampProvider(): ITimestampProvider {
 
         return TimestampProvider()
     }
 
     @Provides
-    fun providesComicInteractor(comicInteractor: ComicInteractor): IComicInteractor {
-
-        return comicInteractor
-    }
-
-    @Provides
     @Singleton
-    fun providesLogger():ILogger{
+    fun providesLogger(): ILogger {
 
         return Logger()
     }
 
     @Provides
     @Singleton
-    fun providesILocationsRemoteRepo( impementer: LocationsRemoteRepo): ILocationsRemoteRepo = impementer
+    fun providesFormValidator(
+            logger: ILogger,
+            organizationsManager: OrganizationsManager): FormValidator {
+        return FormValidator(logger, organizationsManager)
+    }
 
+    @Provides
+    @Singleton
+    fun providesDialogUtil(): IDialogUtil {
+        return DialogUtil()
+    }
+
+    @Provides
+    @Singleton
+    fun providesOrganizationsManager(tiBroishRemoteRepository: ITiBroishRemoteRepository):
+            IOrganizationsManager {
+        return OrganizationsManager(tiBroishRemoteRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesOrganizationsDropdownUtil(): IOrganizationsDropdownUtil {
+        return OrganizationsDropdownUtil()
+    }
+
+    @Provides
+    @Singleton
+    internal fun providesIGallerySelectedImagesProvider(implementation: GallerySelectedImagesProvider): IGallerySelectedImagesProvider {
+        return implementation
+    }
+
+    @Provides
+    @Singleton
+    internal fun providesStatusColorUtil(): IStatusColorUtil {
+        return StatusColorUtil()
+    }
+
+    @Provides
+    @Singleton
+    internal fun providesICameraTakenImageProvider(implementation: CameraTakenImageProvider): ICameraTakenImageProvider = implementation
+
+    @Provides
+    @Singleton
+    internal fun providesIPushTokenSender(implemenation: PushTokenSender): IPushTokenSender = implemenation
+
+    @Provides
+    internal fun providesIPushActionRouter(implemenation: PushActionRouter): IPushActionRouter = implemenation
+
+    @Provides
+    internal fun providesIChannelInitializer(iml: ChannelInitializer): IChannelInitializer = iml
+
+    @Provides
+    @Singleton
+    fun provideLoginScreenLoader(context: Context, userAuthenticator: IUserAuthenticator): LoginActivityLoader {
+        return LoginActivityLoader(context, userAuthenticator)
+    }
+
+    @Provides
+    fun providesProtocolSenderController(implementation: ProtocolSenderController): IProtocolSenderController {
+        return implementation
+    }
+
+    @Provides
+    fun providesViolationSenderController(implementation: ViolationSenderController): IViolationSenderController {
+        return implementation
+    }
+
+    @Provides
+    @Singleton
+    fun providesHtmlTextUtil(): IHtmlTextUtil {
+        return HtmlTextUtil()
+    }
 }
