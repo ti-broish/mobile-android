@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="licenses_text"><![CDATA[
+        <b>
+        Използвани библиотеки в приложението:
+        </b>
+        <p>Retrofit2 - Apache 2.0</p>
+        <p>Square OkHttp3 - Apache 2.0</p>
+        <p>Square Moshi - Apache 2.0</p>
+        <p>RxJava3 - Apache 2.0</p>
+        <p>EventBus - Apache 2.0</p>
+        <p>Lottie - Apache 2.0</p>
+        <p>Dagger - Apache 2.0</p>
+        <p>Glide - Apache 2.0</p>
+        <p>Volley - Apache 2.0</p>
+        <p>Gson - Apache 2.0</p>
+        <p>Mockito - MIT</p>
+        <p>rtmp-rtsp-stream-client-java - Apache 2.0</p>
+        <p>Robolectric - MIT</p>
+        ]]>
+    </string>
+</resources>
