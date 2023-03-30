@@ -189,7 +189,7 @@ class ImageCopier @Inject constructor(@AppContext private val context: Context,
     companion object{
 
         val LOG_TAG = ImageCopier::class.java.simpleName
-        val MAX_IMAGE_SIZE_PX = 2048
-        val IMAGE_QUALITY = 60
+        val MAX_IMAGE_SIZE_PX = 3096
+        val IMAGE_QUALITY = 80
     }
 }

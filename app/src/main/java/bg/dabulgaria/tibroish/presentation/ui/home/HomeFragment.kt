@@ -50,7 +50,6 @@ class HomeFragment : BaseFragment() {
         sendProtocol?.setOnClickListener { mainRouter.onNavigateToItem(NavItemAction.SendProtocol) }
         sendSignal?.setOnClickListener { mainRouter.onNavigateToItem(NavItemAction.SendSignal) }
         rightsAndObligations?.setOnClickListener { mainRouter.onNavigateToItem(NavItemAction.RightsAndObligations) }
-        homeCheckIn?.setOnClickListener { mainRouter.onNavigateToItem(NavItemAction.CheckIn) }
 
         initLiveButton()
     }
