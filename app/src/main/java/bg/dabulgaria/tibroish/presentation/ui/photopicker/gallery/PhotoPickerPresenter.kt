@@ -1,7 +1,10 @@
 package bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery//package bg.dabulgaria.tibroish.presentation.ui.protocol.list
 
 
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.infrastructure.permission.IPermissionRequester
 import bg.dabulgaria.tibroish.infrastructure.permission.PermissionCodes
@@ -40,7 +43,10 @@ class PhotoPickerPresenter @Inject constructor(private val interactor : IPhotoPi
     : BasePresenter<IPhotoPickerView>(dispHandler), IPhotoPickerPresenter, IPermissionResponseListener {
 
     var data : PhotoPickerViewData? = null
-    val permission = PermissionCodes.READ_STORAGE
+    val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            PermissionCodes.READ_MEDIA_IMAGES
+        else
+            PermissionCodes.READ_STORAGE
 
     override fun onRestoreData(bundle: Bundle?) {
         bundle?.let {
@@ -144,7 +150,9 @@ class PhotoPickerPresenter @Inject constructor(private val interactor : IPhotoPi
 
     override fun onPermissionResult(permissionCode: Int, granted: Boolean) {
 
-        if(permissionCode != PermissionCodes.READ_STORAGE.code || !granted)
+        if((permissionCode != PermissionCodes.READ_STORAGE.code
+            && permissionCode != PermissionCodes.READ_MEDIA_IMAGES.code)
+            || !granted)
             return
 
         loadData()

@@ -3,9 +3,9 @@ package bg.dabulgaria.tibroish.domain.image
 import bg.dabulgaria.tibroish.domain.send.ImageSendStatus
 
 interface ImageBase {
-    fun getImageSendStatus(): ImageSendStatus
-    fun setImageSendStatus(status: ImageSendStatus)
-    fun getLocalFilePath(): String
-    fun setServerId(serverId: String)
-    fun setServerUrl(serverUrl: String)
+    fun getSendImageStatus(): ImageSendStatus
+    fun setSendImageStatus(status: ImageSendStatus)
+    fun getFileLocalPath(): String
+    fun setImageServerId(serverId: String)
+    fun setImageServerUrl(serverUrl: String)
 }

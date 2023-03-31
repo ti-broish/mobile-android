@@ -38,8 +38,8 @@ class ProtocolsAdapter @Inject constructor(private val statusColorUtil: IStatusC
         holder.sectionId.text = holder.itemView.context.getString(
             R.string.protocols_list_section_id_unformatted,
             position+1,
-            protocol.section.id)
-        holder.sectionLocation.text = protocol.section.place
+            protocol.section?.id ?: "")
+        holder.sectionLocation.text = protocol.section?.place ?: ""
         holder.sectionStatus.text = protocol.statusLocalized
         holder.sectionStatus.setTextColor(
             statusColorUtil.getColorForStatus(protocol.status.stringValue))

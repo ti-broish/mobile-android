@@ -27,6 +27,7 @@ import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.infrastructure.schedulers.SchedulersProvider
 import bg.dabulgaria.tibroish.live.utils.LoginActivityLoader
 import bg.dabulgaria.tibroish.persistence.local.Logger
+import bg.dabulgaria.tibroish.persistence.local.db.MIGRATION_1_2
 import bg.dabulgaria.tibroish.persistence.local.db.TiBroishDatabase
 import bg.dabulgaria.tibroish.presentation.main.IMainPresenter
 import bg.dabulgaria.tibroish.presentation.main.IMainRouter
@@ -82,8 +83,14 @@ class ApplicationModule {
     @Singleton
     internal fun providesTiBroishDatabase(@AppContext context: Context): TiBroishDatabase {
 
-        return Room.databaseBuilder(context, TiBroishDatabase::class.java, "ti_broish_db${BuildConfig.FLAVOR}")
-                .build()
+        return Room.
+        databaseBuilder(
+            context,
+            TiBroishDatabase::class.java,
+            "ti_broish_db${BuildConfig.FLAVOR}"
+
+        ).addMigrations(MIGRATION_1_2)
+            .build()
     }
 
     @Provides

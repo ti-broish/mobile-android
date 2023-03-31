@@ -9,7 +9,7 @@ class ResolutionUtil(private val resolutions: List<Camera.Size>, private val wid
     fun getCameraSize(): Camera.Size {
         val(selectedWidth, selectedHeight) = resolutions.map {
             Pair(min(it.width, it.height), max(it.width, it.height))
-        }.minBy { size -> getDifference(size.first, size.second) }
+        }.minByOrNull { size -> getDifference(size.first, size.second) }
                 ?: Pair(width, height)
 
         return resolutions.firstOrNull { size ->

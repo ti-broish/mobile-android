@@ -1,6 +1,7 @@
 package bg.dabulgaria.tibroish.presentation.ui.common.item.send
 
 import android.graphics.BitmapFactory
+import bg.dabulgaria.tibroish.domain.ICountryCodesRepo
 import bg.dabulgaria.tibroish.domain.image.IEntityImageUploader
 import bg.dabulgaria.tibroish.domain.io.IFileRepository
 import bg.dabulgaria.tibroish.domain.protocol.image.IImageCopier
@@ -41,7 +42,9 @@ abstract class SendItemInteractor(
     protected val entityImageUploader: IEntityImageUploader,
     protected val imageCopier: IImageCopier,
     protected val fileRepo: IFileRepository,
-    protected val cameraTakenImageProvider: ICameraTakenImageProvider)
+    protected val cameraTakenImageProvider: ICameraTakenImageProvider,
+    protected val countryCodesRepo: ICountryCodesRepo,
+    )
     : ISendItemInteractor,
         ISectionPickerInteractor by sectionPickerInteractor,
         IDisposableHandler by disposableHandler{
@@ -77,6 +80,9 @@ abstract class SendItemInteractor(
         val newViewData = SendItemViewData()
         newViewData.entityItem = viewData.entityItem
         newViewData.message = viewData.message
+        newViewData.phone = viewData.phone
+        newViewData.email = viewData.email
+        newViewData.names = viewData.names
         newViewData.imagesIndexesOffset = 0
         newViewData.imagePreviewOpen = viewData.imagePreviewOpen
         newViewData.manualSectionId = viewData.manualSectionId
@@ -84,6 +90,8 @@ abstract class SendItemInteractor(
         newViewData.sectionsData = loadSectionsData(viewData.sectionsData)
         newViewData.sectionsData?.hideUniqueUntilSectionIsSelected = hideUniqueUntilSectionGetsSelected
         newViewData.sectionsData?.isSectionRequired = sectionIsRequired
+
+        newViewData.countryCodes = countryCodesRepo.getCountryCodes()
 
         logger.i(TAG, "section data loaded")
 
@@ -134,8 +142,12 @@ abstract class SendItemInteractor(
         }
 
         if(supportsMessage) {
-            newViewData.items.add(SendItemListItemMessage(messageLabel,
-                    newViewData.message ?: ""))
+            newViewData.items.add(
+                SendItemListItemMessage(messageLabel,
+                    newViewData.message ?: "",
+                    newViewData.countryCodes
+                )
+            )
             newViewData.imagesIndexesOffset++
         }
 

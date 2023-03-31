@@ -26,4 +26,6 @@ interface IMainScreenView{
     fun showProcessing(processing: Boolean)
 
     fun showDismissableDialog(message: String, dismissCallback: () -> Unit)
+
+    fun onAuthEvent()
 }

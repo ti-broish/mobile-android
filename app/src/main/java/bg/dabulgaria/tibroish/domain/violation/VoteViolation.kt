@@ -16,5 +16,14 @@ class VoteViolation constructor(@PrimaryKey(autoGenerate = true)
                                 var serverId: String = "",
                                 var status: SendStatus = SendStatus.New,
                                 var message: String = "",
-                                var remoteStatus: ViolationRemoteStatus? = null) : Serializable {
+                                var remoteStatus: ViolationRemoteStatus? = null,
+                                @ColumnInfo(name = "names")
+                                var names: String = "",
+                                @ColumnInfo(name = "email")
+                                var email: String = "",
+                                @ColumnInfo(name = "phone")
+                                var phone: String = "",
+                                @ColumnInfo(name = "remoteViolationJson")
+                                var remoteViolationJson: String? = ""
+) : Serializable {
 }

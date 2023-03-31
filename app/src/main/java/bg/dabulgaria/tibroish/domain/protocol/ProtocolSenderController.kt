@@ -12,6 +12,7 @@ import bg.dabulgaria.tibroish.presentation.main.MainActivity
 import bg.dabulgaria.tibroish.presentation.push.PushActionRouter
 import bg.dabulgaria.tibroish.presentation.push.PushActionType
 import bg.dabulgaria.tibroish.presentation.push.PushActionValuesShowScreen
+import com.google.gson.Gson
 import javax.inject.Inject
 
 class ProtocolSenderController @Inject constructor(
@@ -30,15 +31,22 @@ class ProtocolSenderController @Inject constructor(
             protocolImageUploader.uploadImages(protocolId)
             val images = protocolImagesRepo.getByProtocolId(protocolId)
 
-            val request = SendProtocolRequest(metadata.sectionId,
-                    images.map { it.serverId })
+            val section:String? = if(metadata.sectionId.isNullOrEmpty())
+                null
+            else
+                metadata.sectionId
 
-            val response = tiBroishRemoteRepository.sendProtocol(request)
+            val request = SendProtocolRequest(
+                section,
+                images.map { it.serverId }
+            )
 
+            val response: ProtocolRemote = tiBroishRemoteRepository.sendProtocol(request)
 
             protocol.remoteStatus = response.status
             protocol.serverId = response.id
             protocol.status = SendStatus.Send
+            protocol.remoteProtocolJson = Gson().toJson(response)
         }
         catch (apiEx: ApiException){
 

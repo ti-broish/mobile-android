@@ -40,10 +40,10 @@ class AddProtocolPresenter @Inject constructor(schedulersProvider: ISchedulersPr
     override fun validateData(data: SendItemViewData): Boolean {
 
 
-        if (!isManualSectionValid(data.manualSectionId)) {
-
-            return false
-        }
+//        if (!isManualSectionValid(data.manualSectionId)) {
+//
+//            return false
+//        }
 
         return true
     }

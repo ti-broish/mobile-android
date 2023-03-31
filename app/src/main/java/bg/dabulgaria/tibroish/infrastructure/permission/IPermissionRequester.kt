@@ -39,6 +39,8 @@ class PermissionRequester @Inject constructor(private val activity: AppCompatAct
         return ActivityCompat.shouldShowRequestPermissionRationale(activity, appPermission.name)
     }
 
+
+
     companion object{
         val TAG = PermissionRequester::class.java.simpleName
     }

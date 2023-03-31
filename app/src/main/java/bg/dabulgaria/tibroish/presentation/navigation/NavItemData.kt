@@ -14,6 +14,7 @@ enum class NavItemAction{
     YouCountLive,
     Licenses,
     Exit,
+    Login
 }
 
 data class NavItem(val action:NavItemAction,

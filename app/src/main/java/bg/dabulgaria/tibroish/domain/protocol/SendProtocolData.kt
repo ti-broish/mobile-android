@@ -53,13 +53,13 @@ enum class ProtocolStatusRemote constructor(val stringValue:String){
 
 class SendProtocolRequest(
         @SerializedName("section")
-        val section: String,//section.id
+        val section: String?,//section.id
         @SerializedName("pictures")//picture server id's
         val pictures:List<String>):Serializable
 
 class ProtocolRemote(
         val id: String,
-        val section: SectionRemote,
+        val section: SectionRemote?,
         val pictures: List<PictureDto>,
         val status: ProtocolStatusRemote,
         val statusLocalized: String,

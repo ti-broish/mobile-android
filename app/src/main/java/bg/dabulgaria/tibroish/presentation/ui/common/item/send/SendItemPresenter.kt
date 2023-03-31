@@ -41,6 +41,10 @@ interface ISendItemPresenter : IBasePresenter<ISendItemView>, ISectionPickerPres
 
     fun onMessageChanged(message: String)
 
+    fun onNamesChanged(names: String)
+    fun onPhoneChanged(phone: String)
+    fun onEmailChanged(email: String)
+
     fun onHandleBack(imagePosition: Int?): Boolean
 
     fun onImagePreviewClick(position:Int)
@@ -181,20 +185,20 @@ constructor(private val schedulersProvider: ISchedulersProvider,
 
     protected fun isManualSectionValid(manualSectionId: String?): Boolean {
 
-        if (manualSectionId == null) {
-            view?.onError(resourceProvider.getString(R.string.input_section_number))
-            return false
-        }
-        if (!manualSectionId.matches(Regex("\\d+"))) {
-            view?.onError(resourceProvider.getString(R.string.error_section_id_contains_non_digits))
-            return false
-        }
-
-        if (manualSectionId.length != SectionNumLength) {
-            view?.onError(resourceProvider.getString(
-                R.string.error_section_must_contain_n_digits, SectionNumLength))
-            return false
-        }
+//        if (manualSectionId == null) {
+//            view?.onError(resourceProvider.getString(R.string.input_section_number))
+//            return false
+//        }
+//        if (!manualSectionId.matches(Regex("\\d+"))) {
+//            view?.onError(resourceProvider.getString(R.string.error_section_id_contains_non_digits))
+//            return false
+//        }
+//
+//        if (manualSectionId.length != SectionNumLength) {
+//            view?.onError(resourceProvider.getString(
+//                R.string.error_section_must_contain_n_digits, SectionNumLength))
+//            return false
+//        }
         return true
     }
 
@@ -308,6 +312,18 @@ constructor(private val schedulersProvider: ISchedulersProvider,
         data?.message = message
     }
 
+    override fun onNamesChanged(names: String) {
+        data?.names = names
+    }
+
+    override fun onPhoneChanged(phone: String) {
+        data?.phone = phone
+    }
+
+    override fun onEmailChanged(email: String) {
+        data?.email = email
+    }
+
     override fun onHandleBack(imagePosition: Int?): Boolean {
 
         val viewData = data?: return false
@@ -361,6 +377,8 @@ constructor(private val schedulersProvider: ISchedulersProvider,
         currentData.items.addAll(newData.items)
         currentData.entityItem = newData.entityItem
         currentData.message = newData.message
+        currentData.email = newData.email
+        currentData.phone = newData.phone
         currentData.sectionsData = newData.sectionsData
         currentData.previewImageIndex = newData.previewImageIndex
         currentData.imagePreviewOpen = newData.imagePreviewOpen

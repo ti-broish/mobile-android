@@ -259,6 +259,9 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
         }
     }
 
+    override fun onAuthEvent() {
+    }
+
     private fun prepareEncoders(quality: Quality): Boolean? {
         return rtmpCamera1?.let { localCamera ->
 

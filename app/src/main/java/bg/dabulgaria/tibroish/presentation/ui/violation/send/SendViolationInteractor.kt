@@ -3,6 +3,7 @@ package bg.dabulgaria.tibroish.presentation.ui.violation.send
 
 import android.content.Context
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.domain.ICountryCodesRepo
 import bg.dabulgaria.tibroish.domain.image.UploaderService
 import bg.dabulgaria.tibroish.domain.image.PickedImageSource
 import bg.dabulgaria.tibroish.domain.io.IFileRepository
@@ -48,7 +49,9 @@ class SendViolationInteractor @Inject constructor(sectionPickerInteractor: ISect
                                                   private val resourceProvider: IResourceProvider,
                                                   private val selectedSectionLocalRepo:
                                                   ISelectedSectionLocalRepository,
-                                                  @AppContext val context: Context)
+                                                  @AppContext val context: Context,
+                                                  countryCodesRepo: ICountryCodesRepo
+)
     : SendItemInteractor(sectionPickerInteractor,
         disposableHandler,
         schedulersProvider,
@@ -56,7 +59,9 @@ class SendViolationInteractor @Inject constructor(sectionPickerInteractor: ISect
         violationImageUploader,
         imageCopier,
         fileRepo,
-        cameraTakenImageProvider),
+        cameraTakenImageProvider,
+        countryCodesRepo
+),
         ISendViolationInteractor {
 
     init {
@@ -158,7 +163,11 @@ class SendViolationInteractor @Inject constructor(sectionPickerInteractor: ISect
             violationId = entity.id,
             sectionId = viewData.sectionsData?.selectedSection?.id ?:"",
             townId = viewData.sectionsData?.selectedTown?.id,
-            description = viewData.message)
+            description = viewData.message,
+            email = viewData.email,
+            phone = viewData.phone,
+            names = viewData.names
+        )
 
         val entityItem = updateEntityItemStatus(metadata.violationId, SendStatus.Sending)
 

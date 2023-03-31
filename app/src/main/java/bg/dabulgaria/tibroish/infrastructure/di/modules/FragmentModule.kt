@@ -1,5 +1,6 @@
 package bg.dabulgaria.tibroish.infrastructure.di.modules
 
+import bg.dabulgaria.tibroish.presentation.navigation.NavigationDrawerFragment
 import bg.dabulgaria.tibroish.presentation.ui.login.ILoginPresenter
 import bg.dabulgaria.tibroish.presentation.ui.login.LoginFragment
 import bg.dabulgaria.tibroish.presentation.ui.login.LoginPresenter
@@ -39,6 +40,7 @@ import bg.dabulgaria.tibroish.presentation.ui.violation.list.ViolationsListFragm
 import bg.dabulgaria.tibroish.presentation.ui.violation.list.ViolationsListPresenter
 import bg.dabulgaria.tibroish.presentation.ui.violation.send.*
 import dagger.Binds
+import dagger.BindsInstance
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -193,4 +195,7 @@ interface FragmentModule {
     @Binds
     fun bindsILiveSectionPickPresenter(presenter: LiveSectionPickPresenter): ILiveSectionPickPresenter
     //endregion Send CheckIn screen
+
+    @ContributesAndroidInjector
+    fun bindNavigationDrawerFragment(): NavigationDrawerFragment
 }

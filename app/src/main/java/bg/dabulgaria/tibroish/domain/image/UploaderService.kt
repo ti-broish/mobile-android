@@ -148,7 +148,7 @@ class UploaderService : Service() {
                 resourceProvider.getString(R.string.upload_notification_channel_name))
         }
         val pendingIntent = PendingIntent.getActivity(
-            this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            this, 0, intent, PendingIntent.FLAG_MUTABLE)
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
             .setColor(resourceProvider.getColor(R.color.colorPrimary))

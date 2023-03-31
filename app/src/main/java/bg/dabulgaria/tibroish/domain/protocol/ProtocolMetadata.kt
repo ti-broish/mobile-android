@@ -6,4 +6,4 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class ProtocolMetadata(
     val protocolId: Long,
-    val sectionId: String): Parcelable
+    val sectionId: String?): Parcelable

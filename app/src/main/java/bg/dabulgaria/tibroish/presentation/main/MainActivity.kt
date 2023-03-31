@@ -192,6 +192,13 @@ class MainActivity : BaseActivity(),
                 .show()
     }
 
+    override fun onAuthEvent() {
+
+        navigationDrawerFragment = supportFragmentManager.findFragmentById(R.id.navigation_drawer) as NavigationDrawerFragment?
+
+        navigationDrawerFragment?.reloadNavigationItems()
+    }
+
     companion object{
         val TAG = MainActivity::class.java.simpleName
     }

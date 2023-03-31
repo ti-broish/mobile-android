@@ -29,7 +29,7 @@ class NetworkModule() {
     @Singleton
     fun providesOkHttpClient(): OkHttpClient{
 
-        val agent = "Ti Broish ${BuildConfig.FLAVOR} ${BuildConfig.VERSION_NAME} ${BuildConfig.VERSION_CODE}"
+        val agent = "Ti Broish Android ${BuildConfig.VERSION_NAME}"
 
         val okHttpClientBuilder= OkHttpClient.Builder()
                 .connectTimeout(2L, TimeUnit.MINUTES)

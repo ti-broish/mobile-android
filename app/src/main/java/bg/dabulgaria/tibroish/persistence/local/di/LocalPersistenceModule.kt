@@ -1,5 +1,6 @@
 package bg.dabulgaria.tibroish.persistence.local.di
 
+import bg.dabulgaria.tibroish.domain.ICountryCodesRepo
 import bg.dabulgaria.tibroish.domain.config.IAppConfigRepository
 import bg.dabulgaria.tibroish.domain.image.IGalleryImagesRepository
 import bg.dabulgaria.tibroish.domain.protocol.IProtocolsRepository
@@ -56,4 +57,7 @@ interface LocalPersistenceModule {
 
     @Binds
     fun bindsIOrientationReader(implementation: OrientationReader): IOrientationReader
+
+    @Binds
+    fun bindsICountryCodesRepo(implementation: CountryCodesRepo): ICountryCodesRepo
 }

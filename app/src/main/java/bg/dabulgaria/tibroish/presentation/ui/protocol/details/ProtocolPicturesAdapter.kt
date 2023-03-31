@@ -33,8 +33,8 @@ class ProtocolPicturesAdapter @Inject constructor(private val statusColorUtil: I
         viewHolder.status.setTextColor(
             statusColorUtil.getColorForStatus(item.status.stringValue))
         viewHolder.protocolId.text = item.id
-        viewHolder.sectionId.text = item.section.id
-        viewHolder.location.text = item.section.place
+        viewHolder.sectionId.text = item.section?.id ?: ""
+        viewHolder.location.text = item.section?.place?: ""
 
         viewHolder.message.text = item.errorMessage?:""
         viewHolder.messageContainer.visibility = if(item.errorMessage.isNullOrEmpty())

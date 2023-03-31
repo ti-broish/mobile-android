@@ -4,6 +4,7 @@ import bg.dabulgaria.tibroish.domain.send.ImageSendStatus
 import bg.dabulgaria.tibroish.domain.locations.SectionsViewData
 import bg.dabulgaria.tibroish.domain.send.SendStatus
 import bg.dabulgaria.tibroish.presentation.ui.common.preview.images.PreviewImage
+import bg.dabulgaria.tibroish.presentation.ui.registration.CountryCode
 import java.io.Serializable
 
 enum class SendItemListItemType {
@@ -46,7 +47,11 @@ class SendItemListItemButtons(val supportsImages: Boolean)
 class SendItemListItemSendSuccess(val messageText: String)
     : SendItemListItem(SendItemListItemType.SendSuccess), Serializable
 
-class SendItemListItemMessage(val labelText:String, val messageText: String)
+class SendItemListItemMessage(
+    val labelText:String,
+    val messageText: String,
+    val countryCodes:List<CountryCode>?,
+)
     : SendItemListItem(SendItemListItemType.Message), Serializable
 
 class SendItemListItemInfoText()
@@ -59,11 +64,15 @@ class SendItemViewData(val entityDbId: Long?=null) : Serializable {
     val items = mutableListOf<SendItemListItem>()
     var sectionsData: SectionsViewData? = null
     var message: String = ""
+    var email: String = ""
+    var phone: String = ""
+    var names: String = ""
     var cameraPermissionRequested = false
     var imagePreviewOpen = false
     var previewImageIndex = 0
     var imagesIndexesOffset = 0
     var manualSectionId: String? = null
+    var countryCodes: List<CountryCode>? = null
 
     constructor(source: SendItemViewData) : this(null) {
 

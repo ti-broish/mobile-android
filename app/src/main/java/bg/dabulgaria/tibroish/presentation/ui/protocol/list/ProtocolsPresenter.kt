@@ -1,15 +1,15 @@
 package bg.dabulgaria.tibroish.presentation.ui.protocol.list
 
 import android.os.Bundle
-import bg.dabulgaria.tibroish.domain.locations.SectionRemote
 import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
+import bg.dabulgaria.tibroish.domain.protocol.IProtocolsRepository
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
-import bg.dabulgaria.tibroish.domain.protocol.ProtocolStatusRemote
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.ui.profile.ProfileConstants.Companion.VIEW_DATA_KEY
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,7 +29,9 @@ interface IProtocolsPresenter : IBasePresenter<IProtocolsView> {
 class ProtocolsPresenter @Inject constructor(
     disposableHandler: IDisposableHandler,
     private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
-    private val mainRouter: IMainRouter
+    private val mainRouter: IMainRouter,
+    private val protocolsRepository: IProtocolsRepository,
+    private val gson: Gson,
 ) : BasePresenter<IProtocolsView>(disposableHandler),
     IProtocolsPresenter {
 
@@ -59,7 +61,10 @@ class ProtocolsPresenter @Inject constructor(
         }
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val userProtocols = tiBroishRemoteRepository.getUserProtocols()
+                val localProtocols = protocolsRepository.getAll()
+                val userProtocols = localProtocols.map {
+                    gson.fromJson(it.remoteProtocolJson, ProtocolRemote::class.java)
+                }
                 viewData?.userProtocols = userProtocols
                 viewData?.state = State.STATE_LOADED_SUCCESS
                 withContext(Dispatchers.Main) {

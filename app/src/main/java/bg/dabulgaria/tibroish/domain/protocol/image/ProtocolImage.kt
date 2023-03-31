@@ -43,23 +43,23 @@ class ProtocolImage constructor(
         @ColumnInfo(name = "serverUrl")
         @set:JvmName("setServerUrlFake")
         var serverUrl: String? = null) : Serializable, ImageBase {
-        override fun getImageSendStatus(): ImageSendStatus {
+        override fun getSendImageStatus(): ImageSendStatus {
                 return imageSendStatus
         }
 
-        override fun setImageSendStatus(status: ImageSendStatus) {
+        override fun setSendImageStatus(status: ImageSendStatus) {
                 imageSendStatus = status
         }
 
-        override fun getLocalFilePath(): String {
+        override fun getFileLocalPath(): String {
                 return localFilePath
         }
 
-        override fun setServerId(serverId: String) {
+        override fun setImageServerId(serverId: String) {
                 this.serverId = serverId
         }
 
-        override fun setServerUrl(serverUrl: String) {
+        override fun setImageServerUrl(serverUrl: String) {
                 this.serverUrl = serverUrl
         }
 }

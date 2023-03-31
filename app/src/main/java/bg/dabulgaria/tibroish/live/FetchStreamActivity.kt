@@ -80,6 +80,9 @@ class FetchStreamActivity : BaseActivity(), HasAndroidInjector {
     override fun showDismissableDialog(message: String, dismissCallback: () -> Unit) {
     }
 
+    override fun onAuthEvent() {
+    }
+
     private fun tryFetchingStream() {
         showProgressBar()
 

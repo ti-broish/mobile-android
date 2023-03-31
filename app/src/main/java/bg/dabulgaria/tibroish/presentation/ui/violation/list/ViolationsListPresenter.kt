@@ -2,12 +2,14 @@ package bg.dabulgaria.tibroish.presentation.ui.violation.list
 
 import android.os.Bundle
 import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
+import bg.dabulgaria.tibroish.domain.violation.IViolationRepository
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.main.IMainRouter
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,10 +27,13 @@ interface IViolationsListPresenter : IBasePresenter<IViolationsListView> {
     fun showViolationAt(position: Int)
 }
 
-class ViolationsListPresenter @Inject constructor(private val schedulersProvider : ISchedulersProvider,
-                                                  private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
-                                                  dispHandler: IDisposableHandler,
-                                                  private val mainRouter: IMainRouter)
+class ViolationsListPresenter @Inject constructor(
+    private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
+    dispHandler: IDisposableHandler,
+    private val mainRouter: IMainRouter,
+    private val violationRepository: IViolationRepository,
+    private val gson: Gson,
+    )
     : BasePresenter<IViolationsListView>(dispHandler), IViolationsListPresenter {
 
     enum class State {
@@ -52,7 +57,10 @@ class ViolationsListPresenter @Inject constructor(private val schedulersProvider
         }
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val userViolations = tiBroishRemoteRepository.getViolations()
+                val local = violationRepository.getAll()
+                val userViolations = local.map {
+                    gson.fromJson(it.remoteViolationJson, VoteViolationRemote::class.java)
+                }
                 viewData?.userViolations = userViolations
                 viewData?.state = State.STATE_LOADED_SUCCESS
                 withContext(Dispatchers.Main) {

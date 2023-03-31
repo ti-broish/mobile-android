@@ -18,9 +18,9 @@ data class CountryCode (
 
     override fun describeContents(): Int = 0
 
-    override fun writeToParcel(dest: Parcel?, flags: Int) {
-        dest?.writeString(name)
-        dest?.writeString(code)
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeString(name)
+        dest.writeString(code)
     }
 
     companion object CREATOR : Parcelable.Creator<CountryCode> {

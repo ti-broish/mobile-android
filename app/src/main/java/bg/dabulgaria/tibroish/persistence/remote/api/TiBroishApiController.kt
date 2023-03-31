@@ -86,11 +86,49 @@ interface TiBroishApiController {
     fun sendFCMToken(@Header(ApiHeader.Authorization) authorization: String,
                      @Body tokenRequest: SendTokenRequest): Call<SendTokenResponse>
 
-    @GET("me/stream")
-    fun getUserStream(@Header("Authorization") firebaseTokenHeader: String): Call<UserStreamModel>
-
     @POST("streams")
     fun postStream(@Header(ApiHeader.Authorization) authorization: String,
                   @Body tokenRequest: StreamRequest): Call<UserStreamModel>
+
+
+    @GET("me/stream")
+    fun getUserStream(@Header("Authorization") firebaseTokenHeader: String): Call<UserStreamModel>
+
+
+    @GET("/countries")
+    fun getCountries(): Call<List<CountryRemote>>
+
+    @POST("/users")
+    fun createUser(@Body userData: User) : Call<Any>
+
+    @GET("/election_regions")
+    fun getElectionRegions(): Call<List<ElectionRegionRemote>>
+
+    @GET("/towns")
+    fun getTowns(@Query("country") country: String,
+                 @Query("election_region") electionRegion: String?,
+                 @Query("municipality") municipality: String?): Call<List<TownRemote>>
+
+    @GET("/sections")
+    fun getSections(@Query("town") townCode: Long,
+                    @Query("city_region") cityRegionCode: String?): Call<List<SectionRemote>>
+
+    @POST("/pictures")
+    fun uploadImage(@Body image: UploadImageRequest): Call<UploadImageResponse>
+
+    @POST("/protocols")
+    fun sendProtocol(@Body request: SendProtocolRequest): Call<ProtocolRemote>
+
+    @POST("/violations")
+    fun sendViolation(@Body request: SendViolationRequest): Call<VoteViolationRemote>
+
+    @POST("/me/checkins ")
+    fun sendCheckIn(@Body request: SendCheckInRequest): Call<Any>
+
+    @POST("/me/clients")
+    fun sendFCMToken(@Body tokenRequest: SendTokenRequest): Call<SendTokenResponse>
+
+    @POST("streams")
+    fun postStream(@Body tokenRequest: StreamRequest): Call<UserStreamModel>
 
 }

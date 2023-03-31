@@ -5,11 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.presentation.ui.common.IOrganizationsDropdownUtil
 import javax.inject.Inject
 
 
-class SendItemAdapter @Inject constructor(val presenter: ISendItemPresenter)
-    : RecyclerView.Adapter<SendItemViewHolder>() {
+class SendItemAdapter @Inject constructor(
+    val presenter: ISendItemPresenter
+) : RecyclerView.Adapter<SendItemViewHolder>() {
 
     val list = mutableListOf<SendItemListItem>()
 

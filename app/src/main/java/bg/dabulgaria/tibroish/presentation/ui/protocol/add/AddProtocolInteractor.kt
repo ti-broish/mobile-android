@@ -3,6 +3,7 @@ package bg.dabulgaria.tibroish.presentation.ui.protocol.add
 
 import android.content.Context
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.domain.ICountryCodesRepo
 import bg.dabulgaria.tibroish.domain.image.UploaderService
 import bg.dabulgaria.tibroish.domain.protocol.image.IProtocolImageUploader
 import bg.dabulgaria.tibroish.domain.image.PickedImageSource
@@ -45,7 +46,9 @@ class AddProtocolInteractor @Inject constructor(sectionPickerInteractor: ISectio
                                                 private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
                                                 private val resourceProvider: IResourceProvider,
                                                 private val selectedSectionLocalRepo: ISelectedSectionLocalRepository,
-                                                @AppContext val context: Context)
+                                                @AppContext val context: Context,
+                                                countryCodesRepo: ICountryCodesRepo
+                                                )
     : SendItemInteractor(sectionPickerInteractor,
         disposableHandler,
         schedulersProvider,
@@ -53,7 +56,9 @@ class AddProtocolInteractor @Inject constructor(sectionPickerInteractor: ISectio
         protocolImageUploader,
         imageCopier,
         fileRepo,
-        cameraTakenImageProvider),
+        cameraTakenImageProvider,
+        countryCodesRepo,
+),
         IAddProtocolInteractor {
 
     override val titleString: String
@@ -141,7 +146,7 @@ class AddProtocolInteractor @Inject constructor(sectionPickerInteractor: ISectio
 
        // selectedSectionLocalRepo.selectedSectionData = viewData.sectionsData
 
-        val sectionId = viewData.manualSectionId!!
+        val sectionId = viewData.manualSectionId
 
         val metadata = ProtocolMetadata(
             protocolId = viewData.entityItem!!.id,

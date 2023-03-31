@@ -2,6 +2,7 @@ package bg.dabulgaria.tibroish.presentation.ui.checkin
 
 
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.domain.ICountryCodesRepo
 import bg.dabulgaria.tibroish.domain.io.IFileRepository
 import bg.dabulgaria.tibroish.domain.locations.ISelectedSectionLocalRepository
 import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
@@ -9,6 +10,7 @@ import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.send.SendStatus
 import bg.dabulgaria.tibroish.domain.user.SendCheckInRequest
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
+import bg.dabulgaria.tibroish.persistence.local.CountryCodesRepo
 import bg.dabulgaria.tibroish.persistence.local.ImageCopier
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.providers.ICameraTakenImageProvider
@@ -22,25 +24,29 @@ import javax.inject.Inject
 
 interface ISendCheckInInteractor : ISendItemInteractor
 
-class SendCheckInInteractor @Inject constructor(sectionPickerInteractor: ISectionPickerInteractor,
-                                                disposableHandler: IDisposableHandler,
-                                                schedulersProvider: ISchedulersProvider,
-                                                logger: ILogger,
-                                                imageCopier: ImageCopier,
-                                                fileRepo: IFileRepository,
-                                                cameraTakenImageProvider: ICameraTakenImageProvider,
-                                                private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
-                                                private val resourceProvider: IResourceProvider,
-                                                private val selectedSectionLocalRepo: ISelectedSectionLocalRepository)
-    : SendItemInteractor(sectionPickerInteractor,
+class SendCheckInInteractor @Inject constructor(
+    sectionPickerInteractor: ISectionPickerInteractor,
+    disposableHandler: IDisposableHandler,
+    schedulersProvider: ISchedulersProvider,
+    logger: ILogger,
+    imageCopier: ImageCopier,
+    fileRepo: IFileRepository,
+    cameraTakenImageProvider: ICameraTakenImageProvider,
+    private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
+    private val resourceProvider: IResourceProvider,
+    private val selectedSectionLocalRepo: ISelectedSectionLocalRepository,
+    countryCodesRepo: ICountryCodesRepo
+    ) : SendItemInteractor(
+        sectionPickerInteractor,
         disposableHandler,
         schedulersProvider,
         logger,
         EmptyImageUploader(),
         imageCopier,
         fileRepo,
-        cameraTakenImageProvider),
-        ISendCheckInInteractor {
+        cameraTakenImageProvider,
+        countryCodesRepo
+    ), ISendCheckInInteractor {
 
     init {
         this.autoFillSection = true

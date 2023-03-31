@@ -8,4 +8,8 @@ data class ViolationMetadata(
     val violationId: Long,
     val sectionId: String,
     val townId: Long?,
-    val description: String): Parcelable
+    val description: String,
+    val email: String,
+    val phone: String,
+    var names: String
+): Parcelable

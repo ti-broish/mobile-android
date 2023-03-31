@@ -1,5 +1,6 @@
 package bg.dabulgaria.tibroish.presentation.navigation
 
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.*
@@ -12,8 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.domain.user.IUserAuthenticator
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_navigation_drawer.*
 import kotlinx.android.synthetic.main.fragment_navigation_drawer.view.*
+import javax.inject.Inject
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -30,6 +34,15 @@ class NavigationDrawerFragment : Fragment() {
     private var fragmentContainerView: View? = null
 
     private var currentSelectedPosition = 0
+
+    @Inject
+    protected lateinit var userAuthenticator: IUserAuthenticator
+
+    override fun onAttach(context: Context) {
+
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,30 +64,7 @@ class NavigationDrawerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val navItems = listOf(NavItem( NavItemAction.Home, R.string.start, null ),
-                NavItem( NavItemAction.SendProtocol, R.string.send_protocol, null ),
-                NavItem( NavItemAction.SendSignal, R.string.send_signal, null ),
-                NavItem( NavItemAction.YouCountLive, R.string.ti_broish, R.string.live ),
-                NavItem( NavItemAction.CheckIn, R.string.check_in, null ),
-                NavItem( NavItemAction.MyProtocols, R.string.my_protocols, null ),
-                NavItem( NavItemAction.MySignals, R.string.my_signals, null ),
-                NavItem( NavItemAction.RightsAndObligations, R.string.rights_and_obligations, null ),
-                NavItem( NavItemAction.Licenses, R.string.licenses, null ),
-                NavItem( NavItemAction.Profile, R.string.profile, null ),
-                NavItem( NavItemAction.Exit, R.string.exit, null )
-        )
-
-        view.navItemsRecyclerView?.layoutManager = LinearLayoutManager( this.context, RecyclerView.VERTICAL, false )
-        view.navItemsRecyclerView?.adapter = NavItemsAdapter( navItems, object:OnMenuClickListener{
-
-            override fun onNavigateToItem(action: NavItemAction) {
-
-                view.navItemsRecyclerView?.postDelayed( {
-                    drawerLayout?.closeDrawers()
-                    listener?.onNavigateToItem(action)
-                }, 200)
-            }
-        })
+        reloadNavigationItems()
     }
 
     val isDrawerOpen: Boolean
@@ -172,6 +162,41 @@ class NavigationDrawerFragment : Fragment() {
         navItemsRecyclerView?.visibility = if(enabled) View.VISIBLE else View.GONE
         actionBar?.setHomeButtonEnabled(enabled)
         actionBar?.setDisplayHomeAsUpEnabled(enabled)
+    }
+
+    fun reloadNavigationItems(){
+
+        val logged = userAuthenticator.isUserLogged()
+
+        val navItems = mutableListOf(NavItem( NavItemAction.Home, R.string.start, null ),
+            NavItem( NavItemAction.SendProtocol, R.string.send_protocol, null ),
+            NavItem( NavItemAction.SendSignal, R.string.send_signal, null ),
+            NavItem( NavItemAction.MyProtocols, R.string.my_protocols, null ),
+            NavItem( NavItemAction.MySignals, R.string.my_signals, null ),
+            NavItem( NavItemAction.RightsAndObligations, R.string.rights_and_obligations, null )
+        )
+
+        if(logged) {
+            navItems.add(NavItem(NavItemAction.Profile, R.string.profile, null))
+            navItems.add(NavItem(NavItemAction.Exit, R.string.exit, null))
+        }
+        else
+            navItems.add(NavItem( NavItemAction.Login, R.string.login, null))
+
+
+        view?.navItemsRecyclerView?.layoutManager = LinearLayoutManager( this.context, RecyclerView.VERTICAL, false )
+        view?.navItemsRecyclerView?.adapter = NavItemsAdapter( navItems, object:OnMenuClickListener{
+
+            override fun onNavigateToItem(action: NavItemAction) {
+
+                view?.navItemsRecyclerView?.postDelayed( {
+                    drawerLayout?.closeDrawers()
+                    listener?.onNavigateToItem(action)
+                }, 200)
+            }
+        })
+
+
     }
 
     /**

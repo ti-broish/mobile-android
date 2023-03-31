@@ -11,6 +11,7 @@ import bg.dabulgaria.tibroish.presentation.main.MainActivity
 import bg.dabulgaria.tibroish.presentation.push.PushActionRouter
 import bg.dabulgaria.tibroish.presentation.push.PushActionType
 import bg.dabulgaria.tibroish.presentation.push.PushActionValuesShowScreen
+import com.google.gson.Gson
 import java.lang.Exception
 import java.util.logging.Logger
 import javax.inject.Inject
@@ -20,7 +21,9 @@ class ViolationSenderController @Inject constructor(
         private val violationImagesRepo: IViolationImagesRepository,
         private val violationImageUploader: IViolationImageUploader,
         private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
-        private val logger: ILogger) : IViolationSenderController {
+        private val logger: ILogger,
+        private val gson: Gson
+        ) : IViolationSenderController {
 
     override fun upload(metadata: ViolationMetadata): Pair<String,Long>  {
 
@@ -33,17 +36,23 @@ class ViolationSenderController @Inject constructor(
 
             val images = violationImagesRepo.getByViolationId(violationId)
 
-            val request = SendViolationRequest(metadata.sectionId,
-                    metadata.townId,
-                    images.map { it.serverId },
-                    metadata.description)
+            val request = SendViolationRequest(
+                section = metadata.sectionId,
+                town =metadata.townId,
+                pictures =images.map { it.serverId },
+                description = metadata.description,
+                email = metadata.email,
+                phone = metadata.phone,
+                name = metadata.names
+            )
 
-            val response = tiBroishRemoteRepository.sendViolation(request)
+            val response: VoteViolationRemote = tiBroishRemoteRepository.sendViolation(request)
 
             violation.remoteStatus = response.status
             violation.serverId = response.id
             violation.message = metadata.description
             violation.status = SendStatus.Send
+            violation.remoteViolationJson = gson.toJson(response)
 
         }
         catch (ex:Exception){

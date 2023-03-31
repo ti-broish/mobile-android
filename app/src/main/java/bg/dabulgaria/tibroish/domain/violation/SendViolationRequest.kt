@@ -14,7 +14,14 @@ class SendViolationRequest constructor(
         @SerializedName("pictures")//picture server id's
         val pictures: List<String>,
         @SerializedName("description")
-        val description: String) : Serializable
+        val description: String,
+        @SerializedName("name")
+        val name: String,
+        @SerializedName("phone")
+        val phone: String,
+        @SerializedName("email")
+        val email: String,
+) : Serializable
 
 class VoteViolationRemote(
         val id: String,

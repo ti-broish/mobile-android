@@ -36,7 +36,7 @@
     <string name="invalid_mail_or_pass">Невалиден email или парола</string>
 
     <!-- Common -->
-    <string name="invalid_email">Невалиден имейл адрес</string>
+    <string name="invalid_email">Невалиден имейл адрес.</string>
     <string name="invalid_password">Невалидна парола</string>
     <string name="register_repeat_password">Повтори парола*</string>
     <string name="register_password">Парола*</string>
@@ -98,7 +98,7 @@
     <string name="violation_description">Описание на нарушението</string>
     <string name="please_choose_town">Моля изберете населено място</string>
     <string name="please_choose_city_region">Моля изберете микрорайон</string>
-    <string name="please_type_description_more_than_d_symbols">Моля въведете описание. Описанието трябва да бъде повече от %d символа</string>
+    <string name="please_type_description_more_than_d_symbols">Моля въведете описание. Описанието трябва да бъде повече от %d символа.</string>
     <string name="protocols_list_section_id_unformatted">%d. Секция: %s</string>
     <string name="status_label">Статус:</string>
     <string name="protocol_label">Протокол:</string>
@@ -127,6 +127,7 @@
     <string name="button_close">Затвори</string>
 
     <!-- Login activity -->
+    <string name="first_middle_last_name">Име, презиме и фамилия</string>
     <string name="username">Имейл</string>
     <string name="password">Парола</string>
     <string name="login">Вход</string>
@@ -172,5 +173,10 @@
     <string name="protocol_images_info_text">Минималният брой страници за хартиен протокол е четири. Моля, добавете 4 или повече снимки на хартиен протокол. В случай, че в секцията е налична машина за гласуване, моля добавете снимки на разпечатаната от нея лента с финалния протокол.</string>
     <string name="input_section_number">Моля въведете 9 цифрен номер на секция</string>
     <string name="invalid_section_number">Невалиден номер на секция</string>
+
+    <string name="please_type_name_more_than_d_symbols">Моля въведете имена. Имената трябва да са повече от %d символа.</string>
+    <string name="please_type_phone_more_than_d_symbols">Моля телефонен номер с дължина повече от %d символа.</string>
+    <string name="email">Имейл</string>
+    <string name="telephone_number">Телефон</string>
 
 </resources>

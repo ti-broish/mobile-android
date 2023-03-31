@@ -104,6 +104,9 @@ class MainRouter @Inject constructor(@AppContext private val appContext: Context
             }
             NavItemAction.Exit -> {
             }
+            NavItemAction.Login->{
+                showLoginScreen()
+            }
         }
     }
 

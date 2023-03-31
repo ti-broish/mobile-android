@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.CheckBox
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.domain.ICountryCodesRepo
 import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
 import bg.dabulgaria.tibroish.domain.organisation.Organization
 import bg.dabulgaria.tibroish.domain.organisation.OrganizationDto
@@ -80,7 +81,9 @@ class RegistrationPresenter @Inject constructor(
     private val logger: ILogger,
     private val tiBroishRemoteRepository: ITiBroishRemoteRepository,
     private val formValidator: FormValidator,
-    private val organizationsManager: IOrganizationsManager) :
+    private val organizationsManager: IOrganizationsManager,
+    private val countryCodesRepo: ICountryCodesRepo
+    ) :
     BasePresenter<IRegisterView>(disposableHandler), IRegistrationPresenter {
     private var registrationViewData: RegistrationViewData? = null
 
@@ -94,7 +97,7 @@ class RegistrationPresenter @Inject constructor(
 
     override fun getCountryCodes(context: Context, callback: (List<CountryCode>?) -> Unit) {
         if (registrationViewData?.countryCodesData.isNullOrEmpty()) {
-            loadCountryCodesAsync(context, callback)
+            loadCountryCodesAsync(callback)
             return
         }
         callback.invoke(registrationViewData?.countryCodesData)
@@ -115,13 +118,9 @@ class RegistrationPresenter @Inject constructor(
     override fun organizationToOrganizationDto(organization: Organization) =
         OrganizationDto(organization.id, organization.name, organization.type.value)
 
-    private fun loadCountryCodesAsync(context: Context, callback: (List<CountryCode>?) -> Unit) {
-        val json: String? = AssetReader().loadJsonFromAsset(
-            "phone-codes.json",
-            context.applicationContext.assets
-        )
-        val fromJson = Gson().fromJson(json, Countries::class.java)
-        val countries = fromJson.countries
+    private fun loadCountryCodesAsync(callback: (List<CountryCode>?) -> Unit) {
+
+        val countries = countryCodesRepo.getCountryCodes()
         callback.invoke(countries)
         registrationViewData?.countryCodesData?.clear()
         if (countries != null) {

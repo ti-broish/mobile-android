@@ -41,14 +41,14 @@ class MainPresenter @Inject constructor(private val mainRouter: IMainRouter,
 
     override fun onAuthEvent(coldStart:Boolean) {
         CoroutineScope(Dispatchers.Main).launch {
-            if (!userAuthenticator.isUserLogged()) {
-
-                mainRouter.showLoginScreen()
-                view?.showNavigation(false)
-            } else if (coldStart) {
+            if (coldStart) {
 
                 mainRouter.showHomeScreen()
                 view?.showNavigation(true)
+                view?.onAuthEvent()
+            }
+            else{
+                view?.onAuthEvent()
             }
         }
     }
@@ -60,8 +60,8 @@ class MainPresenter @Inject constructor(private val mainRouter: IMainRouter,
         if(action == NavItemAction.Exit){
 
             userAuthenticator.logout()
-            mainRouter.showLoginScreen()
-            view?.showNavigation(false)
+            mainRouter.showHomeScreen()
+            view?.onAuthEvent()
             return
         }
         mainRouter.onNavigateToItem(action)

@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
 
     <uses-feature android:name="android.hardware.camera.flash" />
     <uses-feature android:name="android.hardware.camera" android:required="true" />
@@ -25,11 +26,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:testOnly="false"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:requestLegacyExternalStorage="true">
         <activity
             android:name=".presentation.main.MainActivity"
             android:screenOrientation="fullSensor"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,14 +41,17 @@
         </activity>
         <activity
             android:name=".live.FetchStreamActivity"
-            android:theme="@style/LiveAppTheme.NoActionBar" />
+            android:theme="@style/LiveAppTheme.NoActionBar"
+            android:exported="true"/>
         <activity
             android:name=".live.PrepareToStreamActivity"
-            android:theme="@style/LiveAppTheme.NoActionBar" />
+            android:theme="@style/LiveAppTheme.NoActionBar"
+            android:exported="true"/>
         <activity
             android:name=".live.BroadcastActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/BroadcastActivityTheme" />
+            android:theme="@style/BroadcastActivityTheme"
+            android:exported="true"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -67,7 +73,8 @@
             </intent-filter>
         </service>
 
-        <service android:name=".domain.image.UploaderService" />
+        <service android:name=".domain.image.UploaderService"
+            android:exported="false"/>
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"

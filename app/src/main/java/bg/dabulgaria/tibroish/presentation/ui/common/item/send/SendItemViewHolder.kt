@@ -3,11 +3,15 @@ package bg.dabulgaria.tibroish.presentation.ui.common.item.send
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.AdapterView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.providers.getSpannableStringRedWarnStar
+import bg.dabulgaria.tibroish.presentation.ui.registration.CountryCodesArrayAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import kotlinx.android.synthetic.main.fragment_user_register.*
 import kotlinx.android.synthetic.main.send_item_buttons_layout.view.*
 import kotlinx.android.synthetic.main.send_item_header_layout.view.*
 import kotlinx.android.synthetic.main.send_item_message_layout.view.*
@@ -145,6 +149,8 @@ class SendItemMessageViewHolder(itemView: View) : SendItemViewHolder(itemView) {
 
     override fun bind(position: Int, item: SendItemListItem, presenter: ISendItemPresenter) {
 
+        val context = itemView.context
+
         if (item.type != SendItemListItemType.Message)
             return
 
@@ -164,6 +170,56 @@ class SendItemMessageViewHolder(itemView: View) : SendItemViewHolder(itemView) {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
+
+        itemView.input_names?.hint = R.string.first_middle_last_name.getSpannableStringRedWarnStar(context)
+        itemView.namesEditText?.addTextChangedListener(object :TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+                s?.toString()?.let{ presenter.onNamesChanged(it) }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        itemView.input_email.hint = R.string.email.getSpannableStringRedWarnStar(context)
+        itemView.emailEditText?.addTextChangedListener(object :TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+                s?.toString()?.let{ presenter.onEmailChanged(it) }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        itemView.input_phone_number.hint = R.string.telephone_number.getSpannableStringRedWarnStar(context)
+        itemView.phoneEditText?.addTextChangedListener(object :TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+                onPhoneChanged(presenter)
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        messageItem.countryCodes?.let { countryCodes->
+            val adapter = CountryCodesArrayAdapter(itemView.context, countryCodes)
+            val dropdown = itemView.areaCodeDropdown
+            dropdown.setAdapter(adapter)
+            dropdown.setText(adapter.getDefaultSelectedItem().code, /* filter= */ false)
+            dropdown.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                dropdown.setText(adapter.getItem(position)?.code, /* filter= */ false)
+                adapter.filter.filter(null)
+                onPhoneChanged(presenter)
+            }
+        }
+
+    }
+
+    private fun onPhoneChanged(presenter: ISendItemPresenter){
+
+        val areaCode = itemView.areaCodeDropdown.text.toString()
+        val localPhone = itemView.phoneEditText.text.toString()
+        presenter.onPhoneChanged( areaCode + localPhone)
     }
 }
 

@@ -1,11 +1,9 @@
 package bg.dabulgaria.tibroish.domain.protocol
 
 import androidx.room.*
-import bg.dabulgaria.tibroish.domain.protocol.image.ProtocolImage
 import bg.dabulgaria.tibroish.domain.send.SendStatus
 import bg.dabulgaria.tibroish.domain.send.SendStatusTypeConverter
 import java.io.Serializable
-import java.util.*
 
 
 class ProtocolRemoteStatusConverter {
@@ -24,7 +22,10 @@ open class Protocol constructor(@PrimaryKey(autoGenerate = true)
                                 var uuid: String = "",
                                 var serverId: String = "",
                                 var status: SendStatus = SendStatus.New,
-                                var remoteStatus: ProtocolStatusRemote?= null) : Serializable {
+                                var remoteStatus: ProtocolStatusRemote?= null,
+                                @ColumnInfo(name = "remoteProtocolJson")
+                                var remoteProtocolJson: String? = null
+) : Serializable {
 
     constructor(source: Protocol) : this(source.id,
             source.uuid,

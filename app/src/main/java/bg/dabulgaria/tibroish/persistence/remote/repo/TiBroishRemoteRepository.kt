@@ -14,6 +14,7 @@ import bg.dabulgaria.tibroish.domain.protocol.SendProtocolRequest
 import bg.dabulgaria.tibroish.domain.push.SendTokenRequest
 import bg.dabulgaria.tibroish.domain.push.SendTokenResponse
 import bg.dabulgaria.tibroish.domain.stream.StreamRequest
+import bg.dabulgaria.tibroish.domain.user.IUserAuthenticator
 import bg.dabulgaria.tibroish.domain.user.SendCheckInRequest
 import bg.dabulgaria.tibroish.domain.user.SendCheckInResponse
 import bg.dabulgaria.tibroish.domain.user.User
@@ -26,8 +27,11 @@ import bg.dabulgaria.tibroish.persistence.remote.model.SectionsRequestParams
 import bg.dabulgaria.tibroish.persistence.remote.model.TownsRequestParams
 import javax.inject.Inject
 
-class TiBroishRemoteRepository @Inject constructor(private val apiController: TiBroishApiController,
-                                                   private val authenticator: IRemoteRepoAuthenticator)
+class TiBroishRemoteRepository @Inject constructor(
+    private val apiController: TiBroishApiController,
+    private val authenticator: IRemoteRepoAuthenticator,
+    private val userAuthenticator: IUserAuthenticator
+)
     : ITiBroishRemoteRepository {
 
     override fun getOrganisations(): List<Organization> {
@@ -42,18 +46,27 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
 
     override fun getCountries(): List<CountryRemote> {
 
-        val list = authenticator.executeCall { token ->
-            apiController.getCountries(getAuthorization(token))
+        val list = if(userAuthenticator.isUserLogged()) {
+            authenticator.executeCall { token ->
+                apiController.getCountries(getAuthorization(token))
+            }
         }
+        else
+            apiController.getCountries().execute().body()!!
 
         return list!!.sortedBy { it.name }
     }
 
     override fun getElectionRegions(): List<ElectionRegionRemote> {
 
-        val list = authenticator.executeCall { token ->
-            apiController.getElectionRegions(getAuthorization(token))
-        }!!
+
+        val list = if(userAuthenticator.isUserLogged()) {
+            authenticator.executeCall { token ->
+                apiController.getElectionRegions(getAuthorization(token))
+            }!!
+        }
+        else
+            apiController.getElectionRegions().execute().body()!!
 
         list.map { it.municipalities = it.municipalities.sortedBy { munic -> munic.name } }
 
@@ -62,12 +75,22 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
 
     override fun getTowns(params: TownsRequestParams): List<TownRemote> {
 
-        val towns = authenticator.executeCall({ pParams, token ->
-            apiController.getTowns(getAuthorization(token),
+        val towns = if(userAuthenticator.isUserLogged()) {
+            authenticator.executeCall({ pParams, token ->
+                apiController.getTowns(
+                    getAuthorization(token),
                     pParams.countryCode,
                     pParams.electionRegionCode,
-                    pParams.municipalityCode)
-        }, params)!!
+                    pParams.municipalityCode
+                )
+            }, params)!!
+        }
+        else
+            apiController.getTowns(
+                params.countryCode,
+                params.electionRegionCode,
+                params.municipalityCode
+            ).execute().body()!!
 
         towns.map { it.cityRegions = it.cityRegions?.sortedBy { region -> region.code } }
         return towns.sortedBy { it.name }
@@ -75,11 +98,22 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
 
     override fun getSections(params: SectionsRequestParams): List<SectionRemote> {
 
-        val sections = authenticator.executeCall({ pParams, token ->
-            apiController.getSections(getAuthorization(token),
-                    pParams.townId,
-                    pParams.cityRegionCode)
-        }, params)!!
+        val sections =
+            if(userAuthenticator.isUserLogged()) {
+                authenticator.executeCall({ pParams, token ->
+                    apiController.getSections(
+                        getAuthorization(token),
+                        pParams.townId,
+                        pParams.cityRegionCode
+                    )
+                }, params)!!
+            }
+            else{
+                apiController.getSections(
+                    params.townId,
+                    params.cityRegionCode
+                ).execute().body()!!
+            }
 
         return sections.sortedBy { it.code }
     }
@@ -104,22 +138,37 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
 
     override fun uploadImage(imageRequest: UploadImageRequest): UploadImageResponse {
 
-        return authenticator.executeCall({ pParams, token ->
-            apiController.uploadImage(getAuthorization(token), pParams)
-        }, imageRequest)!!
+        return if(userAuthenticator.isUserLogged()) {
+            authenticator.executeCall({ pParams, token ->
+                apiController.uploadImage(getAuthorization(token), pParams)
+            }, imageRequest)!!
+        }
+        else{
+            apiController.uploadImage(imageRequest).execute().body()!!
+        }
     }
 
     override fun sendProtocol(request: SendProtocolRequest): ProtocolRemote {
 
-        return authenticator.executeCall({ pParams, token ->
-            apiController.sendProtocol(getAuthorization(token), pParams)
-        }, request)!!
+        return if(userAuthenticator.isUserLogged()) {
+            authenticator.executeCall({ pParams, token ->
+                apiController.sendProtocol(getAuthorization(token), pParams)
+            }, request)!!
+        }
+        else{
+            apiController.sendProtocol(request).execute().body()!!
+        }
     }
 
     override fun sendViolation(request: SendViolationRequest): VoteViolationRemote {
-        return authenticator.executeCall({ pParams, token ->
-            apiController.sendViolation(getAuthorization(token), pParams)
-        }, request)!!
+
+        return if(userAuthenticator.isUserLogged()){
+            authenticator.executeCall({ pParams, token ->
+                apiController.sendViolation(getAuthorization(token), pParams)
+                                      }, request)!!
+        }
+        else
+            apiController.sendViolation(request).execute().body()!!
     }
 
     override fun getUserProtocols(): List<ProtocolRemote> {
@@ -142,9 +191,15 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
 
     override fun sendFCMToken(request: SendTokenRequest): SendTokenResponse {
 
-        return authenticator.executeCall({ param, token ->
-            apiController.sendFCMToken(getAuthorization(token), param)
-        }, request)!!
+        return if(userAuthenticator.isUserLogged()) {
+
+            authenticator.executeCall({ param, token ->
+                apiController.sendFCMToken(getAuthorization(token), param)
+            }, request)!!
+        }
+        else{
+            apiController.sendFCMToken(request).execute().body()!!
+        }
     }
 
     override fun getUserStream(): UserStreamModel {
@@ -161,4 +216,5 @@ class TiBroishRemoteRepository @Inject constructor(private val apiController: Ti
     }
 
     private fun getAuthorization(idToken: String): String = "Bearer $idToken"
+
 }
