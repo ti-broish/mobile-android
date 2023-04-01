@@ -2,9 +2,11 @@ package bg.dabulgaria.tibroish.presentation.ui.violation.list
 
 import android.os.Bundle
 import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
+import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.domain.violation.IViolationRepository
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.infrastructure.schedulers.ISchedulersProvider
+import bg.dabulgaria.tibroish.persistence.local.Logger
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
@@ -33,6 +35,7 @@ class ViolationsListPresenter @Inject constructor(
     private val mainRouter: IMainRouter,
     private val violationRepository: IViolationRepository,
     private val gson: Gson,
+    private val logger: ILogger
     )
     : BasePresenter<IViolationsListView>(dispHandler), IViolationsListPresenter {
 
@@ -58,8 +61,16 @@ class ViolationsListPresenter @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val local = violationRepository.getAll()
-                val userViolations = local.map {
-                    gson.fromJson(it.remoteViolationJson, VoteViolationRemote::class.java)
+                val userViolations = mutableListOf<VoteViolationRemote>()
+
+                local.forEach {
+                    if(!it.remoteViolationJson.isNullOrEmpty()) {
+                        val violationRemote = gson.fromJson(it.remoteViolationJson, VoteViolationRemote::class.java)
+
+                        violationRemote?.section?.let {
+                            userViolations.add(violationRemote)
+                        }
+                    }
                 }
                 viewData?.userViolations = userViolations
                 viewData?.state = State.STATE_LOADED_SUCCESS
@@ -67,6 +78,8 @@ class ViolationsListPresenter @Inject constructor(
                     successCallback.invoke(userViolations)
                 }
             } catch (exception: Exception) {
+
+                logger.e(TAG, exception)
                 viewData?.state = State.STATE_LOADED_FAILURE
                 withContext(Dispatchers.Main) {
                     onError(exception)
@@ -110,5 +123,9 @@ class ViolationsListPresenter @Inject constructor(
                 State.STATE_LOADING_INITIAL
             )
         }
+    }
+
+    companion object{
+        val TAG = ViolationsListPresenter::class.java.simpleName
     }
 }

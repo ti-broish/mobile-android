@@ -143,9 +143,12 @@ abstract class SendItemInteractor(
 
         if(supportsMessage) {
             newViewData.items.add(
-                SendItemListItemMessage(messageLabel,
-                    newViewData.message ?: "",
-                    newViewData.countryCodes
+                SendItemListItemMessage(labelText = messageLabel,
+                    messageText = newViewData.message ?: "",
+                    names = newViewData.names,
+                    phone= newViewData.phone,
+                    email = newViewData.email,
+                    countryCodes = newViewData.countryCodes
                 )
             )
             newViewData.imagesIndexesOffset++

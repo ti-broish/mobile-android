@@ -50,6 +50,9 @@ class SendItemListItemSendSuccess(val messageText: String)
 class SendItemListItemMessage(
     val labelText:String,
     val messageText: String,
+    val names: String,
+    val phone: String,
+    val email: String,
     val countryCodes:List<CountryCode>?,
 )
     : SendItemListItem(SendItemListItemType.Message), Serializable

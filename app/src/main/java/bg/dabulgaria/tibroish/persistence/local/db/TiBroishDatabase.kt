@@ -34,6 +34,14 @@ abstract class TiBroishDatabase : RoomDatabase() {
 val MIGRATION_1_2 = object : Migration(1, 2) {
 
     override fun migrate(database: SupportSQLiteDatabase) {
+
+
+        database.execSQL("DELETE FROM ProtocolImage")
+        database.execSQL("DELETE FROM Protocol")
+
+        database.execSQL("DELETE FROM ViolationImage")
+        database.execSQL("DELETE FROM VoteViolation")
+
         database.execSQL("ALTER TABLE Protocol ADD COLUMN remoteProtocolJson TEXT")
 
         database.execSQL("ALTER TABLE VoteViolation ADD COLUMN names TEXT")

@@ -4,11 +4,14 @@ import android.os.Bundle
 import bg.dabulgaria.tibroish.domain.organisation.ITiBroishRemoteRepository
 import bg.dabulgaria.tibroish.domain.protocol.IProtocolsRepository
 import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
+import bg.dabulgaria.tibroish.domain.providers.ILogger
+import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.presentation.base.BasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IBasePresenter
 import bg.dabulgaria.tibroish.presentation.base.IDisposableHandler
 import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.ui.profile.ProfileConstants.Companion.VIEW_DATA_KEY
+import bg.dabulgaria.tibroish.presentation.ui.violation.list.ViolationsListPresenter
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +35,7 @@ class ProtocolsPresenter @Inject constructor(
     private val mainRouter: IMainRouter,
     private val protocolsRepository: IProtocolsRepository,
     private val gson: Gson,
+    private val logger: ILogger,
 ) : BasePresenter<IProtocolsView>(disposableHandler),
     IProtocolsPresenter {
 
@@ -61,16 +65,28 @@ class ProtocolsPresenter @Inject constructor(
         }
         CoroutineScope(Dispatchers.IO).launch {
             try {
+
                 val localProtocols = protocolsRepository.getAll()
-                val userProtocols = localProtocols.map {
-                    gson.fromJson(it.remoteProtocolJson, ProtocolRemote::class.java)
+                val userProtocols = mutableListOf<ProtocolRemote>()
+
+                localProtocols.forEach {
+
+                    if(!it.remoteProtocolJson.isNullOrEmpty()) {
+                        val remote = gson.fromJson(it.remoteProtocolJson, ProtocolRemote::class.java)
+
+                        remote?.section?.let {
+                            userProtocols.add(remote)
+                        }
+                    }
                 }
+
                 viewData?.userProtocols = userProtocols
                 viewData?.state = State.STATE_LOADED_SUCCESS
                 withContext(Dispatchers.Main) {
                     successCallback.invoke(userProtocols)
                 }
             } catch (exception: Exception) {
+                logger.e(ViolationsListPresenter.TAG, exception)
                 viewData?.state = State.STATE_LOADED_FAILURE
                 withContext(Dispatchers.Main) {
                     onError(exception)

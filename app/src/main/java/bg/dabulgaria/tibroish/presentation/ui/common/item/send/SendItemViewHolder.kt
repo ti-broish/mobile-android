@@ -171,6 +171,7 @@ class SendItemMessageViewHolder(itemView: View) : SendItemViewHolder(itemView) {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
+        itemView.namesEditText?.setText(messageItem.names)
         itemView.input_names?.hint = R.string.first_middle_last_name.getSpannableStringRedWarnStar(context)
         itemView.namesEditText?.addTextChangedListener(object :TextWatcher{
             override fun afterTextChanged(s: Editable?) {
@@ -181,6 +182,7 @@ class SendItemMessageViewHolder(itemView: View) : SendItemViewHolder(itemView) {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
+        itemView.emailEditText?.setText(messageItem.email)
         itemView.input_email.hint = R.string.email.getSpannableStringRedWarnStar(context)
         itemView.emailEditText?.addTextChangedListener(object :TextWatcher{
             override fun afterTextChanged(s: Editable?) {
@@ -210,6 +212,16 @@ class SendItemMessageViewHolder(itemView: View) : SendItemViewHolder(itemView) {
                 dropdown.setText(adapter.getItem(position)?.code, /* filter= */ false)
                 adapter.filter.filter(null)
                 onPhoneChanged(presenter)
+            }
+
+            if(messageItem.phone.isNotEmpty()) {
+                val countryCode = countryCodes.find { messageItem.phone.startsWith(it.code ?: "WER") }
+
+                countryCode?.code?.let {
+                    val phone = messageItem.phone.replace(it, "")
+                    dropdown.setText(it)
+                    itemView.phoneEditText.setText(phone)
+                }
             }
         }
 
