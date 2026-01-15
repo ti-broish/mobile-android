@@ -1,7 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'org.openapi.generator'
 apply plugin: 'com.google.gms.google-services'
@@ -33,11 +34,11 @@ android {
         }
     }
 
-    compileSdkVersion 33
+    compileSdkVersion 34
     defaultConfig {
         applicationId "bg.dabulgaria.tibroish"
         minSdkVersion 22
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode 22
         versionName "2.0.1.$versionCode"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
@@ -58,12 +59,18 @@ android {
             signingConfig = signingConfigs.AppSigning
         }
     }
+
+    buildFeatures {
+        viewBinding true
+    }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.current().getMajorVersion()
+        targetCompatibility JavaVersion.current().getMajorVersion()
     }
 
     flavorDimensions "free"
+
     productFlavors {
 
         def productionSigning = signingConfigs.ProdAppSigning
@@ -86,11 +93,14 @@ android {
             signingConfig stagingSigning
         }
     }
+
     testOptions {
         unitTests {
             includeAndroidResources = true
         }
     }
+
+    namespace 'bg.dabulgaria.tibroish'
 }
 
 dependencies {
@@ -178,7 +188,6 @@ dependencies {
 }
 
 repositories {
-    jcenter()
     mavenCentral()
 }
 

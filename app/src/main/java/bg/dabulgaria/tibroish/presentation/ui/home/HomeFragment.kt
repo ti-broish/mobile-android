@@ -23,7 +23,7 @@ import javax.inject.Inject
 class HomeFragment : BaseFragment() {
 
     @Inject
-    protected lateinit var mainRouter: IMainRouter
+    lateinit var mainRouter: IMainRouter
     @Inject
     lateinit var logger: ILogger
     @Inject

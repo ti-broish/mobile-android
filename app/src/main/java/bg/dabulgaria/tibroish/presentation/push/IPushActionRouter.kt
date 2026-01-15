@@ -31,6 +31,9 @@ class PushActionRouter @Inject constructor(private val logger: ILogger,
         when (PushActionType[intent.extras?.getString(ACTION_TYPE_KEY) ?: ""]) {
 
             PushActionType.ShowScreen -> showScreen(intent)
+            else -> {
+                // implement if needed
+            }
         }
     }
 
@@ -48,6 +51,9 @@ class PushActionRouter @Inject constructor(private val logger: ILogger,
             PushActionValuesShowScreen.ViolationDetails -> showViolationDetails(entityId, detailMessage)
             PushActionValuesShowScreen.SendProtocol -> mainRouter.showAddProtocol(entityDBId)
             PushActionValuesShowScreen.SendViolation -> mainRouter.showSendViolation(entityDBId)
+            else -> {
+                // implement if needed
+            }
         }
     }
 

@@ -16,7 +16,7 @@ import com.google.android.material.button.MaterialButton
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
-import kotlinx.android.synthetic.main.activity_fetch_stream.*
+import bg.dabulgaria.tibroish.databinding.ActivityFetchStreamBinding
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
@@ -39,18 +39,19 @@ class FetchStreamActivity : BaseActivity(), HasAndroidInjector {
     private lateinit var logoutButtonView: MaterialButton
     private lateinit var streamingDisabledJustificationView: TextView
     private lateinit var tryAgainButtonView: Button
+    private lateinit var binding: ActivityFetchStreamBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         makeFullScreen()
         setContentView(R.layout.activity_fetch_stream)
 
-        progressBarView = streaming_disabled_progress_bar
-        disabledExplanationContainer = disabled_explanation_container
-        disabledExplanationScrollView = disabled_explanation_scroll_view
-        logoutButtonView = logout_button
-        streamingDisabledJustificationView = streaming_disabled_message_id
-        tryAgainButtonView = try_again_button
+        progressBarView = binding.streamingDisabledProgressBar
+        disabledExplanationContainer = binding.disabledExplanationContainer
+        disabledExplanationScrollView = binding.disabledExplanationScrollView
+        logoutButtonView = binding.logoutButton
+        streamingDisabledJustificationView = binding.streamingDisabledMessageId
+        tryAgainButtonView = binding.tryAgainButton
 
         logoutButtonView.setOnClickListener {
             loginActivityLoader.logout()

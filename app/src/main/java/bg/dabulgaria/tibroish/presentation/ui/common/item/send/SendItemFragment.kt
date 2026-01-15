@@ -5,24 +5,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
 import bg.dabulgaria.tibroish.presentation.navigation.BackHandlerInterface
 import bg.dabulgaria.tibroish.presentation.navigation.BackHandlerObject
-import bg.dabulgaria.tibroish.presentation.ui.common.DialogUtil
-import bg.dabulgaria.tibroish.presentation.ui.common.IDialogUtil
 import bg.dabulgaria.tibroish.presentation.ui.common.preview.images.CloseListener
 import bg.dabulgaria.tibroish.presentation.ui.common.preview.images.PreviewImage
-import bg.dabulgaria.tibroish.presentation.ui.common.preview.images.PreviewImageCheckListener
 import bg.dabulgaria.tibroish.presentation.ui.common.preview.images.PreviewImageDeleteListener
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerFragment
-import kotlinx.android.synthetic.main.fragment_photo_picker.*
-import kotlinx.android.synthetic.main.fragment_send_item.*
-import kotlinx.android.synthetic.main.fragment_send_item.previewImagesView
-import javax.inject.Inject
+import bg.dabulgaria.tibroish.databinding.FragmentPhotoPickerBinding
+import bg.dabulgaria.tibroish.databinding.FragmentSendItemBinding
 
 interface ISendItemView : IBaseView {
 
@@ -40,6 +34,18 @@ open class SendItemFragment<SendPresenter : ISendItemPresenter> constructor()
 
     private var backHandlerInterface: BackHandlerInterface? = null
     lateinit var adapter: SendItemAdapter
+
+    private var _sendItemBinding: FragmentSendItemBinding? = null
+    private val sendItemBinding get() = _sendItemBinding!!
+
+    private var _photoPickerBinding: FragmentPhotoPickerBinding? = null
+    private val photoPickerBinding get() = _photoPickerBinding!!
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _sendItemBinding = null
+        _photoPickerBinding = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +65,7 @@ open class SendItemFragment<SendPresenter : ISendItemPresenter> constructor()
         super.onActivityCreated(savedInstanceState)
 
         adapter = SendItemAdapter(presenter)
-        sendItemRecyclerView.adapter = adapter
+        sendItemBinding.sendItemRecyclerView.adapter = adapter
         val layoutManager = GridLayoutManager(this.activity, 3)
 
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -76,7 +82,7 @@ open class SendItemFragment<SendPresenter : ISendItemPresenter> constructor()
             }
         }
 
-        sendItemRecyclerView.layoutManager = layoutManager
+        sendItemBinding.sendItemRecyclerView.layoutManager = layoutManager
     }
 
     override fun onStart() {
@@ -92,7 +98,7 @@ open class SendItemFragment<SendPresenter : ISendItemPresenter> constructor()
 
     override fun handleBackPressed(): Boolean {
 
-        return presenter.onHandleBack(previewImagesView?.getPosition())
+        return presenter.onHandleBack(photoPickerBinding.previewImagesView.getPosition())
     }
 
     override fun setData(data: SendItemViewData) {
@@ -101,11 +107,11 @@ open class SendItemFragment<SendPresenter : ISendItemPresenter> constructor()
         adapter.list.addAll(data.items)
         adapter.notifyDataSetChanged()
 
-        previewImagesView?.visibility = if(data.imagePreviewOpen) View.VISIBLE else View.GONE
+        photoPickerBinding.previewImagesView.visibility = if(data.imagePreviewOpen) View.VISIBLE else View.GONE
 
         if(data.imagePreviewOpen){
 
-            previewImagesView?.bindView(imagesList = data.entityItem?.images.orEmpty(),
+            photoPickerBinding.previewImagesView.bindView(imagesList = data.entityItem?.images.orEmpty(),
                     initialPosition = data.previewImageIndex,
                     closeListener = object: CloseListener {
                         override fun onClose(lastPosition: Int) {
@@ -138,8 +144,8 @@ open class SendItemFragment<SendPresenter : ISendItemPresenter> constructor()
     override fun onLoadingStateChange(isLoading: Boolean) {
 
         val visibility = if (isLoading) View.VISIBLE else View.GONE
-        sendItemProgressBar.visibility = visibility
-        sendItemProcessingOverlay.visibility = visibility
+        sendItemBinding.sendItemProgressBar.visibility = visibility
+        sendItemBinding.sendItemProcessingOverlay.visibility = visibility
     }
 
     override fun onError(errorMessage: String) {

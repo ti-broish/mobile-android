@@ -7,12 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.live.model.UserStreamModel
 import bg.dabulgaria.tibroish.live.utils.makeFullScreen
-import kotlinx.android.synthetic.main.activity_prepare_to_stream.*
+import bg.dabulgaria.tibroish.databinding.ActivityPrepareToStreamBinding
 
 class PrepareToStreamActivity : AppCompatActivity() {
 
 
     private lateinit var userStream: UserStreamModel
+    private lateinit var binding: ActivityPrepareToStreamBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +22,7 @@ class PrepareToStreamActivity : AppCompatActivity() {
 
         resolveIntent()
 
-        continue_button.setOnClickListener() {
+        binding.continueButton.setOnClickListener() {
             BroadcastActivity.startWithParameters(this@PrepareToStreamActivity, userStream)
             finish()
         }

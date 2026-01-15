@@ -15,17 +15,13 @@ import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.providers.ILogger
 import bg.dabulgaria.tibroish.infrastructure.permission.IPermissionResponseHandler
 import bg.dabulgaria.tibroish.presentation.base.BaseActivity
-import bg.dabulgaria.tibroish.presentation.event.CameraPhotoTakenEvent
 import bg.dabulgaria.tibroish.presentation.navigation.NavigationDrawerFragment
 import bg.dabulgaria.tibroish.presentation.providers.IResourceProvider
 import bg.dabulgaria.tibroish.presentation.push.IPushActionRouter
-import bg.dabulgaria.tibroish.presentation.ui.common.item.send.SendItemInteractor
-import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerConstants
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
-import kotlinx.android.synthetic.main.activity_main.*
-import org.greenrobot.eventbus.EventBus
+import bg.dabulgaria.tibroish.databinding.ActivityMainBinding
 import javax.inject.Inject
 
 class MainActivity : BaseActivity(),
@@ -41,9 +37,9 @@ class MainActivity : BaseActivity(),
     @Inject
     lateinit var permissionsResponseHandler: IPermissionResponseHandler
     @Inject
-    protected lateinit var pushActionRouter: IPushActionRouter
+    lateinit var pushActionRouter: IPushActionRouter
     @Inject
-    protected lateinit var logger: ILogger
+    lateinit var logger: ILogger
 
     private var drawerLayout :DrawerLayout? = null
     private var navigationDrawerFragment :NavigationDrawerFragment ? = null
@@ -52,6 +48,7 @@ class MainActivity : BaseActivity(),
 
     private var isStarted = false
     private var lastIntent :Intent? = null
+    private lateinit var binding: ActivityMainBinding
 
     //region AppCompatActivity overrides
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -179,8 +176,8 @@ class MainActivity : BaseActivity(),
     override fun showProcessing(processing: Boolean) {
 
         val visibility = if(processing) View.VISIBLE else View.GONE
-        mainActivityProcessOverlay.visibility = visibility
-        mainActivityProgressBar.visibility = visibility
+        binding.mainActivityProcessOverlay.visibility = visibility
+        binding.mainActivityProgressBar.visibility = visibility
     }
 
     override fun showDismissableDialog(message: String, dismissCallback: () -> Unit) {

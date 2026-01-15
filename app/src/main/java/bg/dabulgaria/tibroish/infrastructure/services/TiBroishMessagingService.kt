@@ -20,10 +20,10 @@ import javax.inject.Inject
 class TiBroishMessagingService : FirebaseMessagingService() {
 
     @Inject
-    protected lateinit var pushTokenSender: IPushTokenSender
+    lateinit var pushTokenSender: IPushTokenSender
 
     @Inject
-    protected lateinit var resourceProvider: IResourceProvider
+    lateinit var resourceProvider: IResourceProvider
 
     override fun onCreate() {
         AndroidInjection.inject(this)

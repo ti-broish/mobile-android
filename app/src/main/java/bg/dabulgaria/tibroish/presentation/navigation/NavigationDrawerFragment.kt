@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.domain.user.IUserAuthenticator
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_navigation_drawer.*
-import kotlinx.android.synthetic.main.fragment_navigation_drawer.view.*
+import bg.dabulgaria.tibroish.databinding.FragmentNavigationDrawerBinding
+
 import javax.inject.Inject
 
 /**
@@ -36,7 +36,15 @@ class NavigationDrawerFragment : Fragment() {
     private var currentSelectedPosition = 0
 
     @Inject
-    protected lateinit var userAuthenticator: IUserAuthenticator
+    lateinit var userAuthenticator: IUserAuthenticator
+
+    private var _binding: FragmentNavigationDrawerBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onAttach(context: Context) {
 
@@ -63,6 +71,7 @@ class NavigationDrawerFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        _binding = FragmentNavigationDrawerBinding.bind(view)
 
         reloadNavigationItems()
     }
@@ -159,7 +168,7 @@ class NavigationDrawerFragment : Fragment() {
     fun setEnabled(enabled:Boolean){
 
         drawerToggle?.setDrawerIndicatorEnabled(enabled)
-        navItemsRecyclerView?.visibility = if(enabled) View.VISIBLE else View.GONE
+        binding.navItemsRecyclerView?.visibility = if(enabled) View.VISIBLE else View.GONE
         actionBar?.setHomeButtonEnabled(enabled)
         actionBar?.setDisplayHomeAsUpEnabled(enabled)
     }
@@ -183,19 +192,17 @@ class NavigationDrawerFragment : Fragment() {
         else
             navItems.add(NavItem( NavItemAction.Login, R.string.login, null))
 
-
-        view?.navItemsRecyclerView?.layoutManager = LinearLayoutManager( this.context, RecyclerView.VERTICAL, false )
-        view?.navItemsRecyclerView?.adapter = NavItemsAdapter( navItems, object:OnMenuClickListener{
+        binding.navItemsRecyclerView.layoutManager = LinearLayoutManager( this.context, RecyclerView.VERTICAL, false )
+        binding.navItemsRecyclerView.adapter = NavItemsAdapter( navItems, object:OnMenuClickListener {
 
             override fun onNavigateToItem(action: NavItemAction) {
 
-                view?.navItemsRecyclerView?.postDelayed( {
+                binding.navItemsRecyclerView.postDelayed( {
                     drawerLayout?.closeDrawers()
                     listener?.onNavigateToItem(action)
                 }, 200)
             }
         })
-
 
     }
 

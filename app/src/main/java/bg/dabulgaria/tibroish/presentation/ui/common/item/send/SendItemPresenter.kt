@@ -401,6 +401,10 @@ constructor(private val schedulersProvider: ISchedulersProvider,
             }
 
             SendStatus.Sending -> view?.onLoadingStateChange(true)
+
+            else -> {
+                // implement if needed
+            }
         }
     }
 

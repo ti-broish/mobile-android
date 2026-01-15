@@ -27,9 +27,8 @@ import com.pedro.rtplibrary.rtmp.RtmpCamera1
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
-import kotlinx.android.synthetic.main.activity_broadcast.*
+import bg.dabulgaria.tibroish.databinding.ActivityBroadcastBinding
 import net.ossrs.rtmp.ConnectCheckerRtmp
-import java.util.*
 import javax.inject.Inject
 import kotlin.math.min
 
@@ -54,6 +53,7 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
     private var refreshTimer: Handler? = null
 
     private val requiredPermissions = arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
+    private lateinit var binding: ActivityBroadcastBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,18 +66,19 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
         resolveIntent()
 
 
-        action_button.setOnClickListener {
+        binding.actionButton.setOnClickListener {
             if (rtmpCamera1?.isStreaming == false) {
                 startStream()
             } else {
                 stopStream()
             }
         }
-        overlay_in_call.setOnTouchListener { _, _ -> true }
 
-        flashlight.setOnCheckedChangeListener { _, _ -> rtmpCamera1?.switchFlashLight() }
+        binding.overlayInCall.setOnTouchListener { _, _ -> true }
 
-        more.setOnClickListener {
+        binding.flashlight.setOnCheckedChangeListener { _, _ -> rtmpCamera1?.switchFlashLight() }
+
+        binding.more.setOnClickListener {
             showPopup(it)
         }
     }
@@ -89,15 +90,17 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
 
         val layoutParameters = cameraPreviewSizes?.let { ConstraintLayout.LayoutParams(it.first, it.second) }
                 ?: ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT)
-        layoutParameters.startToStart = surfaceViewContainer.id
-        layoutParameters.topToTop = surfaceViewContainer.id
-        layoutParameters.endToEnd = surfaceViewContainer.id
-        layoutParameters.bottomToBottom = surfaceViewContainer.id
+
+        val surfaceViewContainerId = binding.surfaceViewContainer.id
+        layoutParameters.startToStart = surfaceViewContainerId
+        layoutParameters.topToTop = surfaceViewContainerId
+        layoutParameters.endToEnd = surfaceViewContainerId
+        layoutParameters.bottomToBottom = surfaceViewContainerId
         videoStreamSurfaceView.layoutParams = layoutParameters
-        surfaceViewContainer.removeAllViews()
+        binding.surfaceViewContainer.removeAllViews()
         videoStreamSurfaceView.holder.addCallback(this@BroadcastActivity)
         videoStreamSurfaceView.id = View.generateViewId()
-        surfaceViewContainer.addView(videoStreamSurfaceView)
+        binding.surfaceViewContainer.addView(videoStreamSurfaceView)
 
         return videoStreamSurfaceView
     }
@@ -107,7 +110,7 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
         if (quality != null) {
             if (prepareEncoders(quality) == true) {
                 rtmpCamera1?.startStream(userStream.streamUrl)
-                progress_bar.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.VISIBLE
             } else {
                 Toast.makeText(this, R.string.stream_unrecoverable_error, Toast.LENGTH_LONG).show()
             }
@@ -150,9 +153,9 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
         super.onStart()
 
         if (isCallActive()) {
-            overlay_in_call.visibility = View.VISIBLE
+            binding.overlayInCall.visibility = View.VISIBLE
         } else {
-            overlay_in_call.visibility = View.GONE
+            binding.overlayInCall.visibility = View.GONE
             Handler(Looper.getMainLooper()).postDelayed({
                 checkPermissions()
             }, 500L)
@@ -187,11 +190,11 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
     }
 
     private fun stopStream() {
-        action_button.setImageResource(R.drawable.ic_start_button)
+        binding.actionButton.setImageResource(R.drawable.ic_start_button)
         rtmpCamera1?.stopStream()
 
-        live_marker.visibility = View.GONE
-        counter.stop()
+        binding.liveMarker.visibility = View.GONE
+        binding.counter.stop()
     }
 
     override fun onAuthSuccessRtmp() {
@@ -202,22 +205,22 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
 
     override fun onConnectionSuccessRtmp() {
         runOnUiThread {
-            action_button.setImageResource(R.drawable.ic_stop_button)
+            binding.actionButton.setImageResource(R.drawable.ic_stop_button)
             refreshTimer?.removeCallbacksAndMessages(null)
             dialog?.dismiss()
-            live_marker.visibility = View.VISIBLE
-            counter.base = SystemClock.elapsedRealtime()
-            counter.start()
-            progress_bar.visibility = View.GONE
+            binding.liveMarker.visibility = View.VISIBLE
+            binding.counter.base = SystemClock.elapsedRealtime()
+            binding.counter.start()
+            binding.progressBar.visibility = View.GONE
         }
     }
 
     override fun onConnectionFailedRtmp(reason: String) {
         runOnUiThread {
-            live_marker.visibility = View.GONE
-            action_button.setImageResource(R.drawable.ic_start_button)
-            counter.stop()
-            progress_bar.visibility = View.GONE
+            binding.liveMarker.visibility = View.GONE
+            binding.actionButton.setImageResource(R.drawable.ic_start_button)
+            binding.counter.stop()
+            binding.progressBar.visibility = View.GONE
             openDisconnectedDialog()
         }
 
@@ -228,10 +231,10 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
 
     override fun onDisconnectRtmp() {
         runOnUiThread {
-            live_marker.visibility = View.GONE
-            action_button.setImageResource(R.drawable.ic_start_button)
-            counter.stop()
-            progress_bar.visibility = View.GONE
+            binding.liveMarker.visibility = View.GONE
+            binding.actionButton.setImageResource(R.drawable.ic_start_button)
+            binding.counter.stop()
+            binding.progressBar.visibility = View.GONE
         }
 
     }
@@ -243,8 +246,8 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
     override fun surfaceDestroyed(p0: SurfaceHolder) {
         if (rtmpCamera1?.isStreaming == true) {
             rtmpCamera1?.stopStream()
-            action_button.setImageResource(R.drawable.ic_start_button)
-            counter.stop()
+            binding.actionButton.setImageResource(R.drawable.ic_start_button)
+            binding.counter.stop()
         }
         rtmpCamera1?.stopPreview()
     }
@@ -323,8 +326,8 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
     private fun getScaledPreviewSizeBasedOnCamera(): Pair<Int, Int>? {
         val originalPreviewSize = getPreviewSizeBasedOnCamera()
         return originalPreviewSize?.let { (originalWidth, originalHeight) ->
-            val targetWidth = surfaceViewContainer.width
-            val targetHeight = surfaceViewContainer.height
+            val targetWidth = binding.surfaceViewContainer.width
+            val targetHeight = binding.surfaceViewContainer.height
             val scaleFactor = min(targetWidth.toDouble() / originalWidth.toDouble(), targetHeight.toDouble() / originalHeight.toDouble())
             return Pair((originalWidth.toDouble() * scaleFactor).toInt(), (originalHeight.toDouble() * scaleFactor).toInt())
         }
@@ -474,7 +477,7 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
     fun onAllPermissionsGranted() {
         val videoStreamSurfaceView = initSurfaceView()
         videoStreamSurfaceView.visibility = View.VISIBLE
-        permission_rationale_container.visibility = View.GONE
+        binding.permissionRationaleContainer.visibility = View.GONE
         havePermissions = true
 
         rtmpCamera1 = RtmpCamera1(videoStreamSurfaceView, this@BroadcastActivity).apply {
@@ -490,9 +493,9 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
 
     fun onPermissionNotGranted(permission: String) {
         havePermissions = false
-        permission_rationale_container.visibility = View.VISIBLE
-        surfaceViewContainer.removeAllViews()
-        allow_permissions_button.setOnClickListener {
+        binding.permissionRationaleContainer.visibility = View.VISIBLE
+        binding.surfaceViewContainer.removeAllViews()
+        binding.allowPermissionsButton.setOnClickListener {
             startActivity(Intent().apply {
                 action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                 data = Uri.fromParts("package", packageName, null)
