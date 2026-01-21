@@ -4,47 +4,56 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.providers.getSpannableStringRedWarnStar
 import bg.dabulgaria.tibroish.presentation.ui.registration.CountryCodesArrayAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import kotlinx.android.synthetic.main.fragment_user_register.*
-import kotlinx.android.synthetic.main.send_item_buttons_layout.view.*
-import kotlinx.android.synthetic.main.send_item_header_layout.view.*
-import kotlinx.android.synthetic.main.send_item_message_layout.view.*
-import kotlinx.android.synthetic.main.send_item_photo_layout.view.*
-import kotlinx.android.synthetic.main.send_item_section_layout.view.*
-import kotlinx.android.synthetic.main.send_item_section_manual_layout.view.*
-import kotlinx.android.synthetic.main.send_item_success_layout.view.*
 
-sealed class SendItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    abstract fun bind(position: Int,
-                      item: SendItemListItem,
-                      presenter: ISendItemPresenter)
+import bg.dabulgaria.tibroish.databinding.SendItemHeaderLayoutBinding
+import bg.dabulgaria.tibroish.databinding.SendItemSectionLayoutBinding
+import bg.dabulgaria.tibroish.databinding.SendItemSectionManualLayoutBinding
+import bg.dabulgaria.tibroish.databinding.SendItemPhotoLayoutBinding
+import bg.dabulgaria.tibroish.databinding.SendItemButtonsLayoutBinding
+import bg.dabulgaria.tibroish.databinding.SendItemMessageLayoutBinding
+import bg.dabulgaria.tibroish.databinding.SendItemSuccessLayoutBinding
+import bg.dabulgaria.tibroish.databinding.SendItemInfoTextLayoutBinding
+
+sealed class SendItemViewHolder<VB : ViewBinding>(
+    protected val binding: VB
+) : RecyclerView.ViewHolder(binding.root) {
+    abstract fun bind(
+        item: SendItemListItem,
+        presenter: ISendItemPresenter
+    )
 }
 
-class SendItemHeaderViewHolder(itemView: View) : SendItemViewHolder(itemView) {
-    override fun bind(position: Int, item: SendItemListItem,
-                      presenter: ISendItemPresenter) {
-
+class SendItemHeaderViewHolder(
+    binding: SendItemHeaderLayoutBinding
+) : SendItemViewHolder<SendItemHeaderLayoutBinding>(binding) {
+    override fun bind(
+        item: SendItemListItem,
+        presenter: ISendItemPresenter
+    ) {
         if (item.type != SendItemListItemType.Header)
             return
 
         val headerItem = item as SendItemListItemHeader
 
-        itemView.sendItemTitle?.text = headerItem.titleText
+        binding.sendItemTitle.text = headerItem.titleText
     }
 }
 
-class SendItemSectionViewHolder(itemView: View) : SendItemViewHolder(itemView) {
+class SendItemSectionViewHolder(
+    binding: SendItemSectionLayoutBinding
+) : SendItemViewHolder<SendItemSectionLayoutBinding>(binding) {
 
-    override fun bind(position: Int,
-                      item: SendItemListItem,
-                      presenter: ISendItemPresenter) {
-
+    override fun bind(
+        item: SendItemListItem,
+        presenter: ISendItemPresenter
+    ) {
         if (item.type != SendItemListItemType.Section)
             return
 
@@ -52,24 +61,26 @@ class SendItemSectionViewHolder(itemView: View) : SendItemViewHolder(itemView) {
 
         val data = sectionItem.sectionsViewData ?: return
 
-        itemView.sectionPickerView.bindView(data, presenter)
+        binding.sectionPickerView.bindView(data, presenter)
     }
 }
 
-class SendItemSectionManualViewHolder(itemView: View) : SendItemViewHolder(itemView) {
+class SendItemSectionManualViewHolder(
+    binding: SendItemSectionManualLayoutBinding
+) : SendItemViewHolder<SendItemSectionManualLayoutBinding>(binding) {
 
-    override fun bind(position: Int,
-                      item: SendItemListItem,
-                      presenter: ISendItemPresenter) {
-
+    override fun bind(
+        item: SendItemListItem,
+        presenter: ISendItemPresenter
+    ) {
         if (item.type != SendItemListItemType.SectionManual)
             return
 
         val sectionItem = item as SendItemListItemSectionManual
 
-        itemView.uniqueSectionValueTextView.setText(sectionItem.sectionId)
+        binding.uniqueSectionValueTextView.setText(sectionItem.sectionId)
 
-        itemView.uniqueSectionValueTextView.addTextChangedListener(object : TextWatcher {
+        binding.uniqueSectionValueTextView.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -82,11 +93,13 @@ class SendItemSectionManualViewHolder(itemView: View) : SendItemViewHolder(itemV
     }
 }
 
-class SendItemImageViewHolder(itemView: View) : SendItemViewHolder(itemView) {
-    override fun bind(position: Int,
-                      item: SendItemListItem,
-                      presenter: ISendItemPresenter) {
-
+class SendItemImageViewHolder(
+    binding: SendItemPhotoLayoutBinding
+) : SendItemViewHolder<SendItemPhotoLayoutBinding>(binding) {
+    override fun bind(
+        item: SendItemListItem,
+        presenter: ISendItemPresenter
+    ) {
         if (item.type != SendItemListItemType.Image)
             return
 
@@ -94,61 +107,71 @@ class SendItemImageViewHolder(itemView: View) : SendItemViewHolder(itemView) {
         Glide.with(itemView)
                 .load(imageItem.image.localFilePath)
                 .transition(DrawableTransitionOptions.withCrossFade())
-                .into(itemView.sendItemPhotoImageView)
+                .into(binding.sendItemPhotoImageView)
 
-        itemView.sendItemPhotoDeleteView.setOnClickListener {
+        binding.sendItemPhotoDeleteView.setOnClickListener {
             presenter.onImageDeleteClick(imageItem, position)
         }
 
-        itemView.sendItemPhotoImageView.setOnClickListener {
+        binding.sendItemPhotoImageView.setOnClickListener {
             presenter.onImagePreviewClick(position)
         }
     }
 }
 
-class SendItemButtonsViewHolder(itemView: View) : SendItemViewHolder(itemView) {
+class SendItemButtonsViewHolder(
+    binding: SendItemButtonsLayoutBinding
+) : SendItemViewHolder<SendItemButtonsLayoutBinding>(binding) {
 
-    override fun bind(position: Int, item: SendItemListItem, presenter: ISendItemPresenter) {
-
+    override fun bind(
+        item: SendItemListItem,
+        presenter: ISendItemPresenter
+    ) {
         if (item.type != SendItemListItemType.Buttons)
             return
 
         val sendButtons = item as SendItemListItemButtons
         val imagesVisibility = if(sendButtons.supportsImages) View.VISIBLE else View.GONE
-        itemView.sendItemGalleryBtn.visibility = imagesVisibility
-        itemView.sendItemCameraBtn.visibility = imagesVisibility
+        binding.sendItemGalleryBtn.visibility = imagesVisibility
+        binding.sendItemCameraBtn.visibility = imagesVisibility
 
         if(sendButtons.supportsImages) {
-            itemView.sendItemGalleryBtn?.setOnClickListener { presenter.onAddFromGalleryClick() }
-            itemView.sendItemCameraBtn?.setOnClickListener { presenter.onAddFromCameraClick() }
+            binding.sendItemGalleryBtn.setOnClickListener { presenter.onAddFromGalleryClick() }
+            binding.sendItemCameraBtn.setOnClickListener { presenter.onAddFromCameraClick() }
         }
         else {
-            itemView.sendItemGalleryBtn?.setOnClickListener(null)
-            itemView.sendItemCameraBtn?.setOnClickListener(null)
+            binding.sendItemGalleryBtn.setOnClickListener(null)
+            binding.sendItemCameraBtn.setOnClickListener(null)
         }
 
-        itemView.sendItemContinueBtn?.setOnClickListener { presenter.onSend() }
+        binding.sendItemContinueBtn.setOnClickListener { presenter.onSend() }
     }
 }
 
-class SendItemSendSuccessViewHolder(itemView: View) : SendItemViewHolder(itemView) {
-
-    override fun bind(position: Int, item: SendItemListItem, presenter: ISendItemPresenter) {
-
+class SendItemSendSuccessViewHolder(
+    binding: SendItemSuccessLayoutBinding
+) : SendItemViewHolder<SendItemSuccessLayoutBinding>(binding) {
+    override fun bind(
+        item: SendItemListItem,
+        presenter: ISendItemPresenter
+    ) {
         if (item.type != SendItemListItemType.SendSuccess)
             return
 
         val sendSuccess = item as SendItemListItemSendSuccess
 
-        itemView.itemSendText?.text = sendSuccess.messageText
-        itemView.sendItemOkButton?.setOnClickListener { presenter.onSuccessOkClick() }
+        binding.itemSendText.text = sendSuccess.messageText
+        binding.sendItemOkButton.setOnClickListener { presenter.onSuccessOkClick() }
     }
 }
 
-class SendItemMessageViewHolder(itemView: View) : SendItemViewHolder(itemView) {
-
-    override fun bind(position: Int, item: SendItemListItem, presenter: ISendItemPresenter) {
-
+class SendItemMessageViewHolder(
+    binding: SendItemMessageLayoutBinding
+) : SendItemViewHolder<SendItemMessageLayoutBinding>(binding) {
+    override fun bind(
+        item: SendItemListItem,
+        presenter: ISendItemPresenter
+    ) {
         val context = itemView.context
 
         if (item.type != SendItemListItemType.Message)
@@ -156,12 +179,12 @@ class SendItemMessageViewHolder(itemView: View) : SendItemViewHolder(itemView) {
 
         val messageItem = item as SendItemListItemMessage
 
-        itemView.messageLabelTextView.text = R.string.violation_description
+        binding.messageLabelTextView.text = R.string.violation_description
                 .getSpannableStringRedWarnStar(itemView.context)
 
-        itemView.messageTextView?.setText(messageItem.messageText)
+        binding.messageTextView.setText(messageItem.messageText)
 
-        itemView.messageTextView?.addTextChangedListener(object:TextWatcher{
+        binding.messageTextView.addTextChangedListener(object:TextWatcher{
 
             override fun afterTextChanged(s: Editable?) {
                 s?.toString()?.let{ presenter.onMessageChanged(it) }
@@ -171,9 +194,9 @@ class SendItemMessageViewHolder(itemView: View) : SendItemViewHolder(itemView) {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        itemView.namesEditText?.setText(messageItem.names)
-        itemView.input_names?.hint = R.string.first_middle_last_name.getSpannableStringRedWarnStar(context)
-        itemView.namesEditText?.addTextChangedListener(object :TextWatcher{
+        binding.namesEditText.setText(messageItem.names)
+        binding.inputNames.hint = R.string.first_middle_last_name.getSpannableStringRedWarnStar(context)
+        binding.namesEditText.addTextChangedListener(object :TextWatcher{
             override fun afterTextChanged(s: Editable?) {
                 s?.toString()?.let{ presenter.onNamesChanged(it) }
             }
@@ -182,9 +205,9 @@ class SendItemMessageViewHolder(itemView: View) : SendItemViewHolder(itemView) {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        itemView.emailEditText?.setText(messageItem.email)
-        itemView.input_email.hint = R.string.email.getSpannableStringRedWarnStar(context)
-        itemView.emailEditText?.addTextChangedListener(object :TextWatcher{
+        binding.emailEditText.setText(messageItem.email)
+        binding.inputEmail.hint = R.string.email.getSpannableStringRedWarnStar(context)
+        binding.emailEditText.addTextChangedListener(object :TextWatcher{
             override fun afterTextChanged(s: Editable?) {
                 s?.toString()?.let{ presenter.onEmailChanged(it) }
             }
@@ -193,8 +216,8 @@ class SendItemMessageViewHolder(itemView: View) : SendItemViewHolder(itemView) {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        itemView.input_phone_number.hint = R.string.telephone_number.getSpannableStringRedWarnStar(context)
-        itemView.phoneEditText?.addTextChangedListener(object :TextWatcher{
+        binding.inputPhoneNumber.hint = R.string.telephone_number.getSpannableStringRedWarnStar(context)
+        binding.phoneEditText.addTextChangedListener(object :TextWatcher{
             override fun afterTextChanged(s: Editable?) {
                 onPhoneChanged(presenter)
             }
@@ -205,7 +228,7 @@ class SendItemMessageViewHolder(itemView: View) : SendItemViewHolder(itemView) {
 
         messageItem.countryCodes?.let { countryCodes->
             val adapter = CountryCodesArrayAdapter(itemView.context, countryCodes)
-            val dropdown = itemView.areaCodeDropdown
+            val dropdown = binding.areaCodeDropdown
             dropdown.setAdapter(adapter)
             dropdown.setText(adapter.getDefaultSelectedItem().code, /* filter= */ false)
             dropdown.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
@@ -220,7 +243,7 @@ class SendItemMessageViewHolder(itemView: View) : SendItemViewHolder(itemView) {
                 countryCode?.code?.let {
                     val phone = messageItem.phone.replace(it, "")
                     dropdown.setText(it)
-                    itemView.phoneEditText.setText(phone)
+                    binding.phoneEditText.setText(phone)
                 }
             }
         }
@@ -229,12 +252,19 @@ class SendItemMessageViewHolder(itemView: View) : SendItemViewHolder(itemView) {
 
     private fun onPhoneChanged(presenter: ISendItemPresenter){
 
-        val areaCode = itemView.areaCodeDropdown.text.toString()
-        val localPhone = itemView.phoneEditText.text.toString()
+        val areaCode = binding.areaCodeDropdown.text.toString()
+        val localPhone = binding.phoneEditText.text.toString()
         presenter.onPhoneChanged( areaCode + localPhone)
     }
 }
 
-class SendItemInfoTextViewHolder(itemView: View) : SendItemViewHolder(itemView) {
-    override fun bind(position: Int, item: SendItemListItem, presenter: ISendItemPresenter) { }
+class SendItemInfoTextViewHolder(
+    binding: SendItemInfoTextLayoutBinding
+) : SendItemViewHolder<SendItemInfoTextLayoutBinding>(binding) {
+    override fun bind(
+        item: SendItemListItem,
+        presenter: ISendItemPresenter
+    ) {
+        // implement if needed
+    }
 }

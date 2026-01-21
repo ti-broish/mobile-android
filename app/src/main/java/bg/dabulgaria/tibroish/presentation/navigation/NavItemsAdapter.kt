@@ -31,8 +31,6 @@ class NavItemsAdapter constructor(private val items: List<NavItem>,
         )
 
         return ViewHolder(binding)
-//        return ViewHolder(LayoutInflater.from(parent.context)
-//                .inflate(R.layout.nav_item_layout, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

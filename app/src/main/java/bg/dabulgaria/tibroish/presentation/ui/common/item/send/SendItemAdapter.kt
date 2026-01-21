@@ -5,17 +5,24 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 import bg.dabulgaria.tibroish.R
-import bg.dabulgaria.tibroish.presentation.ui.common.IOrganizationsDropdownUtil
+import bg.dabulgaria.tibroish.databinding.SendItemHeaderLayoutBinding
+import bg.dabulgaria.tibroish.databinding.SendItemSectionLayoutBinding
+import bg.dabulgaria.tibroish.databinding.SendItemSectionManualLayoutBinding
+import bg.dabulgaria.tibroish.databinding.SendItemPhotoLayoutBinding
+import bg.dabulgaria.tibroish.databinding.SendItemButtonsLayoutBinding
+import bg.dabulgaria.tibroish.databinding.SendItemMessageLayoutBinding
+import bg.dabulgaria.tibroish.databinding.SendItemSuccessLayoutBinding
+import bg.dabulgaria.tibroish.databinding.SendItemInfoTextLayoutBinding
 import javax.inject.Inject
 
 
 class SendItemAdapter @Inject constructor(
     val presenter: ISendItemPresenter
-) : RecyclerView.Adapter<SendItemViewHolder>() {
+) : RecyclerView.Adapter<SendItemViewHolder<*>>() {
 
     val list = mutableListOf<SendItemListItem>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SendItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SendItemViewHolder<*> {
 
         val inflater = LayoutInflater.from(parent.context)
 
@@ -34,15 +41,37 @@ class SendItemAdapter @Inject constructor(
                 parent, false)
 
         return when(viewType) {
+            SendItemListItemType.Header.ordinal -> SendItemHeaderViewHolder(
+                SendItemHeaderLayoutBinding.inflate(inflater, parent, false)
+            )
 
-            SendItemListItemType.Header.ordinal -> SendItemHeaderViewHolder(view)
-            SendItemListItemType.Section.ordinal -> SendItemSectionViewHolder(view)
-            SendItemListItemType.SectionManual.ordinal -> SendItemSectionManualViewHolder(view)
-            SendItemListItemType.Message.ordinal -> SendItemMessageViewHolder(view)
-            SendItemListItemType.Image.ordinal -> SendItemImageViewHolder(view)
-            SendItemListItemType.Buttons.ordinal -> SendItemButtonsViewHolder(view)
-            SendItemListItemType.SendSuccess.ordinal -> SendItemSendSuccessViewHolder(view)
-            SendItemListItemType.InfoText.ordinal -> SendItemInfoTextViewHolder(view)
+            SendItemListItemType.Section.ordinal -> SendItemSectionViewHolder(
+                SendItemSectionLayoutBinding.inflate(inflater, parent, false)
+            )
+
+            SendItemListItemType.SectionManual.ordinal -> SendItemSectionManualViewHolder(
+                SendItemSectionManualLayoutBinding.inflate(inflater, parent, false)
+            )
+
+            SendItemListItemType.Message.ordinal -> SendItemMessageViewHolder(
+                SendItemMessageLayoutBinding.inflate(inflater, parent, false)
+            )
+
+            SendItemListItemType.Image.ordinal -> SendItemImageViewHolder(
+                SendItemPhotoLayoutBinding.inflate(inflater, parent, false)
+            )
+
+            SendItemListItemType.Buttons.ordinal -> SendItemButtonsViewHolder(
+                SendItemButtonsLayoutBinding.inflate(inflater, parent, false)
+            )
+
+            SendItemListItemType.SendSuccess.ordinal -> SendItemSendSuccessViewHolder(
+                SendItemSuccessLayoutBinding.inflate(inflater, parent, false)
+            )
+
+            SendItemListItemType.InfoText.ordinal -> SendItemInfoTextViewHolder(
+                SendItemInfoTextLayoutBinding.inflate(inflater, parent, false)
+            )
             else -> throw NotImplementedError("SendItemListItemType( $viewType ) View holder class not implemented")
         }
     }
@@ -51,8 +80,8 @@ class SendItemAdapter @Inject constructor(
 
     override fun getItemViewType(position: Int): Int = getItem(position).type.ordinal
 
-    override fun onBindViewHolder(holder: SendItemViewHolder, position: Int)
-            = holder.bind(position, getItem(position), presenter)
+    override fun onBindViewHolder(holder: SendItemViewHolder<*>, position: Int)
+            = holder.bind(getItem(position), presenter)
 
     private fun getItem(position: Int): SendItemListItem = list[position]
 
