@@ -3,75 +3,129 @@ package bg.dabulgaria.tibroish.presentation.ui.common.preview.images
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import bg.dabulgaria.tibroish.R
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import kotlinx.android.synthetic.main.preview_image_item_layout.view.*
+import bg.dabulgaria.tibroish.databinding.PreviewImageItemLayoutBinding
+import bg.dabulgaria.tibroish.databinding.PreviewImageItemLayoutLandBinding
 
-
-interface PreviewImageDeleteListener{
+interface PreviewImageDeleteListener {
 
     fun onDelete(position: Int, image: PreviewImage)
 }
 
-interface PreviewImageCheckListener{
+interface PreviewImageCheckListener {
 
     fun onCheckClick(position: Int, image: PreviewImage)
 }
 
-class PreviewImagesAdapter constructor(private val deleteListener: PreviewImageDeleteListener?,
-                                       private val checkListener: PreviewImageCheckListener?,
-                                       val landscape: Boolean)
-    : RecyclerView.Adapter<PreviewImagesAdapter.PreviewImagesViewHolder>() {
+class PreviewImagesAdapter constructor(
+    private val deleteListener: PreviewImageDeleteListener?,
+    private val checkListener: PreviewImageCheckListener?,
+    val landscape: Boolean
+) : RecyclerView.Adapter<PreviewImagesAdapter.PreviewImagesViewHolder>() {
 
-class PreviewImagesViewHolder constructor(view: View) :RecyclerView.ViewHolder(view)
+    sealed class PreviewImagesViewHolder constructor(
+        private val binding: ConstraintLayout
+    ) : RecyclerView.ViewHolder(binding) {
+        abstract val photoImageView: AppCompatImageView
+        abstract val photoDeleteView: ImageView
+        abstract val photoCheckBox: CheckBox
+        abstract val photoBoxView: View
+
+        class Portrait(
+            val binding: PreviewImageItemLayoutBinding
+        ) : PreviewImagesViewHolder(binding.root) {
+            override val photoImageView: AppCompatImageView
+                get() = binding.photoImageView
+
+            override val photoDeleteView: ImageView
+                get() = binding.photoDeleteView
+
+            override val photoCheckBox: CheckBox
+                get() = binding.photoCheckBox
+
+            override val photoBoxView: View
+                get() = binding.photoBoxView
+        }
+
+        class Landscape(
+            val binding: PreviewImageItemLayoutLandBinding
+        ) : PreviewImagesViewHolder(binding.root) {
+
+            override val photoImageView: AppCompatImageView
+                get() = binding.photoImageView
+
+            override val photoDeleteView: ImageView
+                get() = binding.photoDeleteView
+
+            override val photoCheckBox: CheckBox
+                get() = binding.photoCheckBox
+
+            override val photoBoxView: View
+                get() = binding.photoBoxView
+        }
+    }
 
     val list = mutableListOf<PreviewImage>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PreviewImagesViewHolder {
-
         val inflater = LayoutInflater.from(parent.context)
-        val viewId = if(landscape) R.layout.preview_image_item_layout_land else R.layout.preview_image_item_layout
 
-        val view = inflater.inflate(viewId, parent, false)
+        if (landscape) {
+            val binding = PreviewImageItemLayoutLandBinding.inflate(inflater, parent, false)
 
-        return PreviewImagesViewHolder(view)
+            return PreviewImagesViewHolder.Landscape(binding)
+        } else {
+            val binding = PreviewImageItemLayoutBinding.inflate(inflater, parent, false)
+
+            return PreviewImagesViewHolder.Portrait(binding)
+        }
     }
 
     override fun getItemCount(): Int = list.size
 
-    override fun onBindViewHolder(holder: PreviewImagesViewHolder, position: Int){
+    override fun onBindViewHolder(holder: PreviewImagesViewHolder, position: Int) {
 
         val item = getItem(position)
 
         Glide.with(holder.itemView)
-                .load(item.photoFilePath)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(holder.itemView.photoImageView)
+            .load(item.photoFilePath)
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .into(holder.photoImageView)
 
-        holder.itemView.photoDeleteView.visibility = if(deleteListener == null) View.GONE else View.VISIBLE
-        holder.itemView.photoDeleteView.setOnClickListener { deleteListener?.onDelete(position, item) }
+        holder.photoDeleteView.visibility =
+            if (deleteListener == null) View.GONE else View.VISIBLE
+        holder.photoDeleteView.setOnClickListener {
+            deleteListener?.onDelete(
+                position,
+                item
+            )
+        }
 
-        holder.itemView.photoCheckBox.visibility = if(checkListener == null) View.GONE else View.VISIBLE
-        holder.itemView.photoCheckBox.setOnClickListener {
+        holder.photoCheckBox.visibility =
+            if (checkListener == null) View.GONE else View.VISIBLE
+        holder.photoCheckBox.setOnClickListener {
             checkListener?.onCheckClick(position, item)
         }
-        holder.itemView.photoCheckBox.isChecked = item.photoSelected
+        holder.photoCheckBox.isChecked = item.photoSelected
 
-        holder.itemView.photoImageView.setOnClickListener {
+        holder.photoImageView.setOnClickListener {
             checkListener?.onCheckClick(position, item)
         }
 
-        if(item.photoPreviouslySelected) {
+        if (item.photoPreviouslySelected) {
 
-            holder.itemView.photoBoxView.visibility = View.VISIBLE
-            holder.itemView.photoBoxView.alpha = 1f
-        }
-        else{
+            holder.photoBoxView.visibility = View.VISIBLE
+            holder.photoBoxView.alpha = 1f
+        } else {
 
-            holder.itemView.photoBoxView.visibility = View.GONE
-            holder.itemView.photoBoxView.alpha = 0f
+            holder.photoBoxView.visibility = View.GONE
+            holder.photoBoxView.alpha = 0f
         }
     }
 
