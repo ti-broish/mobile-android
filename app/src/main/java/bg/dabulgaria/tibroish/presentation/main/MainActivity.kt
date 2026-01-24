@@ -52,9 +52,10 @@ class MainActivity : BaseActivity(),
 
     //region AppCompatActivity overrides
     public override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+//        binding = ActivityMainBinding.inflate(layoutInflater)
 
         navigationDrawerFragment = supportFragmentManager.findFragmentById(R.id.navigation_drawer) as NavigationDrawerFragment?
 
@@ -74,6 +75,7 @@ class MainActivity : BaseActivity(),
 
     override fun onDestroy() {
         mainPresenter.view = null
+        navigationDrawerFragment = null
         super.onDestroy()
     }
 

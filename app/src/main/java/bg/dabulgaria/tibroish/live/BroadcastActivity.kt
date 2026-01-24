@@ -58,6 +58,8 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        binding = ActivityBroadcastBinding.inflate(layoutInflater)
+
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         setContentView(R.layout.activity_broadcast)

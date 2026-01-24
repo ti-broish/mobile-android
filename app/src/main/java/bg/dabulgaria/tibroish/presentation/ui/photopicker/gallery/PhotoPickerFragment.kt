@@ -171,8 +171,11 @@ class PhotoPickerFragment : BasePresentableFragment<IPhotoPickerView, IPhotoPick
     }
 
     override fun handleBackPressed(): Boolean {
-
-        return presenter.onHandleBack(photoPickerBinding.previewImagesView.getPosition())
+        if (_photoPickerBinding == null) {
+            return false
+        } else {
+            return presenter.onHandleBack(photoPickerBinding.previewImagesView.getPosition())
+        }
     }
     //endregion IComicListView implementation
 

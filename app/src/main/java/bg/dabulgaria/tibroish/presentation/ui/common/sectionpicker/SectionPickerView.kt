@@ -2,6 +2,7 @@ package bg.dabulgaria.tibroish.presentation.ui.common.sectionpicker
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import androidx.annotation.StringRes
@@ -19,7 +20,11 @@ class SectionPickerView : ConstraintLayout {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(
+        context: Context, attrs: AttributeSet?, defStyleAttr: Int
+    ) : super(context, attrs, defStyleAttr) {
+        binding = LayoutSectionsViewBinding.inflate(LayoutInflater.from(context), this, true)
+    }
 
     private lateinit var binding: LayoutSectionsViewBinding
 

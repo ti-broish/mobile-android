@@ -15,7 +15,6 @@ import bg.dabulgaria.tibroish.presentation.ui.common.preview.images.CloseListene
 import bg.dabulgaria.tibroish.presentation.ui.common.preview.images.PreviewImage
 import bg.dabulgaria.tibroish.presentation.ui.common.preview.images.PreviewImageDeleteListener
 import bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery.PhotoPickerFragment
-import bg.dabulgaria.tibroish.databinding.FragmentPhotoPickerBinding
 import bg.dabulgaria.tibroish.databinding.FragmentSendItemBinding
 
 interface ISendItemView : IBaseView {
@@ -38,13 +37,9 @@ open class SendItemFragment<SendPresenter : ISendItemPresenter> constructor()
     private var _sendItemBinding: FragmentSendItemBinding? = null
     private val sendItemBinding get() = _sendItemBinding!!
 
-    private var _photoPickerBinding: FragmentPhotoPickerBinding? = null
-    private val photoPickerBinding get() = _photoPickerBinding!!
-
     override fun onDestroyView() {
         super.onDestroyView()
         _sendItemBinding = null
-        _photoPickerBinding = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +60,6 @@ open class SendItemFragment<SendPresenter : ISendItemPresenter> constructor()
         super.onViewCreated(view, savedInstanceState)
 
         _sendItemBinding = FragmentSendItemBinding.bind(view)
-        _photoPickerBinding = FragmentPhotoPickerBinding.bind(view)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -104,8 +98,11 @@ open class SendItemFragment<SendPresenter : ISendItemPresenter> constructor()
     }
 
     override fun handleBackPressed(): Boolean {
-
-        return presenter.onHandleBack(photoPickerBinding.previewImagesView.getPosition())
+        if (_sendItemBinding == null) {
+            return false
+        } else {
+            return presenter.onHandleBack(sendItemBinding.previewImagesView.getPosition())
+        }
     }
 
     override fun setData(data: SendItemViewData) {
@@ -114,11 +111,11 @@ open class SendItemFragment<SendPresenter : ISendItemPresenter> constructor()
         adapter.listItems.addAll(data.items)
         adapter.notifyDataSetChanged()
 
-        photoPickerBinding.previewImagesView.visibility = if(data.imagePreviewOpen) View.VISIBLE else View.GONE
+        sendItemBinding.previewImagesView.visibility = if(data.imagePreviewOpen) View.VISIBLE else View.GONE
 
         if(data.imagePreviewOpen){
 
-            photoPickerBinding.previewImagesView.bindView(imagesList = data.entityItem?.images.orEmpty(),
+            sendItemBinding.previewImagesView.bindView(imagesList = data.entityItem?.images.orEmpty(),
                     initialPosition = data.previewImageIndex,
                     closeListener = object: CloseListener {
                         override fun onClose(lastPosition: Int) {

@@ -17,6 +17,8 @@ class PrepareToStreamActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityPrepareToStreamBinding.inflate(layoutInflater)
+
         makeFullScreen()
         setContentView(R.layout.activity_prepare_to_stream)
 

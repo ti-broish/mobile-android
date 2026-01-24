@@ -2,6 +2,7 @@ package bg.dabulgaria.tibroish.presentation.ui.common.preview.images
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +22,10 @@ class PreviewImagesView : ConstraintLayout {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int
+    ) : super(context, attrs, defStyleAttr) {
+        binding = LayoutPreviewImagesBinding.inflate(LayoutInflater.from(context), this, true)
+    }
 
     private var adapter: PreviewImagesAdapter? =null
     private var layoutManager: LinearLayoutManager?=null

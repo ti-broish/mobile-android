@@ -43,6 +43,8 @@ class FetchStreamActivity : BaseActivity(), HasAndroidInjector {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityFetchStreamBinding.inflate(layoutInflater)
+
         makeFullScreen()
         setContentView(R.layout.activity_fetch_stream)
 
