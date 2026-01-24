@@ -1,18 +1,15 @@
 package bg.dabulgaria.tibroish.presentation.ui.login
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView.OnEditorActionListener
-import androidx.fragment.app.Fragment
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
-import kotlinx.android.synthetic.main.fragment_user_login.*
-
+import bg.dabulgaria.tibroish.databinding.FragmentUserLoginBinding
 
 interface ILoginView :IBaseView{
 
@@ -22,6 +19,14 @@ interface ILoginView :IBaseView{
 }
 
 class LoginFragment : BasePresentableFragment<ILoginView, ILoginPresenter>(), ILoginView {
+
+    private var _loginBinding: FragmentUserLoginBinding? = null
+    private val loginBinding get() = _loginBinding!!
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _loginBinding = null
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
         = inflater.inflate(R.layout.fragment_user_login, container, false)
@@ -34,27 +39,27 @@ class LoginFragment : BasePresentableFragment<ILoginView, ILoginPresenter>(), IL
 
     private fun prefillEmail(email: String?) {
         if (email.isNullOrEmpty()) {
-            input_username_edit_text.text = null
+            loginBinding.inputUsernameEditText.text = null
             return
         }
-        input_username_edit_text.setText(email)
+        loginBinding.inputUsernameEditText.setText(email)
     }
 
     private fun setupOnClickListeners() {
-        
-        button_login?.setOnClickListener { onLogin() }
 
-        button_register?.setOnClickListener {
+        loginBinding.buttonLogin?.setOnClickListener { onLogin() }
+
+        loginBinding.buttonRegister?.setOnClickListener {
             hideSoftKeyboard()
-            presenter.onRegisterButtonClicked( input_username_edit_text?.text?.toString() ?:"" )
+            presenter.onRegisterButtonClicked(loginBinding.inputUsernameEditText.text?.toString() ?:"" )
         }
 
-        button_forgot_password?.setOnClickListener {
+        loginBinding.buttonForgotPassword.setOnClickListener {
             hideSoftKeyboard()
-            presenter.onForgotPasswordButtonClicked( input_username_edit_text?.text?.toString() ?:"")
+            presenter.onForgotPasswordButtonClicked(loginBinding.inputUsernameEditText.text?.toString() ?:"")
         }
 
-        input_password_edit_text.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
+        loginBinding.inputPasswordEditText.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
 
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 onLogin()
@@ -65,21 +70,21 @@ class LoginFragment : BasePresentableFragment<ILoginView, ILoginPresenter>(), IL
 
     override fun onDataLoaded(data: LoginViewData){
 
-        input_password?.error = if(data.passValid) null else getString(R.string.invalid_password)
+        loginBinding.inputPassword.error = if(data.passValid) null else getString(R.string.invalid_password)
 
         if(!data.passValid)
-            showSoftKeyboard(input_password_edit_text)
+            showSoftKeyboard(loginBinding.inputPasswordEditText)
 
-        input_username?.error = if (data.emailValid) null else getString(R.string.invalid_email)
+        loginBinding.inputUsername.error = if (data.emailValid) null else getString(R.string.invalid_email)
 
         if(!data.emailValid)
-            showSoftKeyboard(input_username_edit_text)
+            showSoftKeyboard(loginBinding.inputUsernameEditText)
     }
 
     override fun onLoading(loading: Boolean) {
 
-        loginOverlayView?.visibility = if(loading) View.VISIBLE else View.GONE
-        loginProgressBar?.visibility = if(loading) View.VISIBLE else View.GONE
+        loginBinding.loginOverlayView.visibility = if(loading) View.VISIBLE else View.GONE
+        loginBinding.loginProgressBar.visibility = if(loading) View.VISIBLE else View.GONE
     }
 
     private fun onLogin(){
@@ -87,8 +92,8 @@ class LoginFragment : BasePresentableFragment<ILoginView, ILoginPresenter>(), IL
         hideSoftKeyboard()
 
         presenter.onLoginButtonClicked(
-                input_username_edit_text?.text?.toString() ?:"",
-                input_password_edit_text?.text?.toString() ?:"")
+            loginBinding.inputUsernameEditText.text?.toString() ?:"",
+            loginBinding.inputPasswordEditText.text?.toString() ?:"")
     }
 
     fun refreshUi() {

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
-import bg.dabulgaria.tibroish.presentation.ui.common.item.send.*
 import bg.dabulgaria.tibroish.databinding.FragmentLiveSectionPickBinding
 import javax.inject.Inject
 
