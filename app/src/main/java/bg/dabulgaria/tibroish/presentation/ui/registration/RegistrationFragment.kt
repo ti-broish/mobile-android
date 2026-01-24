@@ -16,7 +16,7 @@ import bg.dabulgaria.tibroish.presentation.ui.common.IOrganizationsDropdownUtil
 import bg.dabulgaria.tibroish.presentation.ui.common.IOrganizationsManager
 import bg.dabulgaria.tibroish.presentation.ui.common.UserDataWrapper
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.android.synthetic.main.fragment_user_register.*
+import bg.dabulgaria.tibroish.databinding.FragmentUserRegisterBinding
 import javax.inject.Inject
 
 interface IRegisterView : IBaseView {
@@ -31,6 +31,14 @@ class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistratio
     @Inject
     lateinit var organizationsDropdownUtil: IOrganizationsDropdownUtil
 
+    private var _userRegisterBinding: FragmentUserRegisterBinding? = null
+    private val userRegisterBinding get() = _userRegisterBinding!!
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _userRegisterBinding = null
+    }
+
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = inflater.inflate(R.layout.fragment_user_register, container, false)
 
@@ -44,13 +52,13 @@ class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistratio
     }
 
     private fun setupLoginButton() {
-        button_login.setOnClickListener {
+        userRegisterBinding.buttonLogin.setOnClickListener {
             presenter.navigateToLoginScreen()
         }
     }
 
     private fun setupRegisterButton() {
-        button_register?.setOnClickListener {
+        userRegisterBinding.buttonRegister.setOnClickListener {
             if (validateFields()) {
                 register()
             }
@@ -82,18 +90,18 @@ class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistratio
     }
 
     private fun createUserDataWrapper() = UserDataWrapper(
-        firstName = input_first_name_edit_text.text.toString(),
-        lastName = input_last_name_edit_text.text.toString(),
-        email = input_email_edit_text.text.toString(),
+        firstName = userRegisterBinding.inputFirstNameEditText.text.toString(),
+        lastName = userRegisterBinding.inputLastNameEditText.text.toString(),
+        email = userRegisterBinding.inputEmailEditText.text.toString(),
         phone = getFullPhoneNumber(),
-        pin = input_egn_last_four_digits_edit_text.text.toString(),
+        pin = userRegisterBinding.inputEgnLastFourDigitsEditText.text.toString(),
         organization = getSelectedOrganization()!!,
-        hasAgreedToKeepData = checkbox_consent.isChecked,
-        password = input_password_edit_text.text.toString()
+        hasAgreedToKeepData = userRegisterBinding.checkboxConsent.isChecked,
+        password = userRegisterBinding.inputPasswordEditText.text.toString()
     )
 
     private fun getSelectedOrganization(): Organization? {
-        return presenter.getOrganizationWithName(input_organization_dropdown?.text.toString())
+        return presenter.getOrganizationWithName(userRegisterBinding.inputOrganizationDropdown.text.toString())
     }
 
     private fun setupOrganizations() {
@@ -103,7 +111,7 @@ class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistratio
             }
             organizationsDropdownUtil.populateOrganizationsDropdown(
                 requireContext(),
-                input_organization_dropdown,
+                userRegisterBinding.inputOrganizationDropdown,
                 organizations)
         }
     }
@@ -114,7 +122,7 @@ class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistratio
                 return@getCountryCodes
             }
             val adapter = CountryCodesArrayAdapter(requireContext(), countryCodes)
-            val dropdown = input_area_code_dropdown
+            val dropdown = userRegisterBinding.inputAreaCodeDropdown
             dropdown.setAdapter(adapter)
             dropdown.setText(adapter.getDefaultSelectedItem().code, /* filter= */ false)
             dropdown.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
@@ -169,7 +177,7 @@ class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistratio
 
     private fun processOrganization(): Boolean {
         if (!presenter.processOrganization(
-                input_organization_dropdown?.text.toString()
+                userRegisterBinding.inputOrganizationDropdown.text.toString()
             ) {
                 setTextLayoutError(R.id.input_organization, it)
             }
@@ -218,13 +226,13 @@ class RegistrationFragment : BasePresentableFragment<IRegisterView, IRegistratio
     }
 
     private fun getFullPhoneNumber(): String {
-        val areaCode = input_area_code_dropdown.text.toString()
+        val areaCode = userRegisterBinding.inputAreaCodeDropdown.text.toString()
         val localPhone = getFieldText(R.id.input_phone_number_edit_text)
         return areaCode + localPhone
     }
 
     private fun processOver18Checkbox(): Boolean {
-        val checkBox: CheckBox = checkbox_over_18
+        val checkBox: CheckBox = userRegisterBinding.checkboxOver18
         if (!presenter.processRequiredCheckbox(
                         checkBox,
                         callback = {
