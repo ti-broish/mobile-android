@@ -13,7 +13,7 @@ import bg.dabulgaria.tibroish.domain.protocol.ProtocolRemote
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
 import bg.dabulgaria.tibroish.presentation.ui.common.IStatusColorUtil
-import kotlinx.android.synthetic.main.fragment_protocols_details.*
+import bg.dabulgaria.tibroish.databinding.FragmentProtocolsDetailsBinding
 import javax.inject.Inject
 
 interface IProtocolDetailsView : IBaseView {
@@ -30,6 +30,14 @@ class ProtocolDetailsFragment : BasePresentableFragment<IProtocolDetailsView,
     @Inject
     lateinit var adapter: ProtocolPicturesAdapter
 
+    private var _protocolsDetailsBinding: FragmentProtocolsDetailsBinding? = null
+    private val protocolsDetailsBinding get() = _protocolsDetailsBinding!!
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _protocolsDetailsBinding = null
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(
@@ -41,17 +49,17 @@ class ProtocolDetailsFragment : BasePresentableFragment<IProtocolDetailsView,
 
         val protocol =
             arguments?.getSerializable(ProtocolDetailsConstants.VIEW_DATA_KEY) as ProtocolRemote
-        listRecyclerView.layoutManager =
+        protocolsDetailsBinding.listRecyclerView.layoutManager =
             LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
         adapter.item = protocol
         adapter.onItemClickListener = View.OnClickListener {
-            val position: Int = listRecyclerView.getChildLayoutPosition(it)
+            val position: Int = protocolsDetailsBinding.listRecyclerView.getChildLayoutPosition(it)
             val picture = protocol.pictures[position - 1]
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(picture.url))
             intent.flags.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
-        listRecyclerView.adapter = adapter
+        protocolsDetailsBinding.listRecyclerView.adapter = adapter
     }
 
     companion object {

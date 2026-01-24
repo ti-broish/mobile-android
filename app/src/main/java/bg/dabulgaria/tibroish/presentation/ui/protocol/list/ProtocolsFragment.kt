@@ -9,9 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
-import bg.dabulgaria.tibroish.presentation.ui.common.IDialogUtil
 import bg.dabulgaria.tibroish.presentation.ui.protocol.list.ProtocolsPresenter.State
-import kotlinx.android.synthetic.main.fragment_protocols_list.*
+import bg.dabulgaria.tibroish.databinding.FragmentProtocolsListBinding
 import javax.inject.Inject
 
 interface IProtocolsView : IBaseView {
@@ -24,6 +23,14 @@ class ProtocolsFragment : BasePresentableFragment<IProtocolsView,
 
     @Inject
     lateinit var adapter: ProtocolsAdapter
+
+    private var _protocolsListBinding: FragmentProtocolsListBinding? = null
+    private val protocolsListBinding get() = _protocolsListBinding!!
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _protocolsListBinding = null
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -38,7 +45,7 @@ class ProtocolsFragment : BasePresentableFragment<IProtocolsView,
 
         updateState()
 
-        listSwipeRefreshLayout.setOnRefreshListener {
+        protocolsListBinding.listSwipeRefreshLayout.setOnRefreshListener {
             refreshMyProtocols(initialLoading = false)
         }
     }
@@ -60,16 +67,16 @@ class ProtocolsFragment : BasePresentableFragment<IProtocolsView,
     }
 
     private fun showList() {
-        listSwipeRefreshLayout.visibility = View.VISIBLE
-        progressBar.visibility = View.GONE
+        protocolsListBinding.listSwipeRefreshLayout.visibility = View.VISIBLE
+        protocolsListBinding.progressBar.visibility = View.GONE
     }
 
     private fun setupRecyclerView() {
-        listRecyclerView.layoutManager =
+        protocolsListBinding.listRecyclerView.layoutManager =
             LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
-        listRecyclerView.adapter = adapter
+        protocolsListBinding.listRecyclerView.adapter = adapter
         adapter.onItemClickListener = View.OnClickListener {
-            val position: Int = listRecyclerView.getChildLayoutPosition(it)
+            val position: Int = protocolsListBinding.listRecyclerView.getChildLayoutPosition(it)
             presenter.showProtocolAt(position)
         }
     }
@@ -77,7 +84,7 @@ class ProtocolsFragment : BasePresentableFragment<IProtocolsView,
     private fun refreshMyProtocols(initialLoading: Boolean) {
         presenter.getMyProtocols(initialLoading) {
             adapter.updateList(it)
-            listSwipeRefreshLayout.isRefreshing = false
+            protocolsListBinding.listSwipeRefreshLayout.isRefreshing = false
             updateState()
         }
     }
