@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import bg.dabulgaria.tibroish.R
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import kotlinx.android.synthetic.main.gallery_picker_photo_item.view.*
+import bg.dabulgaria.tibroish.databinding.GalleryPickerPhotoItemBinding
 import javax.inject.Inject
 
 
@@ -17,13 +17,16 @@ class GridPickerAdapter @Inject constructor(private val presenter: IPhotoPickerP
 
     val list = mutableListOf<PhotoItem>()
 
-    class PickerImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class PickerImageViewHolder(
+        val binding: GalleryPickerPhotoItemBinding
+    ) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PickerImageViewHolder {
 
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.gallery_picker_photo_item, parent, false)
-        return PickerImageViewHolder(view)
+        val binding = GalleryPickerPhotoItemBinding.inflate(inflater, parent, false)
+
+        return PickerImageViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
@@ -38,26 +41,26 @@ class GridPickerAdapter @Inject constructor(private val presenter: IPhotoPickerP
         Glide.with(holder.itemView)
                 .load(item.photoFilePath)
                 .transition(DrawableTransitionOptions.withCrossFade())
-                .into(holder.itemView.photoImageView)
+                .into(holder.binding.photoImageView)
 
-        holder.itemView.photoCheckBox.isChecked = item.isSelected
+        holder.binding.photoCheckBox.isChecked = item.isSelected
 
         if(item.previouslySelected) {
 
-            holder.itemView.photoBoxView.visibility = View.VISIBLE
-            holder.itemView.photoBoxView.alpha = 1f
-            holder.itemView.photoImageView.setOnClickListener(null)
-            holder.itemView.photoCheckBox.setOnClickListener(null)
+            holder.binding.photoBoxView.visibility = View.VISIBLE
+            holder.binding.photoBoxView.alpha = 1f
+            holder.binding.photoImageView.setOnClickListener(null)
+            holder.binding.photoCheckBox.setOnClickListener(null)
         }
         else {
 
-            holder.itemView.photoBoxView.visibility = View.GONE
-            holder.itemView.photoBoxView.alpha = 0f
-            holder.itemView.photoImageView.setOnClickListener { presenter.onImageClick(position) }
-            holder.itemView.photoCheckBox.setOnClickListener { presenter.onImageClick(position) }
+            holder.binding.photoBoxView.visibility = View.GONE
+            holder.binding.photoBoxView.alpha = 0f
+            holder.binding.photoImageView.setOnClickListener { presenter.onImageClick(position) }
+            holder.binding.photoCheckBox.setOnClickListener { presenter.onImageClick(position) }
         }
 
-        holder.itemView.photoZoom.setOnClickListener { presenter.onPreviewImageClick(position) }
+        holder.binding.photoZoom.setOnClickListener { presenter.onPreviewImageClick(position) }
     }
 
     fun updateList(newItemsList:List<PhotoItem>) {

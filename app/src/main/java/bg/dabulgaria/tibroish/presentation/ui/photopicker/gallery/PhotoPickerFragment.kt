@@ -21,7 +21,7 @@ import bg.dabulgaria.tibroish.presentation.ui.common.preview.images.CloseListene
 import bg.dabulgaria.tibroish.presentation.ui.common.preview.images.PreviewImage
 import bg.dabulgaria.tibroish.presentation.ui.common.preview.images.PreviewImageCheckListener
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_photo_picker.*
+import bg.dabulgaria.tibroish.databinding.FragmentPhotoPickerBinding
 
 interface IPhotoPickerView : IBaseView {
 
@@ -37,6 +37,14 @@ class PhotoPickerFragment : BasePresentableFragment<IPhotoPickerView, IPhotoPick
 
     private var adapter: GridPickerAdapter? = null
     private var backHandlerInterface: BackHandlerInterface? = null
+
+    private var _photoPickerBinding: FragmentPhotoPickerBinding? = null
+    private val photoPickerBinding get() = _photoPickerBinding!!
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _photoPickerBinding = null
+    }
 
     override fun onAttach(context: Context) {
 
@@ -62,38 +70,42 @@ class PhotoPickerFragment : BasePresentableFragment<IPhotoPickerView, IPhotoPick
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        listRecyclerView?.layoutManager = GridLayoutManager(activity, 3)
+        photoPickerBinding.listRecyclerView.layoutManager = GridLayoutManager(activity, 3)
         adapter = GridPickerAdapter(presenter = presenter)
-        listRecyclerView?.adapter = adapter
+        photoPickerBinding.listRecyclerView.adapter = adapter
 
-        infoText?.setVisibility(View.GONE)
+        photoPickerBinding.infoText.setVisibility(View.GONE)
 
-        listSwipeRefreshLayout?.setColorSchemeResources(R.color.colorPrimary)
-        listSwipeRefreshLayout?.setOnRefreshListener { presenter.loadData() }
+        photoPickerBinding.listSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary)
+        photoPickerBinding.listSwipeRefreshLayout.setOnRefreshListener { presenter.loadData() }
     }
 
     //region IComicListView implementation
     override fun onLoadingStateChange(viewState: ViewState) {
 
-        listSwipeRefreshLayout?.isRefreshing = (viewState == ViewState.Loading)
-        photoPickerOverlayImageView?.visibility = if (viewState == ViewState.Loading) View.VISIBLE else View.GONE
+        photoPickerBinding.listSwipeRefreshLayout.isRefreshing = (viewState == ViewState.Loading)
+        photoPickerBinding.photoPickerOverlayImageView.visibility = if (viewState == ViewState.Loading) View.VISIBLE else View.GONE
 
-        actionButton?.setOnClickListener { presenter.onDoneClick() }
-        infoText?.visibility = View.GONE
-        actionButton?.setText(R.string.add)
+        photoPickerBinding.actionButton.setOnClickListener { presenter.onDoneClick() }
+        photoPickerBinding.infoText.visibility = View.GONE
+        photoPickerBinding.actionButton.setText(R.string.add)
 
         when (viewState) {
 
             ViewState.Loaded -> {
-                infoText?.setText(R.string.list_is_empty)
+                photoPickerBinding.infoText.setText(R.string.list_is_empty)
             }
 
             ViewState.NoPermission -> {
 
-                infoText?.setText(R.string.app_has_no_image_permissions)
-                infoText?.visibility = View.VISIBLE
-                actionButton?.setText(R.string.give_permission)
-                actionButton?.setOnClickListener { presenter.onRequestPermissionClick() }
+                photoPickerBinding.infoText.setText(R.string.app_has_no_image_permissions)
+                photoPickerBinding.infoText.visibility = View.VISIBLE
+                photoPickerBinding.actionButton.setText(R.string.give_permission)
+                photoPickerBinding.actionButton.setOnClickListener { presenter.onRequestPermissionClick() }
+            }
+
+            else -> {
+                // implement if needed
             }
         }
     }
@@ -101,16 +113,16 @@ class PhotoPickerFragment : BasePresentableFragment<IPhotoPickerView, IPhotoPick
     override fun onDataLoaded(viewData: PhotoPickerViewData) {
 
         adapter?.updateList(viewData.photoItems)
-        infoText?.visibility = if (viewData.photoItems.isEmpty()) View.VISIBLE else View.GONE
+        photoPickerBinding.infoText.visibility = if (viewData.photoItems.isEmpty()) View.VISIBLE else View.GONE
 
-        previewImagesView?.visibility = if(viewData.previewOpen) View.VISIBLE else View.GONE
+        photoPickerBinding.previewImagesView.visibility = if(viewData.previewOpen) View.VISIBLE else View.GONE
 
         if(viewData.lastPhotoIndex > -1 )
-            listRecyclerView?.scrollToPosition(viewData.lastPhotoIndex)
+            photoPickerBinding.listRecyclerView.scrollToPosition(viewData.lastPhotoIndex)
 
         if(viewData.previewOpen){
 
-            previewImagesView?.bindView(imagesList = viewData.photoItems,
+            photoPickerBinding.previewImagesView.bindView(imagesList = viewData.photoItems,
                     initialPosition = viewData.lastPhotoIndex,
                     closeListener = object:CloseListener{
                         override fun onClose(lastPosition: Int) {
@@ -132,14 +144,14 @@ class PhotoPickerFragment : BasePresentableFragment<IPhotoPickerView, IPhotoPick
 
         adapter?.updateItem(photoItem, index)
 
-        previewImagesView?.updateItem(photoItem, index)
+        photoPickerBinding.previewImagesView.updateItem(photoItem, index)
     }
 
     override fun onError(errorMessage: String) {
 
         adapter?.notifyDataSetChanged()
 
-        infoText?.visibility = if (adapter?.itemCount == 0) View.VISIBLE else View.INVISIBLE
+        photoPickerBinding.infoText.visibility = if (adapter?.itemCount == 0) View.VISIBLE else View.INVISIBLE
 
         Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show()
     }
@@ -157,7 +169,7 @@ class PhotoPickerFragment : BasePresentableFragment<IPhotoPickerView, IPhotoPick
 
     override fun handleBackPressed(): Boolean {
 
-        return presenter.onHandleBack(previewImagesView?.getPosition())
+        return presenter.onHandleBack(photoPickerBinding.previewImagesView.getPosition())
     }
     //endregion IComicListView implementation
 
