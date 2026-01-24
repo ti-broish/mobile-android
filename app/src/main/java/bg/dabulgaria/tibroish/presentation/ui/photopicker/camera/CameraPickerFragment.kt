@@ -15,7 +15,7 @@ import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_camera_picker.*
+import bg.dabulgaria.tibroish.databinding.FragmentCameraPickerBinding
 
 interface ICameraPickerView : IBaseView {
 
@@ -25,6 +25,14 @@ interface ICameraPickerView : IBaseView {
 class CameraPickerFragment : BasePresentableFragment<ICameraPickerView,ICameraPickerPresenter>(), ICameraPickerView {
 
     private var mAdapter :CameraPickerAdapter ?=null
+
+    private var _pickerBinding: FragmentCameraPickerBinding? = null
+    private val pickerBinding get() = _pickerBinding!!
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _pickerBinding = null
+    }
 
     override fun onAttach(context: Context) {
 
@@ -39,14 +47,14 @@ class CameraPickerFragment : BasePresentableFragment<ICameraPickerView,ICameraPi
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        listRecyclerView?.setLayoutManager(LinearLayoutManager(activity, RecyclerView.VERTICAL, false))
+        pickerBinding.listRecyclerView.setLayoutManager(LinearLayoutManager(activity, RecyclerView.VERTICAL, false))
         mAdapter = CameraPickerAdapter(presenter)
-        listRecyclerView?.setAdapter( mAdapter )
+        pickerBinding.listRecyclerView.setAdapter( mAdapter )
 
-        infoText?.setVisibility(View.GONE)
+        pickerBinding.infoText.setVisibility(View.GONE)
 
-        listSwipeRefreshLayout?.setColorSchemeResources(android.R.color.holo_orange_dark)
-        listSwipeRefreshLayout?.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
+        pickerBinding.listSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_orange_dark)
+        pickerBinding.listSwipeRefreshLayout.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
 
             presenter.reload()
         })
@@ -55,7 +63,7 @@ class CameraPickerFragment : BasePresentableFragment<ICameraPickerView,ICameraPi
     //region IComicListView implementation
     override fun onLoadingStateChange(isLoading: Boolean) {
 
-        listSwipeRefreshLayout?.setRefreshing(isLoading)
+        pickerBinding.listSwipeRefreshLayout.setRefreshing(isLoading)
     }
 
 
@@ -63,7 +71,7 @@ class CameraPickerFragment : BasePresentableFragment<ICameraPickerView,ICameraPi
 
         mAdapter?.notifyDataSetChanged()
 
-        infoText?.setVisibility( if( mAdapter?.itemCount == 0 ) View.VISIBLE else View.INVISIBLE )
+        pickerBinding.infoText.setVisibility( if( mAdapter?.itemCount == 0 ) View.VISIBLE else View.INVISIBLE )
 
         Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show()
     }
