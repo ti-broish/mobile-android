@@ -16,7 +16,7 @@ import bg.dabulgaria.tibroish.presentation.base.BaseFragment
 import bg.dabulgaria.tibroish.presentation.main.IMainRouter
 import bg.dabulgaria.tibroish.presentation.navigation.NavItemAction
 import bg.dabulgaria.tibroish.presentation.push.IPushTokenSender
-import kotlinx.android.synthetic.main.fragment_home.*
+import bg.dabulgaria.tibroish.databinding.FragmentHomeBinding
 import java.util.*
 import javax.inject.Inject
 
@@ -30,6 +30,14 @@ class HomeFragment : BaseFragment() {
     lateinit var schedulersProvider: ISchedulersProvider
     @Inject
     lateinit var pushTokenSender: IPushTokenSender
+
+    private var _homeBinding: FragmentHomeBinding? = null
+    private val homeBinding get() = _homeBinding!!
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _homeBinding = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,9 +55,9 @@ class HomeFragment : BaseFragment() {
 
         pushTokenSender.sendPushToken()
 
-        sendProtocol?.setOnClickListener { mainRouter.onNavigateToItem(NavItemAction.SendProtocol) }
-        sendSignal?.setOnClickListener { mainRouter.onNavigateToItem(NavItemAction.SendSignal) }
-        rightsAndObligations?.setOnClickListener { mainRouter.onNavigateToItem(NavItemAction.RightsAndObligations) }
+        homeBinding.sendProtocol.setOnClickListener { mainRouter.onNavigateToItem(NavItemAction.SendProtocol) }
+        homeBinding.sendSignal.setOnClickListener { mainRouter.onNavigateToItem(NavItemAction.SendSignal) }
+        homeBinding.rightsAndObligations.setOnClickListener { mainRouter.onNavigateToItem(NavItemAction.RightsAndObligations) }
     }
 
     private fun initLiveButton(){
@@ -69,9 +77,9 @@ class HomeFragment : BaseFragment() {
                 firstString.length + secondString.length + 1,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        tiBroishLive?.text = spannableString
+        homeBinding.tiBroishLive.text = spannableString
 
-        tiBroishLive?.setOnClickListener {  mainRouter.onNavigateToItem( NavItemAction.YouCountLive ) }
+        homeBinding.tiBroishLive.setOnClickListener {  mainRouter.onNavigateToItem( NavItemAction.YouCountLive ) }
     }
 
     companion object {
