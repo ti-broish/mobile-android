@@ -39,8 +39,8 @@ android {
         applicationId "bg.dabulgaria.tibroish"
         minSdkVersion 22
         targetSdkVersion 34
-        versionCode 22
-        versionName "2.0.1.$versionCode"
+        versionCode 23
+        versionName "2.0.2.$versionCode"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         signingConfig signingConfigs.AppSigning
         setProperty("archivesBaseName", "Ti-Broish-$versionName")
