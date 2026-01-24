@@ -8,7 +8,7 @@ import androidx.annotation.StringRes
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
-import kotlinx.android.synthetic.main.fragment_forgot_password.*
+import bg.dabulgaria.tibroish.databinding.FragmentForgotPasswordBinding
 
 interface IForgotPasswordView : IBaseView {
     fun passwordResetSuccess(email: String)
@@ -19,6 +19,15 @@ interface IForgotPasswordView : IBaseView {
 class ForgotPasswordFragment : BasePresentableFragment<IForgotPasswordView,
         IForgotPasswordPresenter>
     (), IForgotPasswordView {
+
+
+    private var _forgotPasswordBinding: FragmentForgotPasswordBinding? = null
+    private val forgotPasswordBinding get() = _forgotPasswordBinding!!
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _forgotPasswordBinding = null
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -37,22 +46,22 @@ class ForgotPasswordFragment : BasePresentableFragment<IForgotPasswordView,
         if (email.isNullOrEmpty()) {
             return
         }
-        input_email_edit_text.setText(email)
+        forgotPasswordBinding.inputEmailEditText.setText(email)
     }
 
     private fun setupSendButton() {
-        button_send.setOnClickListener {
+        forgotPasswordBinding.buttonSend.setOnClickListener {
             onSendButtonClicked()
         }
     }
 
     private fun onSendButtonClicked() {
-        val email = input_email_edit_text.text.toString()
+        val email = forgotPasswordBinding.inputEmailEditText.text.toString()
         if (presenter.processEmailField(email) {
-                input_email.error = getString(it)
+                forgotPasswordBinding.inputEmail.error = getString(it)
             }) {
             presenter.sendPasswordResetEmail(email)
-            input_email.error = null
+            forgotPasswordBinding.inputEmail.error = null
         }
     }
 
