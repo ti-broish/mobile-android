@@ -7,7 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import bg.dabulgaria.tibroish.R
-import kotlinx.android.synthetic.main.layout_preview_images.view.*
+import bg.dabulgaria.tibroish.databinding.LayoutPreviewImagesBinding
 
 interface CloseListener{
 
@@ -25,6 +25,7 @@ class PreviewImagesView : ConstraintLayout {
 
     private var adapter: PreviewImagesAdapter? =null
     private var layoutManager: LinearLayoutManager?=null
+    private lateinit var binding: LayoutPreviewImagesBinding
 
     init {
 
@@ -43,7 +44,7 @@ class PreviewImagesView : ConstraintLayout {
 
         if (adapter == null || !landscape.equals(adapter?.landscape)) {
             adapter = PreviewImagesAdapter(deleteListener, checkListener, landscape)
-            previewImagesRecyclerView.adapter = adapter
+            binding.previewImagesRecyclerView.adapter = adapter
         }
 
         adapter?.list?.clear()
@@ -54,15 +55,15 @@ class PreviewImagesView : ConstraintLayout {
         if (layoutManager == null) {
 
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            previewImagesRecyclerView.layoutManager = layoutManager
+            binding.previewImagesRecyclerView.layoutManager = layoutManager
             val snapHelper = PagerSnapHelper()
-            snapHelper.attachToRecyclerView(previewImagesRecyclerView)
+            snapHelper.attachToRecyclerView(binding.previewImagesRecyclerView)
         }
 
         if(initialPosition>-1)
-            previewImagesRecyclerView.scrollToPosition(initialPosition)
+            binding.previewImagesRecyclerView.scrollToPosition(initialPosition)
 
-        previewImagesCloseImageView.setOnClickListener {
+        binding.previewImagesCloseImageView.setOnClickListener {
             val position = layoutManager?.findFirstVisibleItemPosition() ?: 0
             closeListener.onClose(position)
         }
