@@ -64,6 +64,12 @@ class PhotoPickerFragment : BasePresentableFragment<IPhotoPickerView, IPhotoPick
         return inflater.inflate(R.layout.fragment_photo_picker, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        _photoPickerBinding = FragmentPhotoPickerBinding.bind(view)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

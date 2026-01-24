@@ -20,25 +20,21 @@ class SendItemAdapter @Inject constructor(
     val presenter: ISendItemPresenter
 ) : RecyclerView.Adapter<SendItemViewHolder<*>>() {
 
-    val list = mutableListOf<SendItemListItem>()
+    val listItems = mutableListOf<SendItemListItem>()
+
+    override fun getItemCount(): Int = listItems.size
+
+    override fun getItemViewType(position: Int): Int {
+        return listItems[position].type.ordinal
+    }
+
+    override fun onBindViewHolder(holder: SendItemViewHolder<*>, position: Int) {
+        holder.bind(listItems[position], presenter)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SendItemViewHolder<*> {
 
         val inflater = LayoutInflater.from(parent.context)
-
-        val view = inflater.inflate(when(viewType){
-
-            SendItemListItemType.Header.ordinal -> R.layout.send_item_header_layout
-            SendItemListItemType.Section.ordinal -> R.layout.send_item_section_layout
-            SendItemListItemType.SectionManual.ordinal -> R.layout.send_item_section_manual_layout
-            SendItemListItemType.Message.ordinal -> R.layout.send_item_message_layout
-            SendItemListItemType.Image.ordinal -> R.layout.send_item_photo_layout
-            SendItemListItemType.Buttons.ordinal -> R.layout.send_item_buttons_layout
-            SendItemListItemType.SendSuccess.ordinal -> R.layout.send_item_success_layout
-            SendItemListItemType.InfoText.ordinal -> R.layout.send_item_info_text_layout
-            else-> throw NotImplementedError( "SendItemListItemType( $viewType ) ViewHolder layout not implemented")
-        },
-                parent, false)
 
         return when(viewType) {
             SendItemListItemType.Header.ordinal -> SendItemHeaderViewHolder(
@@ -76,16 +72,7 @@ class SendItemAdapter @Inject constructor(
         }
     }
 
-    override fun getItemCount(): Int = list.size
-
-    override fun getItemViewType(position: Int): Int = getItem(position).type.ordinal
-
-    override fun onBindViewHolder(holder: SendItemViewHolder<*>, position: Int)
-            = holder.bind(getItem(position), presenter)
-
-    private fun getItem(position: Int): SendItemListItem = list[position]
-
     companion object {
-         val TAG = SendItemAdapter::class.simpleName
+        val TAG = SendItemAdapter::class.simpleName
     }
 }

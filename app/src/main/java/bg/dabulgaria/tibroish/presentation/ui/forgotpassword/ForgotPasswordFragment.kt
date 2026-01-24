@@ -35,6 +35,12 @@ class ForgotPasswordFragment : BasePresentableFragment<IForgotPasswordView,
         R.layout.fragment_forgot_password, container, false
     )
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        _forgotPasswordBinding = FragmentForgotPasswordBinding.bind(view)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

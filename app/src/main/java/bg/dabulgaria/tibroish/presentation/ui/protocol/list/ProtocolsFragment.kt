@@ -38,6 +38,12 @@ class ProtocolsFragment : BasePresentableFragment<IProtocolsView,
         R.layout.fragment_protocols_list, container, false
     )
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        _protocolsListBinding = FragmentProtocolsListBinding.bind(view)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

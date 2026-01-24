@@ -44,6 +44,12 @@ class CameraPickerFragment : BasePresentableFragment<ICameraPickerView,ICameraPi
         return inflater.inflate(R.layout.fragment_camera_picker, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        _pickerBinding = FragmentCameraPickerBinding.bind(view)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

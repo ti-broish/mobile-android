@@ -44,6 +44,12 @@ class ViolationDetailsFragment : BasePresentableFragment<IViolationDetailsView,
         R.layout.fragment_violation_details, container, false
     )
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        _violationDetailsBinding = FragmentViolationDetailsBinding.bind(view)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

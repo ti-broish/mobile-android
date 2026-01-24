@@ -44,6 +44,12 @@ class ProtocolDetailsFragment : BasePresentableFragment<IProtocolDetailsView,
         R.layout.fragment_protocols_details, container, false
     )
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        _protocolsDetailsBinding = FragmentProtocolsDetailsBinding.bind(view)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

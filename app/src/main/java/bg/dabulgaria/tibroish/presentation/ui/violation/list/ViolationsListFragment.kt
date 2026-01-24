@@ -37,6 +37,12 @@ class ViolationsListFragment
         R.layout.fragment_violations_list, container, false
     )
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        _violationsListBinding = FragmentViolationsListBinding.bind(view)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

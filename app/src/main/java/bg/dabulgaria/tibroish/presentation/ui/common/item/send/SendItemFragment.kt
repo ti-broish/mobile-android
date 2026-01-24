@@ -61,6 +61,13 @@ open class SendItemFragment<SendPresenter : ISendItemPresenter> constructor()
         return inflater.inflate(R.layout.fragment_send_item, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        _sendItemBinding = FragmentSendItemBinding.bind(view)
+        _photoPickerBinding = FragmentPhotoPickerBinding.bind(view)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -72,10 +79,10 @@ open class SendItemFragment<SendPresenter : ISendItemPresenter> constructor()
 
             override fun getSpanSize(position: Int): Int {
 
-                if (position < 0 || position >= adapter.list.size)
+                if (position < 0 || position >= adapter.listItems.size)
                     return 3
 
-                return when (adapter.list[position].type) {
+                return when (adapter.listItems[position].type) {
                     SendItemListItemType.Image -> 1
                     else -> 3
                 }
@@ -103,8 +110,8 @@ open class SendItemFragment<SendPresenter : ISendItemPresenter> constructor()
 
     override fun setData(data: SendItemViewData) {
 
-        adapter.list.clear()
-        adapter.list.addAll(data.items)
+        adapter.listItems.clear()
+        adapter.listItems.addAll(data.items)
         adapter.notifyDataSetChanged()
 
         photoPickerBinding.previewImagesView.visibility = if(data.imagePreviewOpen) View.VISIBLE else View.GONE
@@ -129,11 +136,11 @@ open class SendItemFragment<SendPresenter : ISendItemPresenter> constructor()
 
     override fun setSectionsData(data: SendItemViewData) {
 
-        val index = adapter.list.indexOfFirst { it.type == SendItemListItemType.Section }
+        val index = adapter.listItems.indexOfFirst { it.type == SendItemListItemType.Section }
         if (index < 0)
             return
 
-        val item = adapter.list.getOrNull(index) ?: return
+        val item = adapter.listItems.getOrNull(index) ?: return
 
         val sectionItem = item as SendItemListItemSection
         sectionItem.sectionsViewData = data.sectionsData

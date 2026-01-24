@@ -40,6 +40,12 @@ class ProfileFragment : BasePresentableFragment<IProfileView,
         R.layout.fragment_profile, container, false
     )
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        _profileBinding = FragmentProfileBinding.bind(view)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

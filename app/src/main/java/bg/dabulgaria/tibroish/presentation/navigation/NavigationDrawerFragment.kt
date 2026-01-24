@@ -38,12 +38,12 @@ class NavigationDrawerFragment : Fragment() {
     @Inject
     lateinit var userAuthenticator: IUserAuthenticator
 
-    private var _binding: FragmentNavigationDrawerBinding? = null
-    private val binding get() = _binding!!
+    private var _navigationDrawerBinding: FragmentNavigationDrawerBinding? = null
+    private val navigationDrawerBinding get() = _navigationDrawerBinding!!
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        _navigationDrawerBinding = null
     }
 
     override fun onAttach(context: Context) {
@@ -71,7 +71,7 @@ class NavigationDrawerFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        _binding = FragmentNavigationDrawerBinding.bind(view)
+        _navigationDrawerBinding = FragmentNavigationDrawerBinding.bind(view)
 
         reloadNavigationItems()
     }
@@ -168,7 +168,7 @@ class NavigationDrawerFragment : Fragment() {
     fun setEnabled(enabled:Boolean){
 
         drawerToggle?.setDrawerIndicatorEnabled(enabled)
-        binding.navItemsRecyclerView?.visibility = if(enabled) View.VISIBLE else View.GONE
+        navigationDrawerBinding.navItemsRecyclerView?.visibility = if(enabled) View.VISIBLE else View.GONE
         actionBar?.setHomeButtonEnabled(enabled)
         actionBar?.setDisplayHomeAsUpEnabled(enabled)
     }
@@ -192,12 +192,12 @@ class NavigationDrawerFragment : Fragment() {
         else
             navItems.add(NavItem( NavItemAction.Login, R.string.login, null))
 
-        binding.navItemsRecyclerView.layoutManager = LinearLayoutManager( this.context, RecyclerView.VERTICAL, false )
-        binding.navItemsRecyclerView.adapter = NavItemsAdapter( navItems, object:OnMenuClickListener {
+        navigationDrawerBinding.navItemsRecyclerView.layoutManager = LinearLayoutManager( this.context, RecyclerView.VERTICAL, false )
+        navigationDrawerBinding.navItemsRecyclerView.adapter = NavItemsAdapter( navItems, object:OnMenuClickListener {
 
             override fun onNavigateToItem(action: NavItemAction) {
 
-                binding.navItemsRecyclerView.postDelayed( {
+                navigationDrawerBinding.navItemsRecyclerView.postDelayed( {
                     drawerLayout?.closeDrawers()
                     listener?.onNavigateToItem(action)
                 }, 200)

@@ -36,6 +36,12 @@ class LiveSectionPickFragment @Inject constructor()
         return inflater.inflate(R.layout.fragment_live_section_pick, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        _pickerBinding = FragmentLiveSectionPickBinding.bind(view)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
