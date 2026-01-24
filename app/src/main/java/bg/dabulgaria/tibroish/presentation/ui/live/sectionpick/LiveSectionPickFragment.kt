@@ -9,7 +9,7 @@ import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
 import bg.dabulgaria.tibroish.presentation.ui.common.item.send.*
-import kotlinx.android.synthetic.main.fragment_live_section_pick.*
+import bg.dabulgaria.tibroish.databinding.FragmentLiveSectionPickBinding
 import javax.inject.Inject
 
 interface ILiveSectionPickView: IBaseView{
@@ -24,6 +24,14 @@ interface ILiveSectionPickView: IBaseView{
 class LiveSectionPickFragment @Inject constructor()
     : BasePresentableFragment<ILiveSectionPickView, ILiveSectionPickPresenter>(), ILiveSectionPickView {
 
+    private var _pickerBinding: FragmentLiveSectionPickBinding? = null
+    private val pickerBinding get() = _pickerBinding!!
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _pickerBinding = null
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_live_section_pick, container, false)
@@ -32,12 +40,12 @@ class LiveSectionPickFragment @Inject constructor()
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        liveSectionPickContinueBtn.setOnClickListener { presenter.onContinue() }
+        pickerBinding.liveSectionPickContinueBtn.setOnClickListener { presenter.onContinue() }
     }
 
     override fun setSectionsData(data: LiveSectionPickViewData) {
 
-        liveSectionPickerView?.bindView(data.sectionsData, presenter)
+        pickerBinding.liveSectionPickerView?.bindView(data.sectionsData, presenter)
     }
 
     override fun onError(errorMessage: String) {
@@ -48,8 +56,8 @@ class LiveSectionPickFragment @Inject constructor()
     override fun onLoadingStateChange(isLoading: Boolean) {
 
         val visibility = if (isLoading) View.VISIBLE else View.GONE
-        liveSectionPickProgressBar.visibility = visibility
-        liveSectionPickProcessingOverlay.visibility = visibility
+        pickerBinding.liveSectionPickProgressBar.visibility = visibility
+        pickerBinding.liveSectionPickProcessingOverlay.visibility = visibility
     }
 
     companion object {
