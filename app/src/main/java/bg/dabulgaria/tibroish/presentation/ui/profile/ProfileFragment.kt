@@ -14,7 +14,7 @@ import bg.dabulgaria.tibroish.domain.user.User
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.android.synthetic.main.fragment_profile.*
+import bg.dabulgaria.tibroish.databinding.FragmentProfileBinding
 
 interface IProfileView : IBaseView {
     fun onProfileFetchSuccess(user: User)
@@ -25,6 +25,14 @@ interface IProfileView : IBaseView {
 class ProfileFragment : BasePresentableFragment<IProfileView,
         IProfilePresenter>
     (), IProfileView {
+
+    private var _profileBinding: FragmentProfileBinding? = null
+    private val profileBinding get() = _profileBinding!!
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _profileBinding = null
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -41,7 +49,7 @@ class ProfileFragment : BasePresentableFragment<IProfileView,
     }
 
     private fun setupDeleteProfileButton() {
-        button_delete.setOnClickListener(onDeleteButtonClicked())
+        profileBinding.buttonDelete.setOnClickListener(onDeleteButtonClicked())
     }
 
     private fun onDeleteButtonClicked(): (v: View) -> Unit = {
@@ -87,8 +95,8 @@ class ProfileFragment : BasePresentableFragment<IProfileView,
     }
 
     private fun setupSaveButton() {
-        button_save.isEnabled = false
-        button_save.setOnClickListener {
+        profileBinding.buttonSave.isEnabled = false
+        profileBinding.buttonSave.setOnClickListener {
             if (validateFields()) {
                 send();
             }
@@ -138,22 +146,22 @@ class ProfileFragment : BasePresentableFragment<IProfileView,
     }
 
     private fun applyFieldsToUser(user: User) {
-        user.firstName = input_first_name_edit_text.text.toString()
-        user.lastName = input_last_name_edit_text.text.toString()
-        user.phone = input_phone_number_edit_text.text.toString()
-        user.pin = input_egn_last_four_digits_edit_text.text.toString()
-        user.hasAgreedToKeepData = checkbox_consent.isChecked
+        user.firstName = profileBinding.inputFirstNameEditText.text.toString()
+        user.lastName = profileBinding.inputLastNameEditText.text.toString()
+        user.phone = profileBinding.inputPhoneNumberEditText.text.toString()
+        user.pin = profileBinding.inputEgnLastFourDigitsEditText.text.toString()
+        user.hasAgreedToKeepData = profileBinding.checkboxConsent.isChecked
     }
 
     override fun onProfileFetchSuccess(user: User) {
-        input_first_name_edit_text.setText(user.firstName)
-        input_last_name_edit_text.setText(user.lastName)
-        input_email_edit_text.setText(user.email)
-        input_phone_number_edit_text.setText(user.phone)
-        input_egn_last_four_digits_edit_text.setText(user.pin)
-        input_organization_edit_text.setText(user.organization?.name)
-        checkbox_consent.isChecked = user.hasAgreedToKeepData
-        button_save.isEnabled = true
+        profileBinding.inputFirstNameEditText.setText(user.firstName)
+        profileBinding.inputLastNameEditText.setText(user.lastName)
+        profileBinding.inputEmailEditText.setText(user.email)
+        profileBinding.inputPhoneNumberEditText.setText(user.phone)
+        profileBinding.inputEgnLastFourDigitsEditText.setText(user.pin)
+        profileBinding.inputOrganizationEditText.setText(user.organization?.name)
+        profileBinding.checkboxConsent.isChecked = user.hasAgreedToKeepData
+        profileBinding.buttonSave.isEnabled = true
     }
 
     override fun onProfileFetchFail(@StringRes messageResId: Int) {
@@ -192,7 +200,7 @@ class ProfileFragment : BasePresentableFragment<IProfileView,
 
     private fun processPhoneNumber(): Boolean {
         if (!presenter.processPhoneNumberField(
-                input_phone_number_edit_text.text.toString(),
+                profileBinding.inputPhoneNumberEditText.text.toString(),
                 callback = {
                     setTextLayoutError(R.id.input_phone_number, it)
                 })

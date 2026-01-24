@@ -2,14 +2,11 @@ package bg.dabulgaria.tibroish.presentation.ui.photopicker.gallery//package bg.d
 
 
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
 
 import bg.dabulgaria.tibroish.R
