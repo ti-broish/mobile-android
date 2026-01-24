@@ -9,9 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import bg.dabulgaria.tibroish.R
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
-import bg.dabulgaria.tibroish.presentation.ui.common.IDialogUtil
 import bg.dabulgaria.tibroish.presentation.ui.violation.list.ViolationsListPresenter.State
-import kotlinx.android.synthetic.main.fragment_violations_list.*
+import bg.dabulgaria.tibroish.databinding.FragmentViolationsListBinding
 import javax.inject.Inject
 
 interface IViolationsListView : IBaseView {
@@ -23,6 +22,14 @@ class ViolationsListFragment
 
     @Inject
     lateinit var adapter: ViolationsAdapter
+
+    private var _violationsListBinding: FragmentViolationsListBinding? = null
+    private val violationsListBinding get() = _violationsListBinding!!
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _violationsListBinding = null
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -37,7 +44,7 @@ class ViolationsListFragment
 
         updateState()
 
-        listSwipeRefreshLayout.setOnRefreshListener {
+        violationsListBinding.listSwipeRefreshLayout.setOnRefreshListener {
             refreshMyViolations(initialLoading = false)
         }
     }
@@ -59,16 +66,16 @@ class ViolationsListFragment
     }
 
     private fun showList() {
-        listSwipeRefreshLayout.visibility = View.VISIBLE
-        progressBar.visibility = View.GONE
+        violationsListBinding.listSwipeRefreshLayout.visibility = View.VISIBLE
+        violationsListBinding.progressBar.visibility = View.GONE
     }
 
     private fun setupRecyclerView() {
-        listRecyclerView.layoutManager =
+        violationsListBinding.listRecyclerView.layoutManager =
             LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
-        listRecyclerView.adapter = adapter
+        violationsListBinding.listRecyclerView.adapter = adapter
         adapter.onItemClickListener = View.OnClickListener {
-            val position: Int = listRecyclerView.getChildLayoutPosition(it)
+            val position: Int = violationsListBinding.listRecyclerView.getChildLayoutPosition(it)
             presenter.showViolationAt(position)
         }
     }
@@ -76,7 +83,7 @@ class ViolationsListFragment
     private fun refreshMyViolations(initialLoading: Boolean) {
         presenter.getMyViolations(initialLoading) {
             adapter.updateList(it)
-            listSwipeRefreshLayout.isRefreshing = false
+            violationsListBinding.listSwipeRefreshLayout.isRefreshing = false
             updateState()
         }
     }

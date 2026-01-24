@@ -13,7 +13,7 @@ import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.presentation.base.BasePresentableFragment
 import bg.dabulgaria.tibroish.presentation.base.IBaseView
 import bg.dabulgaria.tibroish.presentation.ui.common.IStatusColorUtil
-import kotlinx.android.synthetic.main.fragment_violation_details.*
+import bg.dabulgaria.tibroish.databinding.FragmentViolationDetailsBinding
 import javax.inject.Inject
 
 interface IViolationDetailsView : IBaseView {
@@ -30,6 +30,14 @@ class ViolationDetailsFragment : BasePresentableFragment<IViolationDetailsView,
     @Inject
     lateinit var adapter: ViolationPicturesAdapter
 
+    private var _violationDetailsBinding: FragmentViolationDetailsBinding? = null
+    private val violationDetailsBinding get() = _violationDetailsBinding!!
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _violationDetailsBinding = null
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(
@@ -41,17 +49,17 @@ class ViolationDetailsFragment : BasePresentableFragment<IViolationDetailsView,
 
         val violation =
             arguments?.getSerializable(ViolationDetailsConstants.VIEW_DATA_KEY) as VoteViolationRemote
-        listRecyclerView.layoutManager =
+        violationDetailsBinding.listRecyclerView.layoutManager =
             LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
         adapter.item = violation
         adapter.onItemClickListener = View.OnClickListener {
-            val position: Int = listRecyclerView.getChildLayoutPosition(it)
+            val position: Int = violationDetailsBinding.listRecyclerView.getChildLayoutPosition(it)
             val picture = violation.pictures[position - 1]
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(picture.url))
             intent.flags.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
-        listRecyclerView.adapter = adapter
+        violationDetailsBinding.listRecyclerView.adapter = adapter
     }
 
     companion object {

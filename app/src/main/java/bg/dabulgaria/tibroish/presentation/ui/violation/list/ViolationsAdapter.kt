@@ -5,9 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import bg.dabulgaria.tibroish.R
+import bg.dabulgaria.tibroish.databinding.PreviewImageItemLayoutLandBinding
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote
 import bg.dabulgaria.tibroish.presentation.ui.common.IStatusColorUtil
-import kotlinx.android.synthetic.main.violations_list_item_layout.view.*
+import bg.dabulgaria.tibroish.databinding.ViolationsListItemLayoutBinding
+import bg.dabulgaria.tibroish.presentation.ui.common.preview.images.PreviewImagesAdapter.PreviewImagesViewHolder
 import javax.inject.Inject
 
 class ViolationsAdapter @Inject constructor(private val statusColorUtil: IStatusColorUtil)
@@ -18,10 +20,14 @@ class ViolationsAdapter @Inject constructor(private val statusColorUtil: IStatus
     lateinit var onItemClickListener: View.OnClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.violations_list_item_layout, parent, false)
+        val inflater = LayoutInflater.from(parent.context)
+
+        val view = inflater.inflate(R.layout.violations_list_item_layout, parent, false)
         view.setOnClickListener(onItemClickListener)
-        return ViewHolder(view)
+
+        val binding = ViolationsListItemLayoutBinding.inflate(inflater, parent, false)
+
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -32,33 +38,33 @@ class ViolationsAdapter @Inject constructor(private val statusColorUtil: IStatus
 
         val violationSignal = items[position]
 
-        holder.itemView.violationSection.visibility = if(!violationSignal.section?.id.isNullOrEmpty())
+        holder.binding.violationSection.visibility = if(!violationSignal.section?.id.isNullOrEmpty())
             View.VISIBLE
         else
             View.GONE
 
         violationSignal.section?.id?.let {
             val section  = "${number}${context.getString(R.string.section_label)} $it"
-            holder.itemView.violationSection.text = section
+            holder.binding.violationSection.text = section
             number=""
         }
 
-        holder.itemView.violationPlace.visibility = if(!violationSignal.town?.name.isNullOrEmpty())
+        holder.binding.violationPlace.visibility = if(!violationSignal.town?.name.isNullOrEmpty())
             View.VISIBLE
         else
             View.GONE
 
         violationSignal.town?.name?.let {
             val place = "${number}${context.getString(R.string.location_label)} $it"
-            holder.itemView.violationPlace.text =  place
+            holder.binding.violationPlace.text =  place
             number=""
         }
 
         val description = "${number}${context.getString(R.string.description)}: ${violationSignal.description}"
-        holder.itemView.violationDescription.text = description
+        holder.binding.violationDescription.text = description
 
-        holder.itemView.violationStatus.text = violationSignal.statusLocalized
-        holder.itemView.violationStatus.setTextColor(
+        holder.binding.violationStatus.text = violationSignal.statusLocalized
+        holder.binding.violationStatus.setTextColor(
             statusColorUtil.getColorForStatus(violationSignal.status.stringValue))
     }
 
@@ -70,7 +76,9 @@ class ViolationsAdapter @Inject constructor(private val statusColorUtil: IStatus
 
     override fun getItemCount(): Int = items.size
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(
+        val binding: ViolationsListItemLayoutBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
 
     }
