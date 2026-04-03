@@ -33,11 +33,11 @@ android {
         }
     }
 
-    compileSdkVersion 34
+    compileSdkVersion 35
     defaultConfig {
         applicationId "bg.dabulgaria.tibroish"
-        minSdkVersion 22
-        targetSdkVersion 34
+        minSdkVersion 23
+        targetSdkVersion 35
         versionCode 23
         versionName "2.0.2.$versionCode"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
@@ -112,7 +112,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     implementation "com.google.android.material:material:1.6.0"
     implementation 'androidx.navigation:navigation-fragment:2.5.3'
-    implementation platform('com.google.firebase:firebase-bom:27.1.0')
+    implementation platform('com.google.firebase:firebase-bom:33.1.2')
 
     implementation 'androidx.navigation:navigation-ui:2.5.3'
 
@@ -138,10 +138,10 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxkotlin:3.0.1'
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-auth'
-    implementation 'com.google.firebase:firebase-messaging-ktx'
-    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-analytics'
 
-    implementation 'org.greenrobot:eventbus:3.2.0'
+    implementation 'org.greenrobot:eventbus:3.3.1'
     implementation 'com.airbnb.android:lottie:5.0.3'
 
     // Dagger core

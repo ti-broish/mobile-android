@@ -52,7 +52,7 @@ class LoginFragmentViewModel : ViewModel() {
                 }
                 ?.addOnSuccessListener { authResult->
 
-                    if( authResult.user.isEmailVerified) {
+                    if(authResult?.user?.isEmailVerified ?: false) {
 
                         mMainRouter?.onAuthEvent()
                     }

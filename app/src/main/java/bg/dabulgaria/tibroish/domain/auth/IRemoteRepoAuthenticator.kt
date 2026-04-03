@@ -154,7 +154,7 @@ class RemoteRepoAuthenticator @Inject constructor(private val authRepo: IAuthRep
      * Has internal synchronization, only one thread starts the token refresh process
      * @return The refreshed token on success and empty string on failure
      */
-    private fun refreshToken() :String{
+    private fun refreshToken() :String {
 
         if (refreshTokenStarted.get()) {
 
@@ -164,35 +164,35 @@ class RemoteRepoAuthenticator @Inject constructor(private val authRepo: IAuthRep
 
                     syncObject.wait()
                 }
-            } catch (ex: Exception) { }
+            } catch (ex: Exception) {
+            }
 
             return authRepo.token
         }
 
         refreshTokenStarted.set(true)
 
-        val task = FirebaseAuth.getInstance().currentUser.getIdToken(true)
+        val task = FirebaseAuth.getInstance().currentUser?.getIdToken(true)
 
-        try{
-
-            val tokenResult = Tasks.await(task)
-            val token = tokenResult.token?:""
-            authRepo.token = token
-
-            return token
-        }
-        catch (th: Throwable){
-
-            authRepo.token = ""
-            logger.e(TAG, th)
-            mainRouter.onAuthEvent()
-        }
-        finally {
-            refreshTokenStarted.set(false)
-            synchronized(syncObject) { syncObject.notifyAll() }
+        if (task == null) {
+            return ""
         }
 
-        return ""
+        return (try {
+                val tokenResult = Tasks.await(task)
+                val token = tokenResult.token ?: ""
+                authRepo.token = token
+
+                return token
+            } catch (th: Throwable) {
+
+                authRepo.token = ""
+                logger.e(TAG, th)
+                mainRouter.onAuthEvent()
+            } finally {
+                refreshTokenStarted.set(false)
+                synchronized(syncObject) { syncObject.notifyAll() }
+            }).toString()
     }
     //endregion private methods
 
