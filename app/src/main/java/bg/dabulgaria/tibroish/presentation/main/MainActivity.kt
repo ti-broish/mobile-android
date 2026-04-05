@@ -3,11 +3,15 @@ package bg.dabulgaria.tibroish.presentation.main
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBar
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
@@ -53,13 +57,13 @@ class MainActivity : BaseActivity(),
     //region AppCompatActivity overrides
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-//        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        configureEdgeToEdgeTopBar()
 
         navigationDrawerFragment = supportFragmentManager.findFragmentById(R.id.navigation_drawer) as NavigationDrawerFragment?
 
-        drawerLayout = findViewById(R.id.drawerLayout)
+        drawerLayout = binding.drawerLayout
         // Set up the drawer.
         navigationDrawerFragment?.setUp(R.id.navigation_drawer, drawerLayout, mainPresenter)
 
@@ -146,6 +150,9 @@ class MainActivity : BaseActivity(),
         val actionBar = supportActionBar?: return
         actionBar.navigationMode = ActionBar.NAVIGATION_MODE_STANDARD
         actionBar.setDisplayShowTitleEnabled(true)
+        if (shouldShowEdgeToEdgeTopBar()) {
+            actionBar.elevation = 0f
+        }
     }
 
     private fun openDrawer() {
@@ -200,5 +207,22 @@ class MainActivity : BaseActivity(),
 
     companion object{
         val TAG = MainActivity::class.java.simpleName
+    }
+
+    private fun configureEdgeToEdgeTopBar() {
+        if (!shouldShowEdgeToEdgeTopBar()) {
+            binding.edgeToEdgeTopBar.visibility = View.GONE
+            return
+        }
+
+        binding.edgeToEdgeTopBar.visibility = View.VISIBLE
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.statusBarColor = Color.TRANSPARENT
+        WindowInsetsControllerCompat(window, binding.root).isAppearanceLightStatusBars = false
+        supportActionBar?.elevation = 0f
+    }
+
+    private fun shouldShowEdgeToEdgeTopBar(): Boolean {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM
     }
 }
