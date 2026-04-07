@@ -301,7 +301,9 @@ constructor(private val schedulersProvider: ISchedulersProvider,
     override fun onSectionSelected(section: SectionRemote) {
 
         val sectionsData = data?.sectionsData ?:return
-        data?.sectionsData = interactor.onSectionSelected(sectionsData, section)
+        val currentData = data ?: return
+        currentData.sectionsData = interactor.onSectionSelected(sectionsData, section)
+        view?.setSectionsData(currentData)
         view?.hideSoftKeyboard()
     }
 

@@ -27,10 +27,6 @@ class SectionPickerView : ConstraintLayout {
     }
 
     private lateinit var binding: LayoutSectionsViewBinding
-
-    init {
-        View.inflate(context, R.layout.layout_sections_view, this)
-    }
     //endregion construction
 
     fun bindView(sectionsViewData: SectionsViewData?, presenter: ISectionPickerPresenter) {
