@@ -23,12 +23,12 @@ import bg.dabulgaria.tibroish.live.utils.*
 import bg.dabulgaria.tibroish.presentation.base.BaseActivity
 import com.pedro.encoder.input.video.CameraHelper
 import com.pedro.encoder.utils.CodecUtil
-import com.pedro.rtplibrary.rtmp.RtmpCamera1
+import com.pedro.library.rtmp.RtmpCamera1
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import bg.dabulgaria.tibroish.databinding.ActivityBroadcastBinding
-import net.ossrs.rtmp.ConnectCheckerRtmp
+import com.pedro.common.ConnectChecker
 import javax.inject.Inject
 import kotlin.math.min
 
@@ -36,7 +36,7 @@ import kotlin.math.min
 const val RECONNECT_ATTEMPT_INTERVAL = 15000L
 private const val PERMISSIONS_REQUEST_CODE = 12345
 
-class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Callback, HasAndroidInjector {
+class BroadcastActivity : BaseActivity(), ConnectChecker, SurfaceHolder.Callback, HasAndroidInjector {
 
     @Inject
     lateinit var loginActivityLoader: LoginActivityLoader
@@ -199,13 +199,19 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
         binding.counter.stop()
     }
 
-    override fun onAuthSuccessRtmp() {
+    override fun onAuthSuccess() {
+        TODO("Not yet implemented")
     }
 
-    override fun onNewBitrateRtmp(bitrate: Long) {
+    override fun onNewBitrate(bitrate: Long) {
+        TODO("Not yet implemented")
     }
 
-    override fun onConnectionSuccessRtmp() {
+    override fun onConnectionStarted(url: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onConnectionSuccess() {
         runOnUiThread {
             binding.actionButton.setImageResource(R.drawable.ic_stop_button)
             refreshTimer?.removeCallbacksAndMessages(null)
@@ -217,7 +223,7 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
         }
     }
 
-    override fun onConnectionFailedRtmp(reason: String) {
+    override fun onConnectionFailed(reason: String) {
         runOnUiThread {
             binding.liveMarker.visibility = View.GONE
             binding.actionButton.setImageResource(R.drawable.ic_start_button)
@@ -228,10 +234,11 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
 
     }
 
-    override fun onAuthErrorRtmp() {
+    override fun onAuthError() {
+        TODO("Not yet implemented")
     }
 
-    override fun onDisconnectRtmp() {
+    override fun onDisconnect() {
         runOnUiThread {
             binding.liveMarker.visibility = View.GONE
             binding.actionButton.setImageResource(R.drawable.ic_start_button)
@@ -278,9 +285,9 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
 
             // there used to be a defect related to Pixel 3a, that seems to have reemerged with latest Android version
             // https://github.com/pedroSG94/rtmp-rtsp-stream-client-java/issues/381
-            if (Build.MODEL == "Pixel 3a") {
-                localCamera.setForce(CodecUtil.Force.SOFTWARE, CodecUtil.Force.FIRST_COMPATIBLE_FOUND)
-            }
+//            if (Build.MODEL == "Pixel 3a") {
+//                localCamera.setForce(CodecUtil.Force.SOFTWARE, CodecUtil.Force.FIRST_COMPATIBLE_FOUND)
+//            }
             val (width, height) = localCamera.getResolutionForQuality(quality)
             val result = localCamera.prepareVideo(
                     width, height, quality.fps,
@@ -483,8 +490,9 @@ class BroadcastActivity : BaseActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
         havePermissions = true
 
         rtmpCamera1 = RtmpCamera1(videoStreamSurfaceView, this@BroadcastActivity).apply {
-            setReTries(10)
-            setLogs(false)
+            TODO("refactor setReTries and setLogs if needed")
+//            setReTries(10)
+//            setLogs(false)
             synchronized(this@BroadcastActivity) {
                 if (havePermissions && surfaceViewCreated && !isOnPreview) {
                     startStreamPreview()

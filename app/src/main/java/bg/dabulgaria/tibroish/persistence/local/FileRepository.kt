@@ -125,7 +125,7 @@ class FileRepository @Inject constructor(@AppContext private val context: Contex
         else {
 
             val fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
-            MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase(Locale.ENGLISH))
+            MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.lowercase())
         }
         return mimeType
     }

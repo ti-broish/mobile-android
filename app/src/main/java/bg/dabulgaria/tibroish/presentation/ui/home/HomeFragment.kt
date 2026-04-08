@@ -69,8 +69,8 @@ class HomeFragment : BaseFragment() {
             resources.getColor(R.color.textRed)
         }
 
-        val firstString = getString(R.string.ti_broish).toUpperCase(Locale.ENGLISH)
-        val secondString = getString(R.string.live).toUpperCase(Locale.ENGLISH)
+        val firstString = getString(R.string.ti_broish).uppercase()
+        val secondString = getString(R.string.live).uppercase()
 
         val spannableString = SpannableString( "${firstString} ${secondString}" )
         spannableString.setSpan(ForegroundColorSpan(color),
