@@ -10,9 +10,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBar
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.GravityCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import bg.dabulgaria.tibroish.R
@@ -59,7 +61,7 @@ class MainActivity : BaseActivity(),
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        configureEdgeToEdgeTopBar()
+        configureEdgeToEdgeBars()
 
         navigationDrawerFragment = supportFragmentManager.findFragmentById(R.id.navigation_drawer) as NavigationDrawerFragment?
 
@@ -209,20 +211,45 @@ class MainActivity : BaseActivity(),
         val TAG = MainActivity::class.java.simpleName
     }
 
-    private fun configureEdgeToEdgeTopBar() {
-        if (!shouldShowEdgeToEdgeTopBar()) {
+    private fun configureEdgeToEdgeBars() {
+        if (!shouldShowEdgeToEdgeBars()) {
             binding.edgeToEdgeTopBar.visibility = View.GONE
+            binding.edgeToEdgeBottomBar.visibility = View.GONE
             return
         }
 
         binding.edgeToEdgeTopBar.visibility = View.VISIBLE
+        binding.edgeToEdgeBottomBar.visibility = View.VISIBLE
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.statusBarColor = Color.TRANSPARENT
-        WindowInsetsControllerCompat(window, binding.root).isAppearanceLightStatusBars = false
+        window.navigationBarColor = Color.TRANSPARENT
+        WindowInsetsControllerCompat(window, binding.root).apply {
+            isAppearanceLightStatusBars = false
+            isAppearanceLightNavigationBars = false
+        }
         supportActionBar?.elevation = 0f
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            updateSpacerHeight(binding.edgeToEdgeTopBar, systemBarsInsets.top)
+            updateSpacerHeight(binding.edgeToEdgeBottomBar, systemBarsInsets.bottom)
+            insets
+        }
+        ViewCompat.requestApplyInsets(binding.root)
     }
 
     private fun shouldShowEdgeToEdgeTopBar(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM
+    }
+
+    private fun shouldShowEdgeToEdgeBars(): Boolean {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM
+    }
+
+    private fun updateSpacerHeight(view: View, height: Int) {
+        val layoutParams = view.layoutParams
+        if (layoutParams.height != height) {
+            layoutParams.height = height
+            view.layoutParams = layoutParams
+        }
     }
 }

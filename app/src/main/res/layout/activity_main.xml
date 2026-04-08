@@ -21,7 +21,7 @@
         android:id="@+id/drawerLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/edgeToEdgeBottomBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edgeToEdgeTopBar">
@@ -40,6 +40,16 @@
             tools:layout="@layout/fragment_navigation_drawer" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
+
+    <View
+        android:id="@+id/edgeToEdgeBottomBar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/dirtyWhite"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ProgressBar
         android:id="@+id/mainActivityProgressBar"
