@@ -12,9 +12,7 @@ import bg.dabulgaria.tibroish.domain.protocol.SendProtocolRequest
 import bg.dabulgaria.tibroish.domain.push.SendTokenRequest
 import bg.dabulgaria.tibroish.domain.push.SendTokenResponse
 import bg.dabulgaria.tibroish.domain.stream.StreamRequest
-import bg.dabulgaria.tibroish.domain.stream.StreamResponse
 import bg.dabulgaria.tibroish.domain.user.SendCheckInRequest
-import bg.dabulgaria.tibroish.domain.user.SendCheckInResponse
 import bg.dabulgaria.tibroish.domain.user.User
 import bg.dabulgaria.tibroish.domain.violation.SendViolationRequest
 import bg.dabulgaria.tibroish.domain.violation.VoteViolationRemote

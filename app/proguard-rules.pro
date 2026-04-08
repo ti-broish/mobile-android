@@ -63,6 +63,14 @@
 -dontnote retrofit2.Platform
 # Platform used when running on Java 8 VMs. Will not be used at runtime.
 -dontwarn retrofit2.Platform$Java8
+
+# Keep Retrofit interfaces
+-keep interface retrofit2.** { *; }
+# Keep annotations
+-keepattributes RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations
+# Keep your API interfaces (IMPORTANT)
+-keep interface bg.dabulgaria.tibroish.** { *; }
+
 # Retain generic type information for use by reflection by converters and adapters.
 -keepattributes Signature
 # Retain declared checked exceptions for use by a Proxy instance.

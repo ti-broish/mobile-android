@@ -38,7 +38,7 @@ android {
         applicationId "bg.dabulgaria.tibroish"
         minSdkVersion 23
         targetSdkVersion 35
-        versionCode 26
+        versionCode 29
         versionName "2.0.2.$versionCode"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         signingConfig signingConfigs.AppSigning
@@ -183,7 +183,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     implementation "com.github.pedroSG94.RootEncoder:library:2.6.6"
-    implementation "com.github.pedroSG94.RootEncoder:extra-sources:2.6.6"
 }
 
 repositories {
